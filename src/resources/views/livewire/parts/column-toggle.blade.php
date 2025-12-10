@@ -36,10 +36,10 @@
         @click.outside="isOpenColumnToggle = false" 
         @keydown.down.prevent="$focus.wrap().next()" 
         @keydown.up.prevent="$focus.wrap().previous()" 
-        class="absolute z-50 top-11 min-w-56 whitespace-nowrap rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 {{$yat_is_mobile ? 'left-1/2 transform -translate-x-1/2' : 'right-0'}}" 
+        class="absolute z-50 top-11 min-w-56 whitespace-nowrap rounded-md shadow-lg overflow-hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 {{$yat_is_mobile ? 'left-1/2 transform -translate-x-1/2' : 'right-0'}}" 
         role="menu"
     >
-        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200 divide-y divide-gray-100 dark:divide-gray-700/50">
+        <ul class="text-sm text-gray-700 dark:text-gray-200 divide-y divide-gray-100 dark:divide-gray-700/50">
             @if(!$yat_is_mobile && $handle_state)
             <li class="w-full">
                 <div class="px-4 py-2.5">
@@ -66,7 +66,7 @@
         @foreach ($columns as $key => $column)
             @if(!$column->hideFromSelector)
                 <li>
-                    <label for="{{ $column->key }}" class="flex items-center justify-between w-full px-4 py-2 cursor-pointer group hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150">
+                    <label for="{{ $column->key }}" class="flex items-center justify-between w-full px-4 py-3 cursor-pointer group hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150">
                         <span class="text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-150">{{ $column->label }}</span>
                         
                         <div class="relative inline-flex items-center cursor-pointer">
@@ -76,7 +76,7 @@
                                 wire:model.live="columns.{{ $key }}.isVisible" 
                                 class="sr-only peer"
                             >
-                            <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 dark:peer-focus:ring-emerald-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-500"></div>
+                            <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-500 dark:peer-focus:ring-emerald-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-500"></div>
                         </div>
                     </label>
                 </li>

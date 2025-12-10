@@ -32,7 +32,7 @@ class="relative min-w-[5rem]"
         class="absolute z-50 mt-1 whitespace-nowrap min-w-[5rem] rounded-md shadow-lg max-h-60 overflow-y-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600"
         style="display: none;"
     >
-        <ul class="py-1 text-sm text-gray-700 dark:text-white">
+        <ul class="text-sm text-gray-700 dark:text-white">
             @foreach ($perPageOptions as $option)
                 <li>
                     <button 

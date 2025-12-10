@@ -36,16 +36,16 @@
         @click.outside="isOpenOptionsToggle = false" 
         @keydown.down.prevent="$focus.wrap().next()" 
         @keydown.up.prevent="$focus.wrap().previous()" 
-        class="absolute z-50 top-11 min-w-56 whitespace-nowrap rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 {{$yat_is_mobile ? 'left-1/2 transform -translate-x-1/2' : 'right-0'}}" 
+        class="absolute z-50 top-11 min-w-56 whitespace-nowrap rounded-md shadow-lg overflow-hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 {{$yat_is_mobile ? 'left-1/2 transform -translate-x-1/2' : 'right-0'}}" 
         role="menu"
     >
-        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200 divide-y divide-gray-100 dark:divide-gray-700/50">
+        <ul class="text-sm text-gray-700 dark:text-gray-200 divide-y divide-gray-100 dark:divide-gray-700/50">
         @foreach ($options as $function => $label)
-            <li>
-                <div class="flex items-center">
+            <li class="">
+                <div class="flex items-center ">
                     <button 
                         wire:click="{{$function}}" 
-                        class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150 flex items-center justify-between group" 
+                        class="w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150 flex items-center justify-between group cursor-pointer" 
                         wire:loading.attr="disabled"
                         wire:loading.class="opacity-50"
                     >

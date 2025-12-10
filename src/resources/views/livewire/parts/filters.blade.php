@@ -8,7 +8,7 @@
     @foreach ($filters as $key => $filter)
         @if($filter->type == "string")
             <div class="relative">
-                <div class="text-sm dark:text-gray-300 text-gray-600">{{ucfirst($filter->label)}}</div>
+                <div class="font-semibold text-gray-700 dark:text-gray-300/80 text-sm tracking-wide ml-1">{{ucfirst($filter->label)}}</div>
                 <label 
                     class="h-10 shadow rounded-md focus-within:ring-blue-400 dark:focus-within:ring-blue-400 bg-background-white dark:bg-background-dark relative flex justify-between gap-x-2 items-center transition-all ease-in-out duration-150 ring-1 ring-inset ring-gray-300 dark:ring-gray-500 focus-within:ring-2 outline-0 pl-3 pr-3 py-2 " 
                     for="filters-{{$filter->key}}" 
