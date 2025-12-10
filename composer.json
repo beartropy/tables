@@ -1,7 +1,7 @@
 {
-    "name": "fantismic/yet-another-table",
-    "version": "1.13.1",
-    "description": "This is yet another laravel livewire table and come as is. You can filter, you can sort, you can bulk, toggle columns, the basics. The data input is a collection/array, we cant handle models.",
+    "name": "beartropy/tables",
+    "version": "1.0.0",
+    "description": "This is yet another laravel livewire table and come as is. You can filter, you can sort, you can bulk, toggle columns, the basics.",
     "license": "MIT",
     "keywords": [
         "livewire table",
@@ -15,18 +15,18 @@
     },
     "autoload": {
         "psr-4": {
-            "Fantismic\\YetAnotherTable\\": "src/"
+            "Beartropy\\Tables\\": "src/"
         }
     },
     "authors": [
         {
-            "name": "Fantismic"
+            "name": "Beartropy"
         }
     ],
     "extra": {
         "laravel": {
             "providers": [
-                "Fantismic\\YetAnotherTable\\YATProvider"
+                "Beartropy\\Tables\\YATProvider"
             ]
         }
     }

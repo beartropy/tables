@@ -1,12 +1,12 @@
 <?php
 
-namespace Fantismic\YetAnotherTable;
+namespace Beartropy\Tables;
 
 use Livewire\Livewire;
 use Illuminate\Support\ServiceProvider;
-use Fantismic\YetAnotherTable\YATBaseTable;
+use Beartropy\Tables\YATBaseTable;
 use Illuminate\View\Compilers\BladeCompiler;
-use Fantismic\YetAnotherTable\Console\Commands\MakeComponent;
+use Beartropy\Tables\Console\Commands\MakeComponent;
 
 class YATProvider extends ServiceProvider
 {

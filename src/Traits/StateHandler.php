@@ -1,6 +1,6 @@
 <?php
 
-namespace Fantismic\YetAnotherTable\Traits;
+namespace Beartropy\Tables\Traits;
 
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Renderless;

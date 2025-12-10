@@ -1,10 +1,10 @@
 <?php
 
-namespace Fantismic\YetAnotherTable\Classes\Filters;
+namespace Beartropy\Tables\Classes\Filters;
 
 
-use Fantismic\YetAnotherTable\Classes\Filters\Filter;
-use Fantismic\YetAnotherTable\Traits\Filters;
+use Beartropy\Tables\Classes\Filters\Filter;
+use Beartropy\Tables\Traits\Filters;
 
 class FilterSelectMagic extends Filter
 {

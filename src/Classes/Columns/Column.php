@@ -1,9 +1,9 @@
 <?php
 
-namespace Fantismic\YetAnotherTable\Classes\Columns;
+namespace Beartropy\Tables\Classes\Columns;
 
 use Illuminate\Support\Str;
-use Fantismic\YetAnotherTable\Traits\Columns;
+use Beartropy\Tables\Traits\Columns;
 
 class Column
 {

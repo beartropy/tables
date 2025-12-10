@@ -9,7 +9,7 @@
             'blue' => 'bg-blue-300 text-blue-700 hover:bg-blue-400 hover:text-blue-900 focus:bg-blue-400 focus:text-blue-900 focus:ring-blue-400 dark:text-blue-900',
             'purple' => 'bg-purple-300 text-purple-700 hover:bg-purple-400 hover:text-purple-900 focus:bg-purple-400 focus:text-purple-900 focus:ring-purple-400 dark:text-purple-900',
             'sky' => 'bg-sky-300 text-sky-700 hover:bg-sky-400 hover:text-sky-900 focus:bg-sky-400 focus:text-sky-900 focus:ring-sky-400 dark:text-sky-900',
-            'default' => 'bg-opacity-60 dark:bg-opacity-30 text-secondary-600 bg-secondary-300 dark:bg-secondary-600 dark:text-secondary-400 hover:bg-opacity-60 dark:hover:bg-opacity-30 hover:text-secondary-800 hover:bg-secondary-400 dark:hover:text-secondary-400 dark:hover:bg-secondary-500 focus:bg-opacity-60 dark:focus:bg-opacity-30 focus:ring-offset-2 focus:text-secondary-800 focus:bg-secondary-400 focus:ring-secondary-400 dark:focus:text-secondary-400 dark:focus:bg-secondary-500 dark:focus:ring-secondary-700',
+            'default' => 'bg-opacity-60 dark:bg-opacity-30 text-gray-600 bg-gray-300 dark:bg-gray-600 dark:text-gray-400 hover:bg-opacity-60 dark:hover:bg-opacity-30 hover:text-gray-800 hover:bg-gray-400 dark:hover:text-gray-400 dark:hover:bg-gray-500 focus:bg-opacity-60 dark:focus:bg-opacity-30 focus:ring-offset-2 focus:text-gray-800 focus:bg-gray-400 focus:ring-gray-400 dark:focus:text-gray-400 dark:focus:bg-gray-500 dark:focus:ring-gray-700',
         ];
 
         $colorClass = $colorClasses[$color] ?? $colorClasses['default'];

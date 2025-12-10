@@ -1,6 +1,6 @@
 <?php
 
-namespace Fantismic\YetAnotherTable\Console\Commands;
+namespace Beartropy\Tables\Console\Commands;
 
 use Illuminate\Console\Command;
 use function Laravel\Prompts\text;

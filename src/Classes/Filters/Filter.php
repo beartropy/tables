@@ -1,8 +1,8 @@
 <?php
 
-namespace Fantismic\YetAnotherTable\Classes\Filters;
+namespace Beartropy\Tables\Classes\Filters;
 
-use Fantismic\YetAnotherTable\Traits\Filters;
+use Beartropy\Tables\Traits\Filters;
 use Illuminate\Support\Str;
 
 class Filter

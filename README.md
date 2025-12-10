@@ -1,9 +1,9 @@
 # Yet Another Table
 
-[![Laravel](https://img.shields.io/static/v1?label=laravel&message=%E2%89%A510.0&color=0078BE&logo=laravel&style=flat-square")](https://packagist.org/packages/fantismic/yet-another-table)
-[![Version](https://img.shields.io/packagist/v/fantismic/yet-another-table)](https://packagist.org/packages/fantismic/yet-another-table)
-[![Downloads](https://img.shields.io/packagist/dt/fantismic/yet-another-table)](https://packagist.org/packages/fantismic/yet-another-table)
-[![Licence](https://img.shields.io/packagist/l/fantismic/yet-another-table)](https://packagist.org/packages/fantismic/yet-another-table)
+[![Laravel](https://img.shields.io/static/v1?label=laravel&message=%E2%89%A510.0&color=0078BE&logo=laravel&style=flat-square")](https://packagist.org/packages/beartropy/tables)
+[![Version](https://img.shields.io/packagist/v/beartropy/tables)](https://packagist.org/packages/beartropy/tables)
+[![Downloads](https://img.shields.io/packagist/dt/beartropy/tables)](https://packagist.org/packages/beartropy/tables)
+[![Licence](https://img.shields.io/packagist/l/beartropy/tables)](https://packagist.org/packages/beartropy/tables)
 
 
 This is yet another laravel livewire table and come as is.
@@ -20,13 +20,13 @@ Consider using other packages like the ones that heavily inspired this one (rapp
 ## Installation
 
 ```
-composer require fantismic/yet-another-table
+composer require beartropy/tables
 ```
 
 You may want to let the user save the table arrange of columns. If so, publish the migrations...
 
 ```
-php artisan vendor:publish --provider="Fantismic\\YetAnotherTable\\YATProvider" --tag="migrations"
+php artisan vendor:publish --provider="Beartropy\\Tables\\YATProvider" --tag="migrations"
 ```
 
 ...and run them.
@@ -44,7 +44,7 @@ That's it. You are ready to go.
 You may want to publish the lang settings and change all the 6 keys. Up to you.
 
 ```
-php artisan vendor:publish --provider="Fantismic\\YetAnotherTable\\YATProvider" --tag="lang"
+php artisan vendor:publish --provider="Beartropy\\Tables\\YATProvider" --tag="lang"
 ```
 
 
@@ -737,4 +737,4 @@ If you have other ways to expor the data or simply dont want to export at all fe
 
 ---
 
-[![Image description](https://i.postimg.cc/SxB7b1T0/fantismic-no-background.png)](https://github.com/fantismic)
+[![Image description](https://i.postimg.cc/SxB7b1T0/fantismic-no-background.png)](https://github.com/beartropy)

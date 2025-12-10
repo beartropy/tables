@@ -1,6 +1,6 @@
 <?php
 
-namespace Fantismic\YetAnotherTable\Exports;
+namespace Beartropy\Tables\Exports;
 
 use Illuminate\Support\Collection;
 use PhpOffice\PhpSpreadsheet\Style\Fill;

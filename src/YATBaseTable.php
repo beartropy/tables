@@ -1,24 +1,24 @@
 <?php
 
-namespace Fantismic\YetAnotherTable;
+namespace Beartropy\Tables;
 
 use Livewire\Component;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
 use Livewire\WithoutUrlPagination;
-use Fantismic\YetAnotherTable\Traits\Bulk;
-use Fantismic\YetAnotherTable\Traits\Data;
-use Fantismic\YetAnotherTable\Traits\Sort;
-use Fantismic\YetAnotherTable\Traits\View;
-use Fantismic\YetAnotherTable\Traits\Cache;
-use Fantismic\YetAnotherTable\Traits\Search;
-use Fantismic\YetAnotherTable\Traits\Columns;
-use Fantismic\YetAnotherTable\Traits\Filters;
-use Fantismic\YetAnotherTable\Traits\Options;
-use Fantismic\YetAnotherTable\Traits\Spinner;
-use Fantismic\YetAnotherTable\Traits\Pagination;
-use Fantismic\YetAnotherTable\Traits\StateHandler;
-use Fantismic\YetAnotherTable\Traits\RowManipulators;
+use Beartropy\Tables\Traits\Bulk;
+use Beartropy\Tables\Traits\Data;
+use Beartropy\Tables\Traits\Sort;
+use Beartropy\Tables\Traits\View;
+use Beartropy\Tables\Traits\Cache;
+use Beartropy\Tables\Traits\Search;
+use Beartropy\Tables\Traits\Columns;
+use Beartropy\Tables\Traits\Filters;
+use Beartropy\Tables\Traits\Options;
+use Beartropy\Tables\Traits\Spinner;
+use Beartropy\Tables\Traits\Pagination;
+use Beartropy\Tables\Traits\StateHandler;
+use Beartropy\Tables\Traits\RowManipulators;
 
 class YATBaseTable extends Component
 {

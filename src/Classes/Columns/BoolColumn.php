@@ -1,10 +1,10 @@
 <?php
 
-namespace Fantismic\YetAnotherTable\Classes\Columns;
+namespace Beartropy\Tables\Classes\Columns;
 
 
-use Fantismic\YetAnotherTable\Classes\Columns\Column;
-use Fantismic\YetAnotherTable\Traits\Columns;
+use Beartropy\Tables\Classes\Columns\Column;
+use Beartropy\Tables\Traits\Columns;
 
 class BoolColumn extends Column
 {

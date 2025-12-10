@@ -3,12 +3,12 @@
 namespace [namespace];
 
 use Livewire\Attributes\On;
-use Fantismic\YetAnotherTable\YATBaseTable;
-use Fantismic\YetAnotherTable\Exports\GenericExport;
-use Fantismic\YetAnotherTable\Classes\Columns\Column;
-use Fantismic\YetAnotherTable\Classes\Columns\BoolColumn;
-use Fantismic\YetAnotherTable\Classes\Filters\FilterString;
-use Fantismic\YetAnotherTable\Classes\Columns\LinkColumn;
+use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\Exports\GenericExport;
+use Beartropy\Tables\Classes\Columns\Column;
+use Beartropy\Tables\Classes\Columns\BoolColumn;
+use Beartropy\Tables\Classes\Filters\FilterString;
+use Beartropy\Tables\Classes\Columns\LinkColumn;
 
 class [class] extends YATBaseTable
 {
