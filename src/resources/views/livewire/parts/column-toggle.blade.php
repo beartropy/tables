@@ -2,7 +2,7 @@
 <div x-data="{ isOpenColumnToggle: $wire.entangle('column_toggle_dd_status') }" class="relative " @keydown.esc.window="isOpenColumnToggle = false">
     <!-- Toggle Button -->
     <!-- Toggle Button -->
-    <button @click="isOpenColumnToggle = ! isOpenColumnToggle" class="w-full flex justify-between items-center gap-x-2 px-3 py-2 text-sm text-gray-900 shadow-sm transition-all duration-150 ease-in-out h-10 rounded-md ring-1 ring-inset ring-gray-300 dark:ring-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-400 bg-background-white dark:bg-background-dark dark:text-gray-400" type="button">
+    <button @click="isOpenColumnToggle = ! isOpenColumnToggle" class="w-full flex justify-between items-center gap-x-2 px-3 py-2 text-sm text-gray-900 shadow-sm transition-all duration-150 ease-in-out h-10 rounded-md ring-1 ring-inset ring-gray-300 dark:ring-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-400 bg-gray-100 dark:bg-gray-800 dark:text-gray-400" type="button">
         {{ucfirst(__('yat::yat.columns'))}}
         <div>
             <svg 

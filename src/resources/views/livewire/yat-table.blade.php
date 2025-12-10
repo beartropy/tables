@@ -9,7 +9,7 @@
                 <div class="flex w-full space-x-2">
                     @includeWhen($yat_most_left_view, $yat_most_left_view)
                     @if($has_filters)
-                    <button @click="showFilters = ! showFilters" class="flex justify-between items-center gap-x-2 px-3 py-2 text-sm text-gray-900 shadow-sm transition-all duration-150 ease-in-out h-10 rounded-md ring-1 ring-inset ring-gray-300 dark:ring-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-400 bg-background-white dark:bg-background-dark dark:text-gray-400" type="button">
+                    <button @click="showFilters = ! showFilters" class="flex justify-between items-center gap-x-2 px-3 py-2 text-sm text-gray-900 shadow-sm transition-all duration-150 ease-in-out h-10 rounded-md ring-1 ring-inset ring-gray-300 dark:ring-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-400 bg-gray-100 dark:bg-gray-800 dark:text-gray-400" type="button">
                         {{ucfirst(__('yat::yat.filters'))}}
                         <div>
                             <svg

@@ -9,7 +9,7 @@ class="relative min-w-[5rem]"
     <button 
         @click="open = !open" 
         type="button"
-        class="w-full flex justify-between items-center gap-x-2 px-3 py-2 text-sm text-gray-900 shadow-sm transition-all duration-150 ease-in-out h-10 rounded-md ring-1 ring-inset ring-gray-300 dark:ring-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-400 bg-background-white dark:bg-background-dark dark:text-gray-400"
+        class="w-full flex justify-between items-center gap-x-2 px-3 py-2 text-sm text-gray-900 shadow-sm transition-all duration-150 ease-in-out h-10 rounded-md ring-1 ring-inset ring-gray-300 dark:ring-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-400 bg-gray-100 dark:bg-gray-800 dark:text-gray-400"
     >
         <span x-text="selected"></span>
         <svg 
@@ -37,9 +37,9 @@ class="relative min-w-[5rem]"
                 <li>
                     <button 
                         type="button"
-                        @click="$wire.set('perPageDisplay', {{ $option }}); selected = {{ $option }}; open = false"
+                        @click="$wire.set('perPageDisplay', '{{ $option }}'); selected = '{{ $option }}'; open = false"
                         class="w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
-                        :class="selected == {{ $option }} ? 'bg-gray-100 dark:bg-gray-700 font-bold' : ''"
+                        :class="selected == '{{ $option }}' ? 'bg-gray-100 dark:bg-gray-700 font-bold' : ''"
                     >
                         {{ $option }}
                     </button>
