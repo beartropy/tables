@@ -15,7 +15,7 @@
                 <line x1="3" y1="12" x2="3.01" y2="12"></line>
             <line x1="3" y1="18" x2="3.01" y2="18"></line>
         </svg>
-            {{$perPage}}
+            {{$perPageDisplay}}
             <div class="ml-2">
                 <svg
                     aria-hidden="true"
@@ -43,8 +43,8 @@
             <li class="w-full border-b last:border-b-0 rounded-mc {{ $themeConfig['dropdowns']['border'] }} {{ $themeConfig['dropdowns']['hover_bg'] }}">
                 <div class="flex items-center ps-3 pr-3">
                     <div 
-                        @click="$wire.set('perPage', '{{ $option }}'); isSelectPerPageOpen = false;" 
-                        class="{{ $option == $perPage ? 'font-extrabold' : 'font-medium' }} px-2 py-2 w-full text-sm items-center text-center {{ $themeConfig['dropdowns']['text'] }}" 
+                        @click="$wire.set('perPageDisplay', '{{ $option }}'); isSelectPerPageOpen = false;" 
+                        class="{{ $option == $perPageDisplay ? 'font-extrabold' : 'font-medium' }} px-2 py-2 w-full text-sm items-center text-center {{ $themeConfig['dropdowns']['text'] }}" 
                     >
                         {!! $option !!}
                     </div>
