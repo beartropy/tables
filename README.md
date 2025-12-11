@@ -147,6 +147,9 @@ public function mount() {
 - [Table spinner](#table-spinner)
 - [Table spinner view](#table-spinner-view)
 - [Modals View](#modals-view)
+- [Set Table Theme](#set-table-theme)
+- [Add Custom Buttons](#add-custom-buttons)
+- [Custom View Slots](#custom-view-slots)
 
 ### [Sorting](#sorting-1)
 - [Set default sort column](#set-default-sort-column)
@@ -171,6 +174,8 @@ public function mount() {
 - [Add row to table](#add-row-to-table)
 - [Remove row from table](#remove-row-from-table)
 - [Expanded rows](#expanded-rows)
+- [Cache Prefix](#cache-prefix)
+
 
 
 ## [Columns](#columns-1)
@@ -304,6 +309,39 @@ This adds the passed view at the bottom of the component, useful for modals.
 
 ```
 $this->setModalsView('myviews.mymodals');
+```
+
+#### Set Table Theme
+`setTheme(string $theme)`
+
+Sets the color theme for the table. Available themes are:
+`slate`, `gray`, `zinc`, `neutral`, `stone`, `red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`, `blue`, `indigo`, `violet`, `purple`, `fuchsia`, `pink`, `rose`.
+
+```php
+$this->setTheme('zinc');
+```
+
+#### Add Custom Buttons
+`addButtons(array $buttons)`
+
+Add custom buttons to the table header (right side). The array keys should be unique identifiers and values can be any data needed by your custom view.
+To render these buttons, the component uses `yat::livewire.parts.custom-buttons` by default, but you can override the view logic if needed.
+
+```php
+$this->addButtons(['create' => 'Create User', 'export' => 'Export Data']);
+```
+
+#### Custom View Slots
+The table provides several slots to inject custom Blade views at specific positions in the header.
+
+- `setMostLeftView(string $view)`: Far left, before the filter button.
+- `setLessLeftView(string $view)`: Left, between global search and the filter button (or search if no filter).
+- `setLessRightView(string $view)`: Right, before custom buttons.
+- `setMostRightView(string $view)`: Far right, after pagination.
+
+```php
+$this->setMostLeftView('my.custom.sidebar-toggle');
+$this->setMostRightView('my.custom.settings-icon');
 ```
 
 
@@ -483,6 +521,16 @@ $content=[
     "parameters" => ["my_custom_parameter" => "some_data"]
 ];
 $this->toggleExpandedRow(43,$content,true);
+```
+
+#### Cache Prefix
+`setCachePrefix(string $prefix)`
+
+Sets a custom prefix for the cache keys used by the table. This is useful when you have multiple instances of the same table or need to segregate cache data specifically.
+Beartropy Tables supports caching for both authenticated users and guest users (via session ID).
+
+```php
+$this->setCachePrefix('my-custom-table');
 ```
 
 

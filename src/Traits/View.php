@@ -29,7 +29,7 @@ trait View
 
     public function setTheme(string $theme) {
         $this->theme = $theme;
-        $presets = require __DIR__ . '/../table-presets.php';
+        $presets = require __DIR__ . '/../resources/views/livewire/table-presets.php';
         $this->themeConfig = $presets[$theme] ?? $presets['slate'];
     }
 

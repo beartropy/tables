@@ -37,14 +37,14 @@
         </div>
     </x-beartropy-ui::button>
     <!-- Dropdown Menu -->
-    <div x-cloak x-show="isSelectPerPageOpen" x-transition @click.outside="isSelectPerPageOpen = false" @keydown.down.prevent="$focus.wrap().next()" @keydown.up.prevent="$focus.wrap().previous()" class="shadow-xl z-30 absolute top-11 w-full rounded-md whitespace-nowrap {{$yat_is_mobile ? 'left-1/2 transform -translate-x-1/2' : 'right-0'}}" role="menu">
-        <ul class="rounded-md text-sm font-medium text-gray-900 bg-white border border-gray-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+    <div x-cloak x-show="isSelectPerPageOpen" x-transition @click.outside="isSelectPerPageOpen = false" @keydown.down.prevent="$focus.wrap().next()" @keydown.up.prevent="$focus.wrap().previous()" class="shadow-xl z-30 absolute top-12 w-full rounded-md whitespace-nowrap {{$yat_is_mobile ? 'left-1/2 transform -translate-x-1/2' : 'right-0'}}" role="menu">
+        <ul class="rounded-md text-sm font-medium border {{ $themeConfig['dropdowns']['bg'] }} {{ $themeConfig['dropdowns']['border'] }} {{ $themeConfig['dropdowns']['text'] }}">
         @foreach ($perPageOptions as $option)
-            <li class="w-full border-b last:border-b-0 border-gray-200 hover:bg-gray-200 rounded-mc dark:border-gray-600 dark:hover:bg-gray-600">
+            <li class="w-full border-b last:border-b-0 rounded-mc {{ $themeConfig['dropdowns']['border'] }} {{ $themeConfig['dropdowns']['hover_bg'] }}">
                 <div class="flex items-center ps-3 pr-3">
                     <div 
                         @click="$wire.set('perPage', '{{ $option }}'); isSelectPerPageOpen = false;" 
-                        class="{{ $option == $perPage ? 'font-extrabold' : 'font-medium' }} px-2 py-2 w-full text-sm text-gray-700 dark:text-gray-300 items-center text-center" 
+                        class="{{ $option == $perPage ? 'font-extrabold' : 'font-medium' }} px-2 py-2 w-full text-sm items-center text-center {{ $themeConfig['dropdowns']['text'] }}" 
                     >
                         {!! $option !!}
                     </div>

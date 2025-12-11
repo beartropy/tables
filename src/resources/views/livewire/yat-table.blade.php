@@ -79,7 +79,7 @@
                             @endif
                         @if ($has_bulk)
                             <th class="text-left px-5">
-                                <x-beartropy-ui::checkbox wire:model.live="selectAll" />
+                                <x-beartropy-ui::checkbox wire:model.live="selectAll" color="{{ $theme }}" />
                             </th>
                         @endif
                         @foreach ($columns as $column)
@@ -153,6 +153,7 @@
                                         value="{{ $row[$column_id] }}"
                                         id="{{ $row[$column_id] }}"
                                         wire:model.live="yat_selected_checkbox"
+                                        color="{{ $theme }}"
                                     />
                                     {{-- <input
                                         type="checkbox"
