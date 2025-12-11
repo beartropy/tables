@@ -1,50 +1,56 @@
-<div x-data="{ 
-    open: false, 
-    selected: @entangle('perPageDisplay') 
-}" 
-class="relative min-w-[5rem]"
-@click.outside="open = false" @keydown.esc.window="open = false">
-
-    <!-- Trigger Button -->
-    <button 
-        @click="open = !open" 
-        type="button"
-        class="w-full flex justify-between items-center gap-x-2 px-3 py-2 text-sm text-gray-900 shadow-sm transition-all duration-150 ease-in-out h-10 rounded-md ring-1 ring-inset ring-gray-300 dark:ring-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-400 bg-gray-100 dark:bg-gray-800 dark:text-gray-400"
+<!-- Select Per Page Button -->
+<div x-data="{ isSelectPerPageOpen: false }" class="relative min-w-18" @keydown.esc.window="isSelectPerPageOpen = false">
+    <x-beartropy-ui::button 
+        @click="isSelectPerPageOpen = ! isSelectPerPageOpen"
+        outline
+        color="{{ $theme }}"
+        class="w-full"
     >
-        <span x-text="selected"></span>
-        <svg 
-            class="w-4 h-4 text-gray-500 dark:text-gray-400 transition-transform duration-200"
-            :class="open ? 'rotate-180' : ''"
-            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+        <div class="flex justify-between items-center w-full">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list mr-2">
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+            <line x1="3" y1="18" x2="3.01" y2="18"></line>
         </svg>
-    </button>
-
+            {{$perPage}}
+            <div class="ml-2">
+                <svg
+                    aria-hidden="true"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    class="w-4 h-4 transition-transform duration-300"
+                    :class="!isSelectPerPageOpen ? 'rotate-180' : 'rotate-0'"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M19.5 15.75l-7.5-7.5-7.5 7.5"
+                    />
+                </svg>
+            </div>
+        </div>
+    </x-beartropy-ui::button>
     <!-- Dropdown Menu -->
-    <div 
-        x-show="open" 
-        x-transition:enter="transition ease-out duration-100"
-        x-transition:enter-start="transform opacity-0 scale-95"
-        x-transition:enter-end="transform opacity-100 scale-100"
-        x-transition:leave="transition ease-in duration-75"
-        x-transition:leave-start="transform opacity-100 scale-100"
-        x-transition:leave-end="transform opacity-0 scale-95"
-        class="absolute z-50 mt-1 whitespace-nowrap min-w-[5rem] rounded-md shadow-lg max-h-60 overflow-y-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600"
-        style="display: none;"
-    >
-        <ul class="text-sm text-gray-700 dark:text-white">
-            @foreach ($perPageOptions as $option)
-                <li>
-                    <button 
-                        type="button"
-                        @click="$wire.set('perPageDisplay', '{{ $option }}'); selected = '{{ $option }}'; open = false"
-                        class="w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
-                        :class="selected == '{{ $option }}' ? 'bg-gray-100 dark:bg-gray-700 font-bold' : ''"
+    <div x-cloak x-show="isSelectPerPageOpen" x-transition @click.outside="isSelectPerPageOpen = false" @keydown.down.prevent="$focus.wrap().next()" @keydown.up.prevent="$focus.wrap().previous()" class="shadow-xl z-30 absolute top-11 w-full rounded-md whitespace-nowrap {{$yat_is_mobile ? 'left-1/2 transform -translate-x-1/2' : 'right-0'}}" role="menu">
+        <ul class="rounded-md text-sm font-medium text-gray-900 bg-white border border-gray-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        @foreach ($perPageOptions as $option)
+            <li class="w-full border-b last:border-b-0 border-gray-200 hover:bg-gray-200 rounded-mc dark:border-gray-600 dark:hover:bg-gray-600">
+                <div class="flex items-center ps-3 pr-3">
+                    <div 
+                        @click="$wire.set('perPage', '{{ $option }}'); isSelectPerPageOpen = false;" 
+                        class="{{ $option == $perPage ? 'font-extrabold' : 'font-medium' }} px-2 py-2 w-full text-sm text-gray-700 dark:text-gray-300 items-center text-center" 
                     >
-                        {{ $option }}
-                    </button>
-                </li>
-            @endforeach
-        </ul>
+                        {!! $option !!}
+                    </div>
+                </div>
+            </li>
+        @endforeach       
+        </ul>                 
     </div>
 </div>

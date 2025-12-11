@@ -51,6 +51,11 @@
     <div class="border-t-black"></div>
     <div class="divide-gray-100"></div>
     <div class="dark:divide-gray-700/50"></div>
+    <div class="placeholder:text-gray-400"></div>
+    <div class="dark:placeholder:text-gray-500"></div>
+    <div class="dark:hover:text-gray-400"></div>
+    <div class="dark:focus:text-gray-400"></div>
+    <div class="dark:focus:ring-gray-700"></div>
 
     <!-- Slate Theme -->
     <div class="text-slate-600"></div>
@@ -104,6 +109,11 @@
     <div class="border-t-black"></div>
     <div class="divide-slate-100"></div>
     <div class="dark:divide-slate-700/50"></div>
+    <div class="placeholder:text-slate-400"></div>
+    <div class="dark:placeholder:text-slate-500"></div>
+    <div class="dark:hover:text-slate-400"></div>
+    <div class="dark:focus:text-slate-400"></div>
+    <div class="dark:focus:ring-slate-700"></div>
 
     <!-- Zinc Theme -->
     <div class="text-zinc-600"></div>
@@ -157,6 +167,11 @@
     <div class="border-t-black"></div>
     <div class="divide-zinc-100"></div>
     <div class="dark:divide-zinc-700/50"></div>
+    <div class="placeholder:text-zinc-400"></div>
+    <div class="dark:placeholder:text-zinc-500"></div>
+    <div class="dark:hover:text-zinc-400"></div>
+    <div class="dark:focus:text-zinc-400"></div>
+    <div class="dark:focus:ring-zinc-700"></div>
 
 
     <!-- Neutral Theme -->
@@ -211,6 +226,11 @@
     <div class="border-t-black"></div>
     <div class="divide-neutral-100"></div>
     <div class="dark:divide-neutral-700/50"></div>
+    <div class="placeholder:text-neutral-400"></div>
+    <div class="dark:placeholder:text-neutral-500"></div>
+    <div class="dark:hover:text-neutral-400"></div>
+    <div class="dark:focus:text-neutral-400"></div>
+    <div class="dark:focus:ring-neutral-700"></div>
 
     <!-- Stone Theme -->
     <div class="text-stone-600"></div>
@@ -264,5 +284,67 @@
     <div class="border-t-black"></div>
     <div class="divide-stone-100"></div>
     <div class="dark:divide-stone-700/50"></div>
+    <div class="placeholder:text-stone-400"></div>
+    <div class="dark:placeholder:text-stone-500"></div>
+    <div class="dark:hover:text-stone-400"></div>
+    <div class="dark:focus:text-stone-400"></div>
+    <div class="dark:focus:ring-stone-700"></div>
 
+        <!-- indigo Theme -->
+    <div class="text-indigo-600"></div>
+    <div class="text-indigo-200"></div>
+    <div class="text-indigo-300"></div>
+    <div class="dark:text-indigo-200"></div>
+    <div class="dark:text-indigo-300"></div>
+    <div class="text-indigo-900"></div>
+    <div class="ring-indigo-300"></div>
+    <div class="dark:ring-indigo-500"></div>
+    <div class="dark:text-indigo-400"></div>
+    <div class="border-indigo-200"></div>
+    <div class="dark:border-indigo-700"></div>
+    <div class="bg-indigo-50"></div>
+    <div class="dark:bg-indigo-800"></div>
+    <div class="border-b-indigo-700"></div>
+    <div class="dark:border-b-indigo-700"></div>
+    <div class="bg-indigo-100"></div>
+    <div class="dark:bg-indigo-900"></div>
+    <div class="text-indigo-500"></div>
+    <div class="text-indigo-700"></div>
+    <div class="hover:bg-indigo-200"></div>
+    <div class="dark:hover:bg-indigo-700"></div>
+    <div class="odd:bg-indigo-100"></div>
+    <div class="dark:even:bg-indigo-800"></div>
+    <div class="dark:odd:bg-indigo-900"></div>
+    <div class="bg-indigo-200"></div>
+    <div class="dark:bg-indigo-700"></div>
+    <div class="border-indigo-300"></div>
+    <div class="dark:border-indigo-600"></div>
+    <div class="dark:bg-indigo-600"></div>
+    <div class="dark:border-indigo-500"></div>
+    <div class="border-indigo-400"></div>
+    <div class="focus:ring-indigo-500"></div>
+    <div class="dark:focus:ring-indigo-600"></div>
+    <div class="dark:ring-offset-indigo-700"></div>
+    <div class="dark:focus:ring-offset-indigo-700"></div>
+    <div class="hover:text-indigo-900"></div>
+    <div class="hover:text-indigo-800"></div>
+    <div class="focus:bg-indigo-400"></div>
+    <div class="focus:ring-indigo-400"></div>
+    <div class="focus:text-indigo-800"></div>
+    <div class="dark:hover:text-white"></div>
+    <div class="group-hover:text-indigo-900"></div>
+    <div class="dark:group-hover:text-white"></div>
+    <div class="bg-indigo-300"></div>
+    <div class="hover:bg-indigo-400"></div>
+    <div class="dark:hover:bg-indigo-500"></div>
+    <div class="dark:focus:bg-indigo-500"></div>
+    <div class="dark:bg-indigo-500"></div>
+    <div class="border-t-black"></div>
+    <div class="divide-indigo-100"></div>
+    <div class="dark:divide-indigo-700/50"></div>
+    <div class="placeholder:text-indigo-400"></div>
+    <div class="dark:placeholder:text-indigo-500"></div>
+    <div class="dark:hover:text-indigo-400"></div>
+    <div class="dark:focus:text-indigo-400"></div>
+    <div class="dark:focus:ring-indigo-700"></div>
 </div>

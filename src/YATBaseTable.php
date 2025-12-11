@@ -59,6 +59,7 @@ class YATBaseTable extends Component
         $this->setOptions();
         $this->setTableState();
         $this->setFilters();
+        $this->mountView();
     }
 
     public function render()
@@ -71,7 +72,7 @@ class YATBaseTable extends Component
             $paginatedData = $this->sortData($paginatedData);
         }
         
-        return view('YATPackage::livewire.yat-table', [
+        return view('yat::livewire.yat-table', [
             'rows' => $paginatedData
         ]);
     }

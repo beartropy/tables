@@ -14,7 +14,7 @@ class YATProvider extends ServiceProvider
     public function boot()
     {
 
-      $this->loadViewsFrom(__DIR__.'/resources/views', 'YATPackage');
+      $this->loadViewsFrom(__DIR__.'/resources/views', 'yat');
 
       $this->loadTranslationsFrom(__DIR__.'/resources/lang', 'yat');
 

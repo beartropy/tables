@@ -24,6 +24,21 @@ trait View
 
     public $yat_custom_buttons = [];
 
+    public string $theme = 'gray';
+    public array $themeConfig = [];
+
+    public function setTheme(string $theme) {
+        $this->theme = $theme;
+        $presets = require __DIR__ . '/../table-presets.php';
+        $this->themeConfig = $presets[$theme] ?? $presets['slate'];
+    }
+
+    public function mountView() {
+        if (empty($this->themeConfig)) {
+            $this->setTheme($this->theme);
+        }
+    }
+
     public function gatherEnvData() {
         $userAgent = request()->header('User-Agent');
         if(preg_match('/(android|webos|iphone|ipad|ipod|blackberry|windows phone)/i', $userAgent)) {

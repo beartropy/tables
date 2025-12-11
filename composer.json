@@ -11,7 +11,8 @@
         "livewire components"
     ],
     "require": {
-        "php": "^8.2"
+        "php": "^8.2",
+        "beartropy/ui": "*"
     },
     "autoload": {
         "psr-4": {

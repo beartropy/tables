@@ -2,6 +2,16 @@
 
 return [
 
+    'showing' => 'Showing',
+    'to' => 'to',
+    'of' => 'of',
+    'entries' => 'entries',
+    'filter_options' => 'Filter Options',
+    'remove_filters' => 'Remove Filters',
+    'reset_columns' => 'Reset Columns',
+    'yes' => 'Yes',
+    'no' => 'No',
+    'from' => 'From',
     'search' => 'search',
     'options' => 'options',
     'columns' => 'columns',
