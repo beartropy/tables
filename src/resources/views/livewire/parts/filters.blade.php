@@ -22,15 +22,17 @@
                 @if($filter->type === 'string')
                     <x-beartropy-ui::input
                         wire:model.live.debounce.500ms="filters.{{ $key }}.input"
-                        placeholder="{{ucfirst($filter->label)}}..."
+                        label="{{ucfirst($filter->label)}}"
                         clearable
                         color="{{ $theme }}"
+                        placeholder="{{ucfirst($filter->label)}}..."
                     />
 
                 @elseif($filter->type === 'daterange')
                     <x-beartropy-ui::input
                         id="filter-{{ $key }}"
                         label="{{ $filter->label }}"
+                        color="{{ $theme }}"
                         wire:model.live.debounce.500ms="filters.{{ $key }}.input"
                         placeholder="YYYY-MM-DD to YYYY-MM-DD"
                     />
@@ -49,6 +51,7 @@
                 @elseif($filter->type === 'select')
                     <x-beartropy-ui::select 
                         label="{{ $filter->label }}"
+                        color="{{ $theme }}"
                         wire:model.live="filters.{{ $key }}.input"
                         :options="$filter->options"
                         placeholder="{{ucfirst(__('yat::yat.all'))}}"
@@ -69,7 +72,7 @@
                         placeholder="{{ucfirst(__('yat::yat.all'))}}"
                         option-label="label"
                         option-value="value"
-                        clearable
+                        :searchable="false"
                     />
                 @endif
             </div>
