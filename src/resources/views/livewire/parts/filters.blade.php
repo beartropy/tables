@@ -29,24 +29,12 @@
                     />
 
                 @elseif($filter->type === 'daterange')
-                    <x-beartropy-ui::input
-                        id="filter-{{ $key }}"
+                    <x-beartropy-ui::datetime 
+                        wire:model.live="filters.{{ $key }}.input"
                         label="{{ $filter->label }}"
                         color="{{ $theme }}"
-                        wire:model.live.debounce.500ms="filters.{{ $key }}.input"
-                        placeholder="YYYY-MM-DD to YYYY-MM-DD"
+                        range
                     />
-                     <script>
-                        document.addEventListener('DOMContentLoaded', function () {
-                            flatpickr("#filter-{{ $key }}", {
-                                mode: "range",
-                                dateFormat: "Y-m-d",
-                                onChange: function(selectedDates, dateStr, instance) {
-                                    @this.set('filters.{{ $key }}.input', dateStr);
-                                }
-                            });
-                        });
-                    </script>
 
                 @elseif($filter->type === 'select')
                     <x-beartropy-ui::select 
@@ -59,7 +47,14 @@
                     />
 
                 @elseif($filter->type === 'bool')
-                    @php
+                    <div class="w-full h-full flex items-center mt-4">
+                        <x-beartropy-ui::toggle
+                            wire:model.live="filters.{{ $key }}.input"
+                            label="{{ $filter->label }}"
+                            color="{{ $theme }}"
+                        />                
+                    </div>
+                    {{-- @php
                         $boolOptions = [
                             ['value' => 1, 'label' => ucfirst(__('yat::yat.yes'))],
                             ['value' => 0, 'label' => ucfirst(__('yat::yat.no'))]
@@ -67,13 +62,14 @@
                     @endphp
                     <x-beartropy-ui::select 
                         label="{{ $filter->label }}"
+                        color="{{ $theme }}"
                         wire:model.live="filters.{{ $key }}.input"
                         :options="$boolOptions"
                         placeholder="{{ucfirst(__('yat::yat.all'))}}"
                         option-label="label"
                         option-value="value"
                         :searchable="false"
-                    />
+                    /> --}}
                 @endif
             </div>
         @endforeach

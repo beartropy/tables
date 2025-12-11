@@ -8,7 +8,8 @@
     <x-beartropy-ui::button
         class="whitespace-nowrap"
         :color="$color"
-        @if(isset($button['action'])) wire:click="{{$button['action']}}" @endif
+        :wire:click="$button['action'] ?? null"
+        outline
     >
         {!! $button['label'] !!}
     </x-beartropy-ui::button>

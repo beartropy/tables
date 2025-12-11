@@ -34,28 +34,41 @@
     <!-- Dropdown Menu -->
     <div x-cloak x-show="isOpenOptionsToggle" x-transition @click.outside="isOpenOptionsToggle = false" @keydown.down.prevent="$focus.wrap().next()" @keydown.up.prevent="$focus.wrap().previous()" class="shadow-xl min-w-52 z-30 absolute top-12 inline-block rounded-md whitespace-nowrap {{$yat_is_mobile ? 'left-1/2 transform -translate-x-1/2' : 'right-0'}}" role="menu">
         <ul class="rounded-md text-sm font-medium border {{ $themeConfig['dropdowns']['bg'] }} {{ $themeConfig['dropdowns']['border'] }} {{ $themeConfig['dropdowns']['text'] }}">
-        @foreach ($options as $function => $label)
-            <li class="w-full border-b last:border-b-0 rounded-mc {{ $themeConfig['dropdowns']['border'] }} {{ $themeConfig['dropdowns']['hover_bg'] }}">
-                <div class="flex items-center ps-3 pr-3">
-                    <div 
-                        wire:click="{{$function}}" 
-                        class="cursor-pointer w-full pr-3 py-3 ms-2 text-sm font-medium flex items-center {{ $themeConfig['dropdowns']['text'] }}" 
-                        wire:loading.attr="disabled"
-                        wire:loading.class="opacity-50"
-                    >
-                        <span>{!! $label !!}</span>
+            @foreach ($options as $function => $option)
+                <li class="w-full border-b last:border-b-0 rounded-mc {{ $themeConfig['dropdowns']['border'] }} {{ $themeConfig['dropdowns']['hover_bg'] }}">
+                    <div class="flex items-center ps-3 pr-3">
+                        <div 
+                            wire:click="{{$function}}" 
+                            class="cursor-pointer w-full pr-3 py-3 ms-2 text-sm font-medium flex items-center {{ $themeConfig['dropdowns']['text'] }}" 
+                            wire:loading.attr="disabled"
+                            wire:loading.class="opacity-50"
+                        >
+                            {{-- 1. ICONO CON CLASE TAILWIND --}}
+                            @if($option['icon'])
+                                {{-- 
+                                    Aquí inyectamos la clase directamente. 
+                                    Si es null, no pasa nada. 
+                                    Ejemplo resultante: class="mr-2 text-base leading-none text-blue-600"
+                                --}}
+                                <span class="mr-2 -ml-2 text-base leading-none">
+                                    {!! $option['icon'] !!}
+                                </span>
+                            @endif
 
-                        <!-- Spinner next to the text when loading -->
-                        <span wire:loading wire:target="{{$function}}" class="ml-2 flex items-center"> 
-                            <svg class="w-4 h-4 animate-spin {{ $themeConfig['loading']['text'] }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 100 8v4a8 8 0 01-8-8z"></path>
-                            </svg>
-                        </span>
+                            {{-- 2. LABEL --}}
+                            <span>{!! $option['label'] !!}</span>
+
+                            {{-- 3. SPINNER --}}
+                            <span wire:loading wire:target="{{$function}}" class="ml-2 flex items-center"> 
+                                <svg class="w-4 h-4 animate-spin {{ $themeConfig['loading']['text'] }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 100 8v4a8 8 0 01-8-8z"></path>
+                                </svg>
+                            </span>
+                        </div>
                     </div>
-                </div>
-            </li>
-        @endforeach       
+                </li>
+            @endforeach     
         </ul>                 
     </div>
 </div>

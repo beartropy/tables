@@ -18,8 +18,9 @@ trait Filters
         } catch (\Throwable $th) {
             return;
         }
-        $this->filters = $this->filters->map(function ($item) {
-            return (object) get_object_vars($item);
+        $this->filters = $this->filters->mapWithKeys(function ($item) {
+            $key = substr(str_shuffle(str_repeat('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 5)), 0, 10);
+            return [$key => (object) get_object_vars($item)];
         });
 
         foreach ($this->filters as $filter) {
@@ -54,9 +55,12 @@ trait Filters
     }
 
     public function updatedFilters($key,$value) {
+        if(is_array($key)) return;
+
         if (!str_contains($key,'filters.')) {
             return;
         }
+        
         $key = str_replace(array('filters.','.input'),'',$key);
         
         if (in_array($this->filters[$key]->type,array("string","select"))) {
@@ -66,17 +70,17 @@ trait Filters
             $this->filters[$key]->input = ($this->filters[$key]->input) ? $this->filters[$key]->compared_with['true'] : $this->filters[$key]->compared_with['false'];
         }
         if ($this->filters[$key]->type == "daterange") {
-            if (empty(trim($value))) {
+            if (empty($value)) {
                 $this->filters[$key]->input = null;
                 $this->filters[$key]->daterange = null;
-            }
-            if (str_contains($this->filters[$key]->input, 'to')) {
-                [$start, $end] = explode(' to ', trim($this->filters[$key]->input));
-                $this->filters[$key]->daterange = ["start"=>Carbon::parse($start),"end"=>Carbon::parse($end)];
+            } else {
+                $this->filters[$key]->input = json_encode($value);
+                $this->filters[$key]->daterange = [
+                    "start" => Carbon::parse($value['start'])->startOfDay(),
+                    "end"   => Carbon::parse($value['end'])->endOfDay()
+                ];
             }
         }
-
-        
     }
 
     public function applyFilters($data) {

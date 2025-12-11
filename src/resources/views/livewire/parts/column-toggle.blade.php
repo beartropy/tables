@@ -36,7 +36,7 @@
             @if(!$yat_is_mobile && $handle_state)
             <li class="w-full border-b rounded-t-lg rounded-md {{ $themeConfig['dropdowns']['border'] }}">
                 <div class="p-3">
-                    <button 
+                    {{-- <button 
                         wire:click="saveTableState" 
                         type="button" 
                         class="w-full outline-none inline-flex justify-center items-center group hover:shadow-sm focus:ring-offset-background-white dark:focus:ring-offset-background-dark transition-all ease-in-out duration-200 focus:ring-2 disabled:opacity-80 disabled:cursor-not-allowed text-white bg-emerald-500 dark:bg-emerald-700 hover:text-white hover:bg-emerald-600 dark:hover:bg-emerald-600 focus:text-white focus:ring-offset-2 focus:bg-emerald-600 focus:ring-emerald-600 dark:focus:bg-emerald-600 dark:focus:ring-emerald-600 rounded-md gap-x-1 text-xs px-2.5 py-1.5"
@@ -52,7 +52,8 @@
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 100 8v4a8 8 0 01-8-8z"></path>
                             </svg>
                         </span>
-                    </button>
+                    </button> --}}
+                    <x-beartropy-ui::button xs outline emerald class="w-full" label="{{ucfirst(__('yat::yat.save_column_election'))}}" wire:click="saveTableState"/>
                 </div>
             </li>
             @endif
