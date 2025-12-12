@@ -37,14 +37,34 @@
         </div>
     </x-beartropy-ui::button>
     <!-- Dropdown Menu -->
-    <div x-cloak x-show="isSelectPerPageOpen" x-transition @click.outside="isSelectPerPageOpen = false" @keydown.down.prevent="$focus.wrap().next()" @keydown.up.prevent="$focus.wrap().previous()" class="shadow-xl z-30 absolute top-12 w-full rounded-md whitespace-nowrap {{$yat_is_mobile ? 'left-1/2 transform -translate-x-1/2' : 'right-0'}}" role="menu">
-        <ul class="rounded-md text-sm font-medium {{ $themeConfig['dropdowns']['bg'] }} {{ $themeConfig['dropdowns']['border'] }} {{ $themeConfig['dropdowns']['text'] }}">
+    <!-- Dropdown Menu / Modal -->
+    <div 
+        x-cloak 
+        x-show="isSelectPerPageOpen" 
+        x-transition 
+        @click.outside="isSelectPerPageOpen = false" 
+        @keydown.down.prevent="$focus.wrap().next()" 
+        @keydown.up.prevent="$focus.wrap().previous()" 
+        class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 backdrop-blur-[2px] p-4 md:absolute md:top-12 md:w-full md:inset-auto md:bg-transparent md:block md:p-0" 
+        role="menu"
+    >
+        <!-- Backdrop click handler for mobile -->
+        <div class="absolute inset-0 md:hidden" @click="isSelectPerPageOpen = false"></div>
+
+        <ul class="relative w-[90%] max-w-md md:w-full md:max-w-none max-h-[80vh] overflow-y-auto md:overflow-visible shadow-xl rounded-md text-base md:text-sm font-medium z-10 {{ $themeConfig['dropdowns']['bg'] }} {{ $themeConfig['dropdowns']['border'] }} {{ $themeConfig['dropdowns']['text'] }}">
+            @if($yat_is_mobile)
+                <li class="w-full border-b border-gray-200 dark:border-gray-600">
+                    <div class="p-3">
+                        {{ucfirst(__('yat::yat.per_page_display'))}}
+                    </div>
+                </li>
+            @endif
         @foreach ($perPageOptions as $option)
             <li class="w-full border-b last:border-b-0 border-gray-300 dark:border-gray-600 rounded-mc {{ $themeConfig['dropdowns']['hover_bg'] }}">
                 <div class="flex items-center ps-3 pr-3">
                     <div 
                         @click="$wire.set('perPageDisplay', '{{ $option }}'); isSelectPerPageOpen = false;" 
-                        class="{{ $option == $perPageDisplay ? 'font-extrabold' : 'font-medium' }} px-2 py-2 w-full text-sm items-center text-center {{ $themeConfig['dropdowns']['text'] }}" 
+                        class="{{ $option == $perPageDisplay ? 'font-extrabold' : 'font-medium' }} cursor-pointer px-2 py-3 md:py-2 w-full text-base md:text-sm items-center text-center {{ $themeConfig['dropdowns']['text'] }}" 
                     >
                         {!! $option !!}
                     </div>

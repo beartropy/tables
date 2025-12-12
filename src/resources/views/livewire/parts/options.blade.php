@@ -33,14 +33,34 @@
         </div>
     </x-beartropy-ui::button>
     <!-- Dropdown Menu -->
-    <div x-cloak x-show="isOpenOptionsToggle" x-transition @click.outside="isOpenOptionsToggle = false" @keydown.down.prevent="$focus.wrap().next()" @keydown.up.prevent="$focus.wrap().previous()" class="shadow-xl min-w-52 z-30 absolute top-12 inline-block rounded-md whitespace-nowrap {{$yat_is_mobile ? 'left-1/2 transform -translate-x-1/2' : 'right-0'}}" role="menu">
-        <ul class="rounded-md text-sm font-medium {{ $themeConfig['dropdowns']['bg'] }} {{ $themeConfig['dropdowns']['border'] }} {{ $themeConfig['dropdowns']['text'] }}">
+    <!-- Dropdown Menu / Modal -->
+    <div 
+        x-cloak 
+        x-show="isOpenOptionsToggle" 
+        x-transition 
+        @click.outside="isOpenOptionsToggle = false" 
+        @keydown.down.prevent="$focus.wrap().next()" 
+        @keydown.up.prevent="$focus.wrap().previous()" 
+        class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 backdrop-blur-[2px] p-4 md:absolute md:top-12 md:right-0 md:inset-auto md:bg-transparent md:block md:p-0 md:w-auto" 
+        role="menu"
+    >
+        <!-- Backdrop click handler for mobile -->
+        <div class="absolute inset-0 md:hidden" @click="isOpenOptionsToggle = false"></div>
+
+        <ul class="relative w-[90%] max-w-md md:min-w-52 md:w-auto md:max-w-none max-h-[80vh] overflow-y-auto md:overflow-visible shadow-xl rounded-md text-base md:text-sm font-medium z-10 {{ $themeConfig['dropdowns']['bg'] }} {{ $themeConfig['dropdowns']['border'] }} {{ $themeConfig['dropdowns']['text'] }}">
+            @if($yat_is_mobile)
+                <li class="w-full border-b border-gray-200 dark:border-gray-600">
+                    <div class="p-3">
+                        {{ucfirst(__('yat::yat.options'))}}
+                    </div>
+                </li>
+            @endif
             @foreach ($options as $function => $option)
                 <li class="w-full border-b last:border-b-0 rounded-mc border-gray-300 dark:border-gray-600 {{ $themeConfig['dropdowns']['hover_bg'] }}">
                     <div class="flex items-center ps-3 pr-3">
                         <div 
                             wire:click="{{$function}}" 
-                            class="cursor-pointer w-full pr-3 py-3 ms-2 text-sm font-medium flex items-center {{ $themeConfig['dropdowns']['text'] }}" 
+                            class="cursor-pointer w-full pr-3 py-3 md:py-3 ms-2 text-base md:text-sm font-medium flex items-center {{ $themeConfig['dropdowns']['text'] }}" 
                             wire:loading.attr="disabled"
                             wire:loading.class="opacity-50"
                         >
@@ -51,7 +71,7 @@
                                     Si es null, no pasa nada. 
                                     Ejemplo resultante: class="mr-2 text-base leading-none text-blue-600"
                                 --}}
-                                <span class="mr-2 -ml-2 text-base leading-none">
+                                <span class="mr-2 -ml-2 text-lg md:text-base leading-none">
                                     {!! $option['icon'] !!}
                                 </span>
                             @endif
