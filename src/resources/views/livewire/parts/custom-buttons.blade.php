@@ -10,6 +10,7 @@
         :color="$color"
         :wire:click="$button['action'] ?? null"
         outline
+        class="w-full"
     >
         {!! $button['label'] !!}
     </x-beartropy-ui::button>
