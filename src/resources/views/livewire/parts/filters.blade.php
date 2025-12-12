@@ -47,17 +47,18 @@
                     />
 
                 @elseif($filter->type === 'bool')
-                    <div class="w-full h-full flex items-center mt-4">
+                    {{-- <div class="w-full h-full flex items-center mt-4">
                         <x-beartropy-ui::toggle
                             wire:model.live="filters.{{ $key }}.input"
                             label="{{ $filter->label }}"
                             color="{{ $theme }}"
                         />                
-                    </div>
-                    {{-- @php
+                    </div> --}}
+                    @php
                         $boolOptions = [
-                            ['value' => 1, 'label' => ucfirst(__('yat::yat.yes'))],
-                            ['value' => 0, 'label' => ucfirst(__('yat::yat.no'))]
+                            ['value' => "all", 'label' => ucfirst(__('yat::yat.all'))],
+                            ['value' => "true", 'label' => ucfirst(__('yat::yat.yes'))],
+                            ['value' => "false", 'label' => ucfirst(__('yat::yat.no'))]
                         ];
                     @endphp
                     <x-beartropy-ui::select 
@@ -69,7 +70,8 @@
                         option-label="label"
                         option-value="value"
                         :searchable="false"
-                    /> --}}
+                        :clearable="false"
+                    />
                 @endif
             </div>
         @endforeach

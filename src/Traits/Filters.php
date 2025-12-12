@@ -67,7 +67,9 @@ trait Filters
             $this->filters[$key]->input = trim($this->filters[$key]->input);
         }
         if ($this->filters[$key]->type == "bool") {
-            $this->filters[$key]->input = ($this->filters[$key]->input) ? $this->filters[$key]->compared_with['true'] : $this->filters[$key]->compared_with['false'];
+            if ($this->filters[$key]->input === 'all') {
+                $this->filters[$key]->input = null;
+            }
         }
         if ($this->filters[$key]->type == "daterange") {
             if (empty($value)) {
@@ -100,7 +102,11 @@ trait Filters
                     }
                 }
                 if ($filter->type == "bool") {
-                    if (!is_null($filter->input) && $filter->input != $item[$filter->key]) {
+                    if ($filter->input === 'all' || $filter->input === '' || is_null($filter->input)) {
+                        continue;
+                    }
+                    $boolVal = filter_var($filter->input, FILTER_VALIDATE_BOOLEAN);
+                    if ((bool) $item[$filter->key] !== $boolVal) {
                         return false;
                     }
                 }
