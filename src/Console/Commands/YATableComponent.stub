@@ -3,41 +3,65 @@
 namespace [namespace];
 
 use Livewire\Attributes\On;
+use Livewire\Attributes\Layout;
 use Beartropy\Tables\YATBaseTable;
+use Illuminate\Support\Facades\Auth;
 use Beartropy\Tables\Exports\GenericExport;
 use Beartropy\Tables\Classes\Columns\Column;
 use Beartropy\Tables\Classes\Columns\BoolColumn;
-use Beartropy\Tables\Classes\Filters\FilterString;
 use Beartropy\Tables\Classes\Columns\LinkColumn;
+use Beartropy\Tables\Classes\Filters\FilterBool;
+use Beartropy\Tables\Classes\Filters\FilterString;
+use Beartropy\Tables\Classes\Filters\FilterDateRange;
+use Beartropy\Tables\Classes\Filters\FilterSelectMagic;
 
 class [class] extends YATBaseTable
 {
 
     public $tableName = '[class]';
+    public string $theme = 'gray';
+
 
     public function settings(): void {
         $this->setTitle('[title]');
         $this->hasBulk(true);
-        [state-handler-notice]$this->useStateHandler([stateHandleBool]);
+        $this->useStateHandler(Auth::check());
+        $this->addButtons([
+            ["label" => 'Delete selected rows', "action" => "remove", "color" => "red"]
+        ]);
     }
-
     public function data() {
         return collect([
-            ['id' => 1, 'name' => 'Red', 'hex' => '#FF0000', 'isPrimary' => true],
-            ['id' => 2, 'name' => 'Green', 'hex' => '#00FF00', 'isPrimary' => true],
-            ['id' => 3, 'name' => 'Blue', 'hex' => '#0000FF', 'isPrimary' => true],
-            ['id' => 4, 'name' => 'Yellow', 'hex' => '#FFFF00', 'isPrimary' => false],
-            ['id' => 5, 'name' => 'Purple', 'hex' => '#800080', 'isPrimary' => false],
-            ['id' => 6, 'name' => 'Orange', 'hex' => '#FFA500', 'isPrimary' => false],
-            ['id' => 7, 'name' => 'Pink', 'hex' => '#FFC0CB', 'isPrimary' => false],
-            ['id' => 8, 'name' => 'Brown', 'hex' => '#A52A2A', 'isPrimary' => false],
-            ['id' => 9, 'name' => 'Gray', 'hex' => '#808080', 'isPrimary' => false],
-            ['id' => 10, 'name' => 'Black', 'hex' => '#000000', 'isPrimary' => false],
-            ['id' => 11, 'name' => 'White', 'hex' => '#FFFFFF', 'isPrimary' => false],
-            ['id' => 12, 'name' => 'Cyan', 'hex' => '#00FFFF', 'isPrimary' => false],
-            ['id' => 13, 'name' => 'Magenta', 'hex' => '#FF00FF', 'isPrimary' => false],
-            ['id' => 14, 'name' => 'Lime', 'hex' => '#00FF00', 'isPrimary' => false],
-            ['id' => 15, 'name' => 'Teal', 'hex' => '#008080', 'isPrimary' => false],
+            ['id' => 1, 'name' => 'Red', 'hex' => '#FF0000', 'isPrimary' => true, 'category' => 'Warm', 'created_at' => now()->subDays(1)->format('Y-m-d H:i:s')],
+            ['id' => 2, 'name' => 'Green', 'hex' => '#00FF00', 'isPrimary' => true, 'category' => 'Cool', 'created_at' => now()->subDays(2)->format('Y-m-d H:i:s')],
+            ['id' => 3, 'name' => 'Blue', 'hex' => '#0000FF', 'isPrimary' => true, 'category' => 'Cool', 'created_at' => now()->subDays(3)->format('Y-m-d H:i:s')],
+            ['id' => 4, 'name' => 'Yellow', 'hex' => '#FFFF00', 'isPrimary' => false, 'category' => 'Warm', 'created_at' => now()->subDays(4)->format('Y-m-d H:i:s')],
+            ['id' => 5, 'name' => 'Purple', 'hex' => '#800080', 'isPrimary' => false, 'category' => 'Cool', 'created_at' => now()->subDays(5)->format('Y-m-d H:i:s')],
+            ['id' => 6, 'name' => 'Orange', 'hex' => '#FFA500', 'isPrimary' => false, 'category' => 'Warm', 'created_at' => now()->subDays(6)->format('Y-m-d H:i:s')],
+            ['id' => 7, 'name' => 'Pink', 'hex' => '#FFC0CB', 'isPrimary' => false, 'category' => 'Warm', 'created_at'=> now()->subDays(7)->format('Y-m-d H:i:s')],
+            ['id' => 8, 'name' => 'Black', 'hex' => '#000000', 'isPrimary' => false, 'category' => 'Neutral', 'created_at'=> now()->subDays(8)->format('Y-m-d H:i:s')],
+            ['id' => 9, 'name' => 'White', 'hex' => '#FFFFFF', 'isPrimary' => false, 'category' => 'Neutral', 'created_at'=> now()->subDays(9)->format('Y-m-d H:i:s')],
+            ['id' => 10, 'name' => 'Cyan', 'hex' => '#00FFFF', 'isPrimary' => false, 'category' => 'Cool', 'created_at'=> now()->subDays(10)->format('Y-m-d H:i:s')],
+            ['id' => 11, 'name' => 'Magenta', 'hex' => '#FF00FF', 'isPrimary' => false, 'category' => 'Warm', 'created_at'=> now()->subDays(12)->format('Y-m-d H:i:s')],
+            ['id' => 12, 'name' => 'Lime', 'hex' => '#32CD32', 'isPrimary' => false, 'category' => 'Cool', 'created_at'=> now()->subDays(14)->format('Y-m-d H:i:s')],
+            ['id' => 13, 'name' => 'Teal', 'hex' => '#008080', 'isPrimary' => false, 'category' => 'Cool', 'created_at'=> now()->subDays(16)->format('Y-m-d H:i:s')],
+            ['id' => 14, 'name' => 'Brown', 'hex' => '#A52A2A', 'isPrimary' => false, 'category' => 'Neutral', 'created_at'=> now()->subDays(18)->format('Y-m-d H:i:s')],
+            ['id' => 15, 'name' => 'Gray', 'hex' => '#808080', 'isPrimary' => false, 'category' => 'Neutral', 'created_at'=> now()->subDays(20)->format('Y-m-d H:i:s')],
+            ['id' => 16, 'name' => 'Navy', 'hex' => '#000080', 'isPrimary' => false, 'category' => 'Cool', 'created_at'=> now()->subDays(22)->format('Y-m-d H:i:s')],
+            ['id' => 17, 'name' => 'Maroon', 'hex' => '#800000', 'isPrimary' => false, 'category' => 'Warm', 'created_at'=> now()->subDays(24)->format('Y-m-d H:i:s')],
+            ['id' => 18, 'name' => 'Silver', 'hex' => '#C0C0C0', 'isPrimary' => false, 'category' => 'Neutral', 'created_at'=> now()->subDays(26)->format('Y-m-d H:i:s')],
+            ['id' => 19, 'name' => 'Gold', 'hex' => '#FFD700', 'isPrimary' => false, 'category' => 'Warm', 'created_at'=> now()->subDays(28)->format('Y-m-d H:i:s')],
+            ['id' => 20, 'name' => 'Olive', 'hex' => '#808000', 'isPrimary' => false, 'category' => 'Warm', 'created_at'=> now()->subDays(30)->format('Y-m-d H:i:s')],
+            ['id' => 21, 'name' => 'Turquoise', 'hex' => '#40E0D0', 'isPrimary' => false, 'category' => 'Cool', 'created_at'=> now()->subDays(35)->format('Y-m-d H:i:s')],
+            ['id' => 22, 'name' => 'Lavender', 'hex' => '#E6E6FA', 'isPrimary' => false, 'category' => 'Cool', 'created_at'=> now()->subDays(38)->format('Y-m-d H:i:s')],
+            ['id' => 23, 'name' => 'Beige', 'hex' => '#F5F5DC', 'isPrimary' => false, 'category' => 'Neutral', 'created_at'=> now()->subDays(41)->format('Y-m-d H:i:s')],
+            ['id' => 24, 'name' => 'Indigo', 'hex' => '#4B0082', 'isPrimary' => false, 'category' => 'Cool', 'created_at'=> now()->subDays(44)->format('Y-m-d H:i:s')],
+            ['id' => 25, 'name' => 'Coral', 'hex' => '#FF7F50', 'isPrimary' => false, 'category' => 'Warm', 'created_at'=> now()->subDays(47)->format('Y-m-d H:i:s')],
+            ['id' => 26, 'name' => 'Crimson', 'hex' => '#DC143C', 'isPrimary' => false, 'category' => 'Warm', 'created_at'=> now()->subDays(50)->format('Y-m-d H:i:s')],
+            ['id' => 27, 'name' => 'Sky Blue', 'hex' => '#87CEEB', 'isPrimary' => false, 'category' => 'Cool', 'created_at'=> now()->subDays(53)->format('Y-m-d H:i:s')],
+            ['id' => 28, 'name' => 'Violet', 'hex' => '#EE82EE', 'isPrimary' => false, 'category' => 'Cool', 'created_at'=> now()->subDays(56)->format('Y-m-d H:i:s')],
+            ['id' => 29, 'name' => 'Salmon', 'hex' => '#FA8072', 'isPrimary' => false, 'category' => 'Warm', 'created_at'=> now()->subDays(58)->format('Y-m-d H:i:s')],
+            ['id' => 30, 'name' => 'Slate', 'hex' => '#708090', 'isPrimary' => false, 'category' => 'Neutral', 'created_at'=> now()->subDays(60)->format('Y-m-d H:i:s')],
         ]);
     }
 
@@ -56,30 +80,30 @@ class [class] extends YATBaseTable
                 ->href(function($row, $value){
                     return "https://www.google.com/search?q=".$value;
                 })
-                ->text('Search in google'),
+                ->target('_blank')
+                ->text('🔍︎ Search in google'),
             BoolColumn::make('Primary','isPrimary'),
+            Column::make('Category','category'),
+            Column::make('Created at','created_at'),
         ];
     }
 
     public function filters(): array {
         return [
-            FilterString::make('name')
+            FilterBool::make('Primary'),
+            FilterString::make('name'),
+            FilterSelectMagic::make('Category'),
+            FilterDateRange::make('Created at','created_at')
         ];
     }
 
     public function options(): array {
         return [
-            'export_selected' => 'Export selected rows',
-            'export_filtered' => 'Export data with filters',
-            'export_all' => 'Export all data',
-            'remove' => 'Delete selected rows',
+            "export_selected" => ["label"=>"Export selected rows", "icon"=> "☑️"],
+            "export_filtered" => ["label"=>"Export filtered rows", "icon"=> "🔍"],
+            "export_all" => ["label"=>"Export all rows", "icon"=> "📗"]
         ];
     }
-
-    /*
-        If you have Laravel Excel (https://laravel-excel.com/) this exports will work.
-        If you are using other export methods or do not want to export at all simply change/delete them at will.
-    */
 
     public function export_all() {
         $allData = $this->getAllData();
