@@ -70,7 +70,17 @@
         @includeWhen($has_filters, 'yat::livewire.parts.filters')
 
         <!-- Data Table -->
-        <div class="{{ $override_table_classes ? $table_classes : $table_classes. 'w-full overflow-x-auto rounded-lg'}}" >
+        <div class="relative {{ $override_table_classes ? $table_classes : $table_classes. 'w-full overflow-x-auto rounded-lg'}}" >
+            @if($loading_table_spinner)
+            <div
+                class="absolute inset-0 z-10 flex items-center justify-center bg-white/50 dark:bg-gray-900/50 backdrop-blur-[1px] hidden"
+                wire:loading.delay.class.remove="hidden"
+                wire:target="{{$trigger_spinner}}"
+            >
+                @includeUnless($loading_table_spinner_custom_view, 'yat::livewire.parts.loading-table')
+                @includeWhen($loading_table_spinner_custom_view, $loading_table_spinner_custom_view)
+            </div>
+            @endif
             <table class="min-w-full border-collapse border {{ $themeConfig['table']['wrapper'] }}">
                 <thead class="min-w-full {{ $themeConfig['table']['thead_bg'] }} {{ $sticky_header ? 'sticky -top-[0.125rem]' : '' }}">
                     <tr class="md:border-none uppercase text-sm leading-normal {{ $themeConfig['table']['tr_thead'] }}">
@@ -121,28 +131,11 @@
                         </td>
                     </tr>
                     @endif
-                    @if($loading_table_spinner)
-                    <tr
-                        class="hidden d-none bg-red"
-                        @if($loading_table_spinner)
-                            wire:loading.long.class.remove="hidden d-none"
-                            wire:target="{{$trigger_spinner}}"
-                        @endif
 
-                    >
-                        <td colspan="{{ $cols = ($has_bulk) ? count($columns) + 1 : count($columns) }}">
-                            @includeUnless($loading_table_spinner_custom_view, 'yat::livewire.parts.loading-table')
-                            @includeWhen($loading_table_spinner_custom_view, $loading_table_spinner_custom_view)
-                        </td>
-                    </tr>
-                    @endif
                     @forelse ($rows as $key => $row)
                         <tr
                             class="md:border-none transition-colors even:bg-white {{ $themeConfig['table']['tr_body_hover'] }} {{ $themeConfig['table']['border_b'] }} {{ $themeConfig['table']['tr_body_odd'] }} {{ $themeConfig['table']['tr_body_even'] }}"
-                            @if($loading_table_spinner)
-                                wire:loading.long.class.add="hidden d-none"
-                                wire:target="{{$trigger_spinner}}"
-                            @endif
+
                         >
                             @if($has_counter)
                                 <td class="pl-2 text-sm font-extralight {{ $themeConfig['table']['td_text'] }}">{{ $loop->iteration }}</td>
@@ -222,13 +215,9 @@
                         @endif
                     @empty
                         <tr
-                            @if($loading_table_spinner)
-                                wire:loading.long.class.add="hidden d-none"
-                                wire:target="{{$trigger_spinner}}"
-                            @endif
                         >
-                            <td colspan="{{ $cols = ($has_bulk) ? count($columns) + 1 : count($columns) }}" class="text-center py-5">
-                                <div class="text-xl p-3 {{ $themeConfig['table']['empty_text'] }}">{{ucfirst(__('yat::yat.empty_search'))}}</div>
+                            <td colspan="{{ ($has_counter ? 1 : 0) + ($has_bulk ? 1 : 0) + count($columns) }}" class="text-center py-5">
+                                <div class="flex justify-center items-center w-full text-xl p-3 {{ $themeConfig['table']['empty_text'] }}">{{ucfirst(__('yat::yat.empty_search'))}}</div>
                             </td>
                         </tr>
                     @endforelse
