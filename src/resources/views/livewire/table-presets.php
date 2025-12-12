@@ -1,6 +1,68 @@
 <?php
 
 return [
+    'beartropy' => [
+        'general' => [
+            'title' => 'text-gray-600 dark:text-gray-300',
+            'text_main' => 'text-gray-900 dark:text-gray-400',
+            'text_secondary' => 'text-gray-700 dark:text-gray-300',
+            'bg_main' => 'bg-gray-100 dark:bg-gray-800',
+            'ring_main' => 'ring-gray-300 dark:ring-gray-500',
+            'focus_ring' => 'focus:ring-gray-400 dark:focus:ring-gray-400',
+        ],
+        'table' => [
+            'wrapper' => 'border-gray-200 dark:border-gray-700',
+            'thead_bg' => 'bg-gray-50 dark:bg-gray-800',
+            'tr_thead' => 'border-b dark:border-b-gray-700 bg-gray-100 dark:bg-gray-900 text-gray-600 dark:text-gray-300',
+            'th' => 'text-gray-500 dark:bg-gray-900 dark:text-gray-400',
+            'tr_body_hover' => 'hover:bg-gray-200 dark:hover:bg-gray-700',
+            'tr_body_odd' => 'odd:bg-gray-100 dark:odd:bg-gray-900',
+            'tr_body_even' => 'dark:even:bg-gray-800',
+            'td_text' => 'text-gray-600 dark:text-gray-300',
+            'td_text_secondary' => 'text-gray-700 dark:text-gray-300',
+            'border_b' => 'border-b dark:border-b-gray-700',
+            'empty_text' => 'text-gray-700 dark:text-gray-300',
+        ],
+        'buttons' => [
+            'filter_toggle' => 'text-gray-900 ring-gray-300 dark:ring-gray-500 focus:ring-gray-400 dark:focus:ring-gray-400 bg-gray-100 dark:bg-gray-800 dark:text-gray-400',
+            'column_toggle' => 'text-gray-900 ring-gray-300 dark:ring-gray-500 focus:ring-gray-400 dark:focus:ring-gray-400 bg-gray-100 dark:bg-gray-800 dark:text-gray-400',
+            'options_toggle' => 'text-gray-900 ring-gray-300 dark:ring-gray-500 focus:ring-gray-400 dark:focus:ring-gray-400 bg-gray-100 dark:bg-gray-800 dark:text-gray-400',
+            'per_page' => 'text-gray-900 ring-gray-300 dark:ring-gray-500 focus:ring-gray-400 dark:focus:ring-gray-400 bg-gray-100 dark:bg-gray-800 dark:text-gray-400',
+            'pagination' => 'text-gray-900 ring-gray-300 dark:ring-gray-500 focus:ring-gray-400 dark:focus:ring-gray-400 bg-gray-100 dark:bg-gray-800 dark:text-gray-400',
+            'default' => 'bg-opacity-60 dark:bg-opacity-30 text-gray-600 bg-gray-300 dark:bg-gray-600 dark:text-gray-400 hover:bg-opacity-60 dark:hover:bg-opacity-30 hover:text-gray-800 hover:bg-gray-400 dark:hover:text-gray-400 dark:hover:bg-gray-500 focus:bg-opacity-60 dark:focus:bg-opacity-30 focus:ring-offset-2 focus:text-gray-800 focus:bg-gray-400 focus:ring-gray-400 dark:focus:text-gray-400 dark:focus:bg-gray-500 dark:focus:ring-gray-700',
+        ],
+        'dropdowns' => [
+            'bg' => 'bg-white dark:bg-gray-800',
+            'border' => 'border-gray-200 dark:border-gray-600',
+            'text' => 'text-gray-700 dark:text-gray-200',
+            'divide' => 'divide-gray-100 dark:divide-gray-700/50',
+            'hover_bg' => 'hover:bg-gray-100 dark:hover:bg-gray-700',
+            'hover_text' => 'text-gray-700 dark:text-gray-300 dark:hover:text-white',
+            'active_bg' => 'bg-gray-100 dark:bg-gray-700',
+        ],
+        'inputs' => [
+            'border' => 'ring-gray-300 dark:ring-gray-500',
+            'text' => 'text-gray-900 dark:text-gray-400',
+            'placeholder' => 'placeholder:text-gray-400 dark:placeholder:text-gray-500',
+            'wrapper_bg' => 'bg-background-white dark:bg-background-dark',
+            'checkbox' => 'text-gray-500 bg-gray-100 border-gray-400 focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500',
+            'toggle_bg' => 'bg-gray-200 dark:bg-gray-700',
+            'toggle_circle_border' => 'border-gray-300 dark:border-gray-600',
+            'icon' => 'text-gray-500 dark:text-gray-400',
+            'icon_remove' => 'text-gray-400',
+        ],
+        'filters' => [
+            'label' => 'text-gray-700 dark:text-gray-300',
+            'label_secondary' => 'text-gray-600 dark:text-gray-300',
+        ],
+        'pagination' => [
+            'text' => 'text-gray-700 dark:text-gray-400',
+        ],
+        'loading' => [
+            'text' => 'text-gray-500 dark:text-gray-200',
+            'border' => 'border-gray-300',
+        ],
+    ],
     'slate' => [
         'general' => [
             'title' => 'text-slate-600 dark:text-slate-300',

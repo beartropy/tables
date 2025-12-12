@@ -24,13 +24,20 @@ trait View
 
     public $yat_custom_buttons = [];
 
-    public string $theme = 'gray';
+    public string $theme = 'slate';
+
+    public ?string $bulkThemeOverride = null;
+
     public array $themeConfig = [];
 
     public function setTheme(string $theme) {
         $this->theme = $theme;
         $presets = require __DIR__ . '/../resources/views/livewire/table-presets.php';
         $this->themeConfig = $presets[$theme] ?? $presets['slate'];
+    }
+
+    public function setBulkThemeOverride(?string $theme) {
+        $this->bulkThemeOverride = $theme;
     }
 
     public function mountView() {
