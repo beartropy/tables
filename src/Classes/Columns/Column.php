@@ -20,6 +20,7 @@ class Column
     public $th_classes = '';
     public $has_modified_data = false;
     public $hide_on_mobile = false;
+    public $collapseOnMobile = false;
 
     protected static $existingKeys = [];
 
@@ -32,6 +33,11 @@ class Column
     public static function make(string $label, ?string $key = null): Column
     {
         return new static($label, $key);
+    }
+
+    public function collapseOnMobile(bool $bool = true): self {
+        $this->collapseOnMobile = $bool;
+        return $this;
     }
 
     protected function generateUniqueKey(string $label): string {

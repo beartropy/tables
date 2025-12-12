@@ -110,13 +110,16 @@
                                 </th>
                             @endif
                         @endforeach
+                        @if($yat_is_mobile && $hasMobileCollapsedColumns)
+                            <th class="px-5 py-3 text-xs font-medium uppercase tracking-wider {{ $themeConfig['table']['th'] }}"></th>
+                        @endif
                     </tr>
                 </thead>
 
                 <tbody class="min-w-full">
                     @if($selectAll && $all_data_count != count($rows))
                     <tr >
-                        <td colspan="{{ $cols = ($has_bulk) ? count($columns) + 1 : count($columns) }}">
+                        <td colspan="{{ $cols = ($has_bulk ? 1 : 0) + ($has_counter ? 1 : 0) + count($columns) + (($yat_is_mobile && $hasMobileCollapsedColumns) ? 1 : 0) }}">
                             <div class="px-5 py-3 whitespace-nowrap text-pretty text-base font-normal {{ $themeConfig['table']['empty_text'] }}">
                                 @if($filtered_data_count && $filtered_data_count != $all_data_count)
                                     Se seleccionaron {{ count($yat_selected_checkbox) }} de {{ $filtered_data_count }} registros. Haga <span class="cursor-pointer font-bold underline link" wire:click="select_all_data(true)">click aquí</span> para seleccionar todos los registros.<br> Existen filtros aplicados <span class="cursor-pointer font-bold underline link" wire:click="clearAllFilters(true)">{{__('yat::yat.remove_all_filters')}}</span>
@@ -158,7 +161,7 @@
                                 </td>
                             @endif
                             @foreach ($columns as $column)
-                              @if (!$column->isHidden && $column->isVisible)
+                                @if (!$column->isHidden && $column->isVisible)
                                     @if(property_exists($column, 'hasView') && $column->hasView)
                                     <td class="">
                                         @include($column->view)
@@ -201,10 +204,26 @@
                                     @endif
                                 @endif
                             @endforeach
+                            @if($yat_is_mobile && $hasMobileCollapsedColumns)
+                                <td class="px-5 py-3 whitespace-nowrap text-center text-sm font-normal {{ $themeConfig['table']['td_text'] }}">
+                                    <button 
+                                        wire:click="expandMobileRow('{{ $row[$column_id] }}')"
+                                        class="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                            @if(in_array($row[$column_id], $yatable_expanded_rows))
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" />
+                                            @else
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                            @endif
+                                        </svg>
+                                    </button>
+                                </td>
+                            @endif
                         </tr>
                         @if (isset($row[$column_id]) && in_array($row[$column_id], $yatable_expanded_rows))
                             <tr>
-                                <td colspan="{{ $cols = ($has_bulk) ? count($columns) + 1 : count($columns) }}" class="p-1">
+                                <td colspan="{{ $cols = ($has_bulk ? 1 : 0) + ($has_counter ? 1 : 0) + count($columns) + (($yat_is_mobile && $hasMobileCollapsedColumns) ? 1 : 0) }}" class="p-1">
                                     @if($yatable_expanded_rows_is_component)
                                         @livewire($yatable_expanded_rows_content[$row[$column_id]]['component'], $yatable_expanded_rows_content[$row[$column_id]]['parameters'], key('yatable_expanded_rows_content'.$row[$column_id]))
                                     @else
@@ -216,7 +235,7 @@
                     @empty
                         <tr
                         >
-                            <td colspan="{{ ($has_counter ? 1 : 0) + ($has_bulk ? 1 : 0) + count($columns) }}" class="text-center py-5">
+                            <td colspan="{{ ($has_counter ? 1 : 0) + ($has_bulk ? 1 : 0) + count($columns) + (($yat_is_mobile && $hasMobileCollapsedColumns) ? 1 : 0) }}" class="text-center py-5">
                                 <div class="flex justify-center items-center w-full text-xl p-3 {{ $themeConfig['table']['empty_text'] }}">{{ucfirst(__('yat::yat.empty_search'))}}</div>
                             </td>
                         </tr>

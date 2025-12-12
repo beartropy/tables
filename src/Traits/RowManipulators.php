@@ -60,6 +60,22 @@ trait RowManipulators
         $this->updateCacheData($data);
     }
 
+    public function expandMobileRow($rowId) {
+        // Find the row data
+        $row = $this->getAllData()->firstWhere($this->column_id, $rowId);
+
+        if (!$row) return;
+
+        // Render the details view
+        $content = view('yat::livewire.parts.mobile-details', [
+            'row' => $row,
+            'columns' => $this->mobileCollapsedColumns,
+            'row_id_name' => $this->column_id
+        ])->render();
+
+        $this->toggleExpandedRow($rowId, $content);
+    }
+
     public function toggleBoolean($id, $column) {
 
         $trigger = $this->columns->where('key',$column)->first()->trigger;

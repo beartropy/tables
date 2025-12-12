@@ -13,12 +13,29 @@ trait Columns
     public $columns;
     public $show_column_toggle = true;
     public $column_toggle_dd_status = false;
+    public $hasMobileCollapsedColumns = false;
+    public $mobileCollapsedColumns = [];
 
     public function setColumns() {
+        $this->mobileCollapsedColumns = [];
         $this->columns = collect($this->columns());
         $this->columns = $this->columns->map(function ($column) {
-            if ($this->yat_is_mobile && $column->hide_on_mobile) {
-            $column->isVisible = false;
+            if ($this->yat_is_mobile) {
+                if ($column->hide_on_mobile) {
+                    $column->isVisible = false;
+                }
+                if ($column->collapseOnMobile) {
+                    $column->isVisible = false;
+                    $this->hasMobileCollapsedColumns = true;
+                    // We need to keep track of collapsed columns to render them in the details view
+                    $colVars = get_object_vars($column);
+                    foreach ($colVars as $key => $value) {
+                        if ($value instanceof Closure) {
+                            $colVars[$key] = null;
+                        }
+                    }
+                    $this->mobileCollapsedColumns[] = (object) $colVars;
+                }
             }
             return $column;
         });
