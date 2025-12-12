@@ -70,21 +70,33 @@ class [class] extends YATBaseTable
             Column::make('Name','name')
                 ->styling('text-lg font-bold')
                 ->hideFromSelector(true),
-            Column::make('Hex Code','hex'),
+                
+            Column::make('Hex Code','hex')
+                ->collapseOnMobile(true),
+
             Column::make('Color')
                 ->customData(function($row, $value){
                     return '<span style="color:'.$row['hex'].'">██████████████</span>';
                 })
-                ->toHtml(),
+                ->toHtml()
+                ->collapseOnMobile(true),
+            
             LinkColumn::make('Google it','name')
                 ->href(function($row, $value){
                     return "https://www.google.com/search?q=".$value;
                 })
-                ->target('_blank')
-                ->text('🔍︎ Search in google'),
-            BoolColumn::make('Primary','isPrimary'),
-            Column::make('Category','category'),
-            Column::make('Created at','created_at'),
+                ->text('Search in google')
+                ->target("_blank")
+                ->collapseOnMobile(true),
+            
+            BoolColumn::make('Primary','isPrimary')
+                ->collapseOnMobile(true),
+            
+            Column::make('Category','category')
+                ->collapseOnMobile(true),
+
+            Column::make('Created at','created_at')
+                ->collapseOnMobile(true),
         ];
     }
 
