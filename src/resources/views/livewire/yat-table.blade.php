@@ -199,7 +199,7 @@
                                     @php
                                         $link_data = json_decode($row[$column->key],true);
                                     @endphp
-                                    <a href="{{$link_data[0]}}" class="{{$column->tag_classes ?? 'cursor-pointer'}}">{!! $link_data[1] !!}</a>
+                                    <a href="{{$link_data[0]}}" class="{{$column->tag_classes ?? 'cursor-pointer'}}" target="{{ $column->target ?? '' }}">{!! $link_data[1] !!}</a>
                                     </td>
                                     @else
                                     <td class="px-5 py-3 whitespace-nowrap text-pretty text-sm font-normal {{ $themeConfig['table']['td_text'] }} {{$column->classes}} ">
