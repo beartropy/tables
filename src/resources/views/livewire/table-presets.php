@@ -33,7 +33,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-gray-800',
-            'border' => 'border-gray-200 dark:border-gray-600',
+            'border' => 'border border-gray-200 dark:border-gray-600',
             'text' => 'text-gray-700 dark:text-gray-200',
             'divide' => 'divide-gray-100 dark:divide-gray-700/50',
             'hover_bg' => 'hover:bg-gray-100 dark:hover:bg-gray-700',
@@ -95,7 +95,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-slate-800',
-            'border' => 'border-slate-200 dark:border-slate-600',
+            'border' => 'border border-slate-200 dark:border-slate-600',
             'text' => 'text-slate-700 dark:text-slate-200',
             'divide' => 'divide-slate-100 dark:divide-slate-700/50',
             'hover_bg' => 'hover:bg-slate-100 dark:hover:bg-slate-700',
@@ -156,7 +156,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-gray-800',
-            'border' => 'border-gray-200 dark:border-gray-600',
+            'border' => 'border border-gray-200 dark:border-gray-600',
             'text' => 'text-gray-700 dark:text-gray-200',
             'divide' => 'divide-gray-100 dark:divide-gray-700/50',
             'hover_bg' => 'hover:bg-gray-100 dark:hover:bg-gray-700',
@@ -217,7 +217,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-zinc-800',
-            'border' => 'border-zinc-200 dark:border-zinc-600',
+            'border' => 'border border-zinc-200 dark:border-zinc-600',
             'text' => 'text-zinc-700 dark:text-zinc-200',
             'divide' => 'divide-zinc-100 dark:divide-zinc-700/50',
             'hover_bg' => 'hover:bg-zinc-100 dark:hover:bg-zinc-700',
@@ -278,7 +278,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-neutral-800',
-            'border' => 'border-neutral-200 dark:border-neutral-600',
+            'border' => 'border border-neutral-200 dark:border-neutral-600',
             'text' => 'text-neutral-700 dark:text-neutral-200',
             'divide' => 'divide-neutral-100 dark:divide-neutral-700/50',
             'hover_bg' => 'hover:bg-neutral-100 dark:hover:bg-neutral-700',
@@ -339,7 +339,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-stone-800',
-            'border' => 'border-stone-200 dark:border-stone-600',
+            'border' => 'border border-stone-200 dark:border-stone-600',
             'text' => 'text-stone-700 dark:text-stone-200',
             'divide' => 'divide-stone-100 dark:divide-stone-700/50',
             'hover_bg' => 'hover:bg-stone-100 dark:hover:bg-stone-700',
@@ -400,7 +400,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-gray-800',
-            'border' => 'border-red-200 dark:border-gray-600',
+            'border' => 'border border-red-300 dark:border-red-600',
             'text' => 'text-red-700 dark:text-red-200',
             'divide' => 'divide-red-100 dark:divide-gray-700/50',
             'hover_bg' => 'hover:bg-red-100 dark:hover:bg-gray-700',
@@ -461,7 +461,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-gray-800',
-            'border' => 'border-orange-200 dark:border-gray-600',
+            'border' => 'border border-orange-300 dark:border-orange-600',
             'text' => 'text-orange-700 dark:text-orange-200',
             'divide' => 'divide-orange-100 dark:divide-gray-700/50',
             'hover_bg' => 'hover:bg-orange-100 dark:hover:bg-gray-700',
@@ -522,7 +522,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-gray-800',
-            'border' => 'border-amber-200 dark:border-gray-600',
+            'border' => 'border border-amber-300 dark:border-amber-600',
             'text' => 'text-amber-700 dark:text-amber-200',
             'divide' => 'divide-amber-100 dark:divide-gray-700/50',
             'hover_bg' => 'hover:bg-amber-100 dark:hover:bg-gray-700',
@@ -583,7 +583,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-gray-800',
-            'border' => 'border-yellow-200 dark:border-gray-600',
+            'border' => 'border border-yellow-300 dark:border-yellow-600',
             'text' => 'text-yellow-700 dark:text-yellow-200',
             'divide' => 'divide-yellow-100 dark:divide-gray-700/50',
             'hover_bg' => 'hover:bg-yellow-100 dark:hover:bg-gray-700',
@@ -644,7 +644,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-gray-800',
-            'border' => 'border-lime-200 dark:border-gray-600',
+            'border' => 'border border-lime-300 dark:border-lime-600',
             'text' => 'text-lime-700 dark:text-lime-200',
             'divide' => 'divide-lime-100 dark:divide-gray-700/50',
             'hover_bg' => 'hover:bg-lime-100 dark:hover:bg-gray-700',
@@ -705,7 +705,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-gray-800',
-            'border' => 'border-green-200 dark:border-gray-600',
+            'border' => 'border border-green-300 dark:border-green-600',
             'text' => 'text-green-700 dark:text-green-200',
             'divide' => 'divide-green-100 dark:divide-gray-700/50',
             'hover_bg' => 'hover:bg-green-100 dark:hover:bg-gray-700',
@@ -766,7 +766,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-gray-800',
-            'border' => 'border-emerald-200 dark:border-gray-600',
+            'border' => 'border border-emerald-300 dark:border-emerald-600',
             'text' => 'text-emerald-700 dark:text-emerald-200',
             'divide' => 'divide-emerald-100 dark:divide-gray-700/50',
             'hover_bg' => 'hover:bg-emerald-100 dark:hover:bg-gray-700',
@@ -827,7 +827,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-gray-800',
-            'border' => 'border-teal-200 dark:border-gray-600',
+            'border' => 'border border-teal-300 dark:border-teal-600',
             'text' => 'text-teal-700 dark:text-teal-200',
             'divide' => 'divide-teal-100 dark:divide-gray-700/50',
             'hover_bg' => 'hover:bg-teal-100 dark:hover:bg-gray-700',
@@ -888,7 +888,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-gray-800',
-            'border' => 'border-cyan-200 dark:border-gray-600',
+            'border' => 'border border-cyan-300 dark:border-cyan-600',
             'text' => 'text-cyan-700 dark:text-cyan-200',
             'divide' => 'divide-cyan-100 dark:divide-gray-700/50',
             'hover_bg' => 'hover:bg-cyan-100 dark:hover:bg-gray-700',
@@ -949,7 +949,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-gray-800',
-            'border' => 'border-sky-200 dark:border-gray-600',
+            'border' => 'border border-sky-300 dark:border-sky-600',
             'text' => 'text-sky-700 dark:text-sky-200',
             'divide' => 'divide-sky-100 dark:divide-gray-700/50',
             'hover_bg' => 'hover:bg-sky-100 dark:hover:bg-gray-700',
@@ -1010,7 +1010,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-gray-800',
-            'border' => 'border-blue-200 dark:border-gray-600',
+            'border' => 'border border-blue-300 dark:border-blue-600',
             'text' => 'text-blue-700 dark:text-blue-200',
             'divide' => 'divide-blue-100 dark:divide-gray-700/50',
             'hover_bg' => 'hover:bg-blue-100 dark:hover:bg-gray-700',
@@ -1071,7 +1071,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-gray-800',
-            'border' => 'border-indigo-200 dark:border-gray-600',
+            'border' => 'border border-indigo-300 dark:border-indigo-600',
             'text' => 'text-indigo-700 dark:text-indigo-200',
             'divide' => 'divide-indigo-100 dark:divide-gray-700/50',
             'hover_bg' => 'hover:bg-indigo-100 dark:hover:bg-gray-700',
@@ -1132,7 +1132,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-gray-800',
-            'border' => 'border-violet-200 dark:border-gray-600',
+            'border' => 'border border-violet-300 dark:border-violet-600',
             'text' => 'text-violet-700 dark:text-violet-200',
             'divide' => 'divide-violet-100 dark:divide-gray-700/50',
             'hover_bg' => 'hover:bg-violet-100 dark:hover:bg-gray-700',
@@ -1193,7 +1193,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-gray-800',
-            'border' => 'border-purple-200 dark:border-gray-600',
+            'border' => 'border border-purple-300 dark:border-purple-600',
             'text' => 'text-purple-700 dark:text-purple-200',
             'divide' => 'divide-purple-100 dark:divide-gray-700/50',
             'hover_bg' => 'hover:bg-purple-100 dark:hover:bg-gray-700',
@@ -1254,7 +1254,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-gray-800',
-            'border' => 'border-fuchsia-200 dark:border-gray-600',
+            'border' => 'border border-fuchsia-300 dark:border-fuchsia-600',
             'text' => 'text-fuchsia-700 dark:text-fuchsia-200',
             'divide' => 'divide-fuchsia-100 dark:divide-gray-700/50',
             'hover_bg' => 'hover:bg-fuchsia-100 dark:hover:bg-gray-700',
@@ -1315,7 +1315,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-gray-800',
-            'border' => 'border-pink-200 dark:border-gray-600',
+            'border' => 'border border-pink-300 dark:border-pink-600',
             'text' => 'text-pink-700 dark:text-pink-200',
             'divide' => 'divide-pink-100 dark:divide-gray-700/50',
             'hover_bg' => 'hover:bg-pink-100 dark:hover:bg-gray-700',
@@ -1376,7 +1376,7 @@ return [
         ],
         'dropdowns' => [
             'bg' => 'bg-white dark:bg-gray-800',
-            'border' => 'border-rose-200 dark:border-gray-600',
+            'border' => 'border border-rose-300 dark:border-rose-600',
             'text' => 'text-rose-700 dark:text-rose-200',
             'divide' => 'divide-rose-100 dark:divide-gray-700/50',
             'hover_bg' => 'hover:bg-rose-100 dark:hover:bg-gray-700',

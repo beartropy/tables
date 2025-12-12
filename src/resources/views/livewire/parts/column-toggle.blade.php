@@ -32,7 +32,7 @@
     </x-beartropy-ui::button>
     <!-- Dropdown Menu -->
     <div x-cloak x-show="isOpenColumnToggle" x-transition @click.outside="isOpenColumnToggle = false" @keydown.down.prevent="$focus.wrap().next()" @keydown.up.prevent="$focus.wrap().previous()" class="shadow-xl min-w-52 z-30 absolute top-12 inline-block rounded-md whitespace-nowrap {{$yat_is_mobile ? 'left-1/2 transform -translate-x-1/2' : 'right-0'}}" role="menu">
-        <ul class="rounded-md text-sm font-medium border {{ $themeConfig['dropdowns']['bg'] }} {{ $themeConfig['dropdowns']['border'] }} {{ $themeConfig['dropdowns']['text'] }}">
+        <ul class="rounded-md text-sm font-medium {{ $themeConfig['dropdowns']['bg'] }} {{ $themeConfig['dropdowns']['border'] }} {{ $themeConfig['dropdowns']['text'] }}">
             @if(!$yat_is_mobile && $handle_state)
             <li class="w-full border-b rounded-t-lg rounded-md {{ $themeConfig['dropdowns']['border'] }}">
                 <div class="p-3">

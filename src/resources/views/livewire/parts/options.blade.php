@@ -33,9 +33,9 @@
     </x-beartropy-ui::button>
     <!-- Dropdown Menu -->
     <div x-cloak x-show="isOpenOptionsToggle" x-transition @click.outside="isOpenOptionsToggle = false" @keydown.down.prevent="$focus.wrap().next()" @keydown.up.prevent="$focus.wrap().previous()" class="shadow-xl min-w-52 z-30 absolute top-12 inline-block rounded-md whitespace-nowrap {{$yat_is_mobile ? 'left-1/2 transform -translate-x-1/2' : 'right-0'}}" role="menu">
-        <ul class="rounded-md text-sm font-medium border {{ $themeConfig['dropdowns']['bg'] }} {{ $themeConfig['dropdowns']['border'] }} {{ $themeConfig['dropdowns']['text'] }}">
+        <ul class="rounded-md text-sm font-medium {{ $themeConfig['dropdowns']['bg'] }} {{ $themeConfig['dropdowns']['border'] }} {{ $themeConfig['dropdowns']['text'] }}">
             @foreach ($options as $function => $option)
-                <li class="w-full border-b last:border-b-0 rounded-mc {{ $themeConfig['dropdowns']['border'] }} {{ $themeConfig['dropdowns']['hover_bg'] }}">
+                <li class="w-full border-b last:border-b-0 rounded-mc border-gray-300 dark:border-gray-600 {{ $themeConfig['dropdowns']['hover_bg'] }}">
                     <div class="flex items-center ps-3 pr-3">
                         <div 
                             wire:click="{{$function}}" 

@@ -1,6 +1,6 @@
 {
     "name": "beartropy/tables",
-    "version": "2.0.7",
+    "version": "2.0.8",
     "description": "This is yet another laravel livewire table and come as is. You can filter, you can sort, you can bulk, toggle columns, the basics.",
     "license": "MIT",
     "keywords": [
