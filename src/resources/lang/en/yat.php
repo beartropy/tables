@@ -24,6 +24,7 @@ return [
     'false' => 'no',
     'select_filter_warning' => '<b>:filtered_count</b> records selected from a total of <b>:all_data_count</b>. To select all records you must ',
     'remove_all_filters' => 'delete all filters',
-    'per_page_display' => 'rows per page'
+    'per_page_display' => 'rows per page',
+    'loading_data' => 'Loading data...'
 
 ];
