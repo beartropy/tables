@@ -61,7 +61,50 @@ trait Filters
                 $filter->key = $this->getColumnKey($filter->label);
             }
             if ($filter->type == 'magic-select') {
-                $filter->options = $this->getAllData()->pluck($filter->key)->unique()->values();
+                $pluckKey = $filter->key;
+                
+                // If filter key is explicitly the DB column, we need to find the matching Column key (slug)
+                // because getAllData returns data keyed by Column keys.
+                // We trust $this->columns is available (it usually is in YAT tables).
+                if (isset($this->columns)) {
+                     $matchingCol = $this->columns->first(function($c) use ($filter) {
+                         return ($c->index ?? $c->key) === $filter->key;
+                     });
+                     if ($matchingCol) {
+                         $pluckKey = $matchingCol->key;
+                     }
+                }
+
+                $options = $this->getAllData()->pluck($pluckKey)->unique()->values();
+                // Map objects/arrays to strings if necessary
+                $filter->options = $options->map(function($item) {
+                     if (is_string($item) || is_numeric($item) || is_bool($item)) {
+                         return $item;
+                     }
+                     if (is_object($item)) {
+                         if (method_exists($item, '__toString')) {
+                             return (string) $item;
+                         }
+                         $candidates = ['name', 'label', 'title', 'slug', 'id'];
+                         foreach ($candidates as $candidate) {
+                             if (isset($item->$candidate)) {
+                                 return $item->$candidate;
+                             }
+                         }
+                         // Try array access on object if supported? Or just get vars
+                         // Usually Eloquent models support property access used above.
+                     }
+                     if (is_array($item)) {
+                         $candidates = ['name', 'label', 'title', 'slug', 'id'];
+                         foreach ($candidates as $candidate) {
+                             if (isset($item[$candidate])) {
+                                 return $item[$candidate];
+                             }
+                         }
+                     }
+                     return $item; // Fallback, let it be [object Object] or whatever if we failed
+                })->filter()->unique()->values();
+                
                 $filter->type = 'select';
             }
         }
@@ -223,11 +266,21 @@ trait Filters
             }
 
             $key = $filter->key;
-            $relation = null;
-            $column = $key;
+            $dbColumn = $key;
+            
+            // Resolve actual DB column if key is a slug
+            if (isset($this->columns)) {
+                $col = $this->columns->firstWhere('key', $key);
+                if ($col) {
+                    $dbColumn = $col->index ?? $col->key;
+                }
+            }
 
-            if (str_contains($key, '.')) {
-                $parts = explode('.', $key);
+            $relation = null;
+            $column = $dbColumn;
+
+            if (str_contains($dbColumn, '.')) {
+                $parts = explode('.', $dbColumn);
                 $column = array_pop($parts);
                 $relation = implode('.', $parts);
             }
@@ -239,18 +292,18 @@ trait Filters
                             $q->where($column, 'like', '%' . $filter->input . '%');
                         });
                     } else {
-                        $query->where($key, 'like', '%' . $filter->input . '%');
+                        $query->where($dbColumn, 'like', '%' . $filter->input . '%');
                     }
                 }
             }
-            if ($filter->type == "select") {
+            if ($filter->type == "select" || $filter->type == "magic-select") {
                 if ($filter->input) {
                    if ($relation) {
                         $query->whereHas($relation, function($q) use ($column, $filter) {
                             $q->where($column, $filter->input);
                         });
                     } else {
-                        $query->where($key, $filter->input);
+                        $query->where($dbColumn, $filter->input);
                     }
                 }
             }
@@ -264,7 +317,7 @@ trait Filters
                         $q->where($column, $boolVal);
                     });
                 } else {
-                    $query->where($key, $boolVal);
+                    $query->where($dbColumn, $boolVal);
                 }
             }
             if ($filter->type == "daterange") {
@@ -277,7 +330,7 @@ trait Filters
                            ]);
                         });
                     } else {
-                       $query->whereBetween($key, [
+                       $query->whereBetween($dbColumn, [
                            $filter->daterange['start'], 
                            $filter->daterange['end']
                        ]);
