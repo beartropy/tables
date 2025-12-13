@@ -867,6 +867,3 @@ If you have [Laravel Excel](https://laravel-excel.com/) the stub comes with thre
 
 If you have other ways to expor the data or simply dont want to export at all feel free to delete the functions in the component.
 
----
-
-[![Image description](https://i.postimg.cc/SxB7b1T0/fantismic-no-background.png)](https://github.com/beartropy)
