@@ -14,6 +14,12 @@ class Filter
     public $column;
     public $key;
     public $input;
+    public $queryCallback;
+
+    public function query(callable $callback) {
+        $this->queryCallback = $callback;
+        return $this;
+    }
 
     protected static $existingKeys = [];
 

@@ -43,6 +43,7 @@ class YATBaseTable extends Component
         ;
 
     public $model;
+    public $with = [];
 
     private $userData;
 

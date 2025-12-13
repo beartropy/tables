@@ -41,8 +41,21 @@ trait Columns
         });
 
         $this->columns = $this->columns->map(function ($item) {
-            return (object) get_object_vars($item);
+            $vars = get_object_vars($item);
+            foreach ($vars as $key => $value) {
+                if ($value instanceof Closure) {
+                    $vars[$key] = null;
+                }
+            }
+            return (object) $vars;
         });
+    }
+
+    public function getFreshColumns() {
+        if (method_exists(\Beartropy\Tables\Classes\Columns\Column::class, 'resetStaticKeys')) {
+            \Beartropy\Tables\Classes\Columns\Column::resetStaticKeys();
+        }
+        return collect($this->columns());
     }
 
     public function showColumnToggle(bool $bool) {

@@ -42,12 +42,23 @@ trait Sort
     public function sortData($data) {
 
         if ($this->sortColumn) {
-            $sort_column = $this->columns->where('key',strtolower($this->sortColumn))->first();           
+            // Retrieve fresh columns to access the closure if sorting by user selection
+            $freshCols = $this->getFreshColumns();
+            $sort_column = $freshCols->where('key', $this->sortColumn)->first();
+            
 
-            if ($sort_column->has_modified_data) {
+            
+            if ($sort_column && $sort_column->has_modified_data) {
                 $sort_column = $sort_column->key."_original";
-            } else {
+            } else if ($sort_column) {
                 $sort_column = $sort_column->key;    
+            } else {
+                // If the sort column is not found in fresh columns,
+                // we cannot proceed with sorting based on it.
+                // This might happen if the column was dynamically added/removed
+                // or if the sortColumn property is out of sync.
+                // For now, we'll just return the data as is, unsorted.
+                return $data;
             }
 
             if ($this->sortDirection === 'desc') {
@@ -75,18 +86,66 @@ trait Sort
 
     public function applySortToQuery($query) {
         if ($this->sortColumn) {
-            // Sort column is already managed by valid click, so it should be safe.
-            // But we should check if table actually has that column.
-            $sort_column = $this->columns->where('key', $this->sortColumn)->first();
+            // Retrieve fresh columns to access the closure if sorting by user selection
+            $freshCols = $this->getFreshColumns();
+            $sort_column = $freshCols->where('key', $this->sortColumn)->first();
             
             if ($sort_column) {
-                // If it's a model attribute, we can sort by it.
-                // If it's custom data, we might not be able to sort by it in SQL.
-                // Assuming it maps to a DB column for now.
-                $query->orderBy($this->sortColumn, $this->sortDirection);
+                // Check for custom sort callback
+                if (property_exists($sort_column, 'sortableCallback') && is_callable($sort_column->sortableCallback)) {
+                    call_user_func($sort_column->sortableCallback, $query, $this->sortDirection);
+                } else {
+                    // Standard sort
+                    // Use index if available as it represents the data path
+                    $targetObject = $sort_column->index ?? $sort_column->key;
+                    
+                    if (str_contains($targetObject, '.')) {
+                        $parts = explode('.', $targetObject);
+                        $relationName = $parts[0];
+                        $columnName = $parts[1];
+                        
+                        $model = $query->getModel();
+                        
+                        if (method_exists($model, $relationName)) {
+                            $relation = $model->{$relationName}();
+                            
+                            // Handle HasOne relationship
+                            if ($relation instanceof \Illuminate\Database\Eloquent\Relations\HasOne) {
+                                $relatedModel = $relation->getRelated();
+                                $relatedTable = $relatedModel->getTable();
+                                $foreignKey = $relation->getForeignKeyName(); // profile.user_id
+                                $localKey = $relation->getLocalKeyName(); // users.id
+                                $parentTable = $model->getTable();
+
+                                $subQuery = $relatedModel->newQuery()
+                                    ->select($columnName)
+                                    ->whereColumn("{$relatedTable}.{$foreignKey}", "{$parentTable}.{$localKey}");
+
+                                $query->orderBy($subQuery, $this->sortDirection);
+                                return $query;
+                            }
+                            // Handle BelongsTo relationship
+                            elseif ($relation instanceof \Illuminate\Database\Eloquent\Relations\BelongsTo) {
+                                $relatedModel = $relation->getRelated();
+                                $relatedTable = $relatedModel->getTable();
+                                $foreignKey = $relation->getForeignKeyName(); // post.user_id
+                                $ownerKey = $relation->getOwnerKeyName(); // user.id
+                                $parentTable = $model->getTable();
+
+                                $subQuery = $relatedModel->newQuery()
+                                    ->select($columnName)
+                                    ->whereColumn("{$relatedTable}.{$ownerKey}", "{$parentTable}.{$foreignKey}");
+
+                                $query->orderBy($subQuery, $this->sortDirection);
+                                return $query;
+                            }
+                        }
+                    }
+
+                    $query->orderBy($targetObject, $this->sortDirection);
+                }
             }
         }
         return $query;
     }
 }
-

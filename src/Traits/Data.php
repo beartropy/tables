@@ -34,7 +34,11 @@ trait Data
 
     public function getAllData() {
         if ($this->model) {
-            $data = $this->model::all();
+            $query = $this->model::query();
+             if (!empty($this->with)) {
+                $query->with($this->with);
+            }
+            $data = $query->get();
             return $this->processCollection($data);
         }
         return $this->getCachedData();
@@ -59,6 +63,10 @@ trait Data
             // Apply Sort
             if (method_exists($this, 'applySortToQuery')) {
                 $this->applySortToQuery($query);
+            }
+
+            if (!empty($this->with)) {
+                $query->with($this->with);
             }
             
             $data = $query->get();
@@ -91,6 +99,10 @@ trait Data
              // Apply Sort if desired? Usually selected data is just the data.
              // But let's return it as is or maybe sorted by default order.
              // Let's keep distinct logic minimal.
+
+            if (!empty($this->with)) {
+                $query->with($this->with);
+            }
             
             $data = $query->get();
             return $this->processCollection($data);
@@ -100,7 +112,12 @@ trait Data
 
     public function getRowByID($id) {
         if ($this->model) {
-            $row = $this->model::where($this->custom_column_id ?? 'id', $id)->first();
+            $query = $this->model::where($this->custom_column_id ?? 'id', $id);
+            if (!empty($this->with)) {
+                $query->with($this->with);
+            }
+            $row = $query->first();
+
             if (!$row) return null;
             
             // We return the transformed row to maintain consistency 
@@ -225,13 +242,16 @@ trait Data
         foreach ($this->columns as $column) {
             $columnIndex = $column->index ?? $column->key;
             // Fallback for accessors that might not be in toArray() but are accessible on the object
-            if (!array_key_exists($columnIndex, $rowArray) && is_object($row) && isset($row->$columnIndex)) {
-                $rawValue = $row->$columnIndex;
+            // Also support Dot Notation using data_get
+            if (is_object($row)) {
+                 $parsedValue = data_get($row, $columnIndex);
             } else {
-                $rawValue = $rowArray[$columnIndex] ?? '';
+                 $parsedValue = data_get($rowArray, $columnIndex, '');
             }
-            $parsedValue = $rawValue;
-            
+            // If data_get matched nothing and returned default (null/empty), check direct usage if needed?
+            // data_get is robust.
+            $rawValue = $parsedValue;
+
             // Handle Custom Data
             if (isset($customData[$column->key])) {
                 $parsedValue = call_user_func_array($customData[$column->key]['function'], [$row, $rawValue ?? null]);
@@ -274,12 +294,11 @@ trait Data
 
     public function getCustomData() {
         $customData = [];
-        foreach ($this->columns as $key => $column) {
+        foreach ($this->getFreshColumns() as $column) {
             if (property_exists($column, 'customData') && is_callable($column->customData)) {
-                $customData[$column->key] = ['index'=> $column->index ?? $column->key, 'function' => $column->customData];
-            }
-            if (property_exists($column, 'customData')) {
-                unset($this->columns[$key]->customData);
+                $customData[$column->key] = [
+                    'function' => $column->customData,
+                ];
             }
         }
         return $customData;
@@ -287,12 +306,13 @@ trait Data
 
     public function getLinkColumns() {
         $linkColumns = [];
-        foreach ($this->columns as $key => $column) {
+        foreach ($this->getFreshColumns() as $column) {
             if (property_exists($column,'isLink') && $column->isLink) {
-                $linkColumns[$column->key] = ['index'=> $column->index ?? $column->key, 'function' => $column->href];
-            }
-            if (property_exists($column, 'href')) {
-                unset($this->columns[$key]->href);
+                if (property_exists($column, 'href')) {
+                    $linkColumns[$column->key] = [
+                        'function' => $column->href,
+                    ];
+                }
             }
         }
         return $linkColumns;
@@ -300,17 +320,17 @@ trait Data
 
     public function getToggleColumns() {
         $toggleColumns = [];
-        foreach ($this->columns as $key => $column) {
-            if (property_exists($column,'isToggle') && $column->isToggle) {
-                $toggleColumns[$column->key] = ['index'=> $column->index ?? $column->key];
-                if (property_exists($column, 'disableToggleWhen') && is_callable($column->disableToggleWhen)) {
-                    $toggleColumns[$column->key]['disableToggleWhen'] = $column->disableToggleWhen;
-                    unset($this->columns[$key]->disableToggleWhen);
-                }
-                if (property_exists($column, 'hideToggleWhen') && is_callable($column->hideToggleWhen)) {
-                    $toggleColumns[$column->key]['hideToggleWhen'] = $column->hideToggleWhen;
-                    unset($this->columns[$key]->hideToggleWhen);
-                }
+        foreach ($this->getFreshColumns() as $column) {
+            
+            if (property_exists($column, 'disableToggleWhen') && is_callable($column->disableToggleWhen)) {
+                $toggleColumns['disable'][$column->key] = [
+                    'function' => $column->disableToggleWhen,
+                ];
+            }
+            if (property_exists($column, 'hideToggleWhen') && is_callable($column->hideToggleWhen)) {
+                $toggleColumns['hide'][$column->key] = [
+                    'function' => $column->hideToggleWhen,
+                ];
             }
         }
         return $toggleColumns;
@@ -322,6 +342,13 @@ trait Data
             $this->csvString = '';
             return;
         }
+
+        // Clean collection: remove _original keys
+        $collection = $collection->map(function ($row) {
+            return collect($row)->reject(function ($value, $key) {
+                return str_ends_with($key, '_original');
+            })->all();
+        });
 
         $headers = array_keys($collection->first());
         $lines = [];

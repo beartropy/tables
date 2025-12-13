@@ -61,17 +61,36 @@ trait Search
         }
 
         return $query->where(function ($q) use ($searchTerm) {
-            foreach ($this->columns as $column) {
-                // If it's a custom data column (calculated), we can't search it in DB easily unless suppressed
-                // We'll rely on the user to mark columns as unsearchable if needed, but for now we search all defined columns
-                // that match DB columns. We should skip if marked hidden? 
-                // The prompt says "leaving pagination, search etc on side of database".
-                
-                // We assume column key is the DB column name.
-                // We'll check if the column should be searchable.
-                
-                // For now, search all keys.
-                $q->orWhere($column->key, 'like', '%' . $searchTerm . '%');
+            foreach ($this->getFreshColumns() as $column) {
+                // Check for custom search callback
+                if (property_exists($column, 'searchableCallback') && is_callable($column->searchableCallback)) {
+                     call_user_func($column->searchableCallback, $q, $searchTerm);
+                     continue;
+                }
+
+                // If not explicitly searchable, we might skip? 
+                // Existing implementation searched everything. 
+                // But now we have $column->isSearchable.
+                // Assuming default true for backward compat.
+                if (property_exists($column, 'isSearchable') && $column->isSearchable === false) {
+                    continue;
+                }
+
+                // Use index if available as it represents the data path (e.g. profile.bio)
+                $targetObject = $column->index ?? $column->key;
+
+                // Determine if column target is a relationship (contains dot)
+                if (str_contains($targetObject, '.')) {
+                    $parts = explode('.', $targetObject);
+                    $attribute = array_pop($parts);
+                    $relation = implode('.', $parts);
+                    
+                    $q->orWhereHas($relation, function ($relQuery) use ($attribute, $searchTerm) {
+                        $relQuery->where($attribute, 'like', '%' . $searchTerm . '%');
+                    });
+                } else {
+                    $q->orWhere($targetObject, 'like', '%' . $searchTerm . '%');
+                }
             }
         });
     }

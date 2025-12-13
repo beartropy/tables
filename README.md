@@ -16,6 +16,54 @@ Consider using other packages like the ones that heavily inspired this one (rapp
 - Laravel 10/11
 - Livewire 3
 
+## Eloquent Support
+
+While maintaining backward compatibility with collections/arrays, version 2.0+ introduces native Eloquent Model support. This enables server-side pagination, searching, and sorting directly on the database.
+
+### Basic Usage
+
+To use Eloquent mode, define the `public $model` property in your component instead of returning data in the `data()` method.
+
+```php
+class UsersTable extends YATBaseTable
+{
+    public $model = User::class;
+    // ...
+}
+```
+
+### Relationship Support
+
+You can display data from related models using dot notation and manage eager loading.
+
+#### Eager Loading
+Avoid N+1 queries by defining the `$with` property.
+
+```php
+public $with = ['role', 'settings'];
+```
+
+#### Dot Notation
+Access related attributes easily in your column definitions.
+
+```php
+Column::make('Role', 'role.name')
+```
+
+#### HasMany Relationships (Custom Data)
+For `HasMany` relationships where you need to filter specific items (like getting a specific setting from a collection), use `customData`.
+
+```php
+Column::make('Theme', 'theme_setting')
+    ->customData(function($row) {
+        // Assuming $row->settings is a collection of user settings
+        return $row->settings->firstWhere('key', 'theme')?->value ?? 'N/A';
+    })
+```
+
+#### Searching Relationships
+Searching works automatically with dot notation columns. A search for a `role.name` column will automatically perform a `whereHas` query.
+
 
 ## Installation
 
@@ -666,6 +714,27 @@ LinkColumn::make('Edit user','id')
 ```
 
 
+
+#### Custom Sorting & Searching
+You can define custom logic for sorting and searching, which is useful for calculated columns or complex relationships (e.g., HasMany).
+
+```php
+Column::make('Theme', 'theme_setting')
+    ->sortable(function($query, $direction) {
+        $query->orderBy(
+            UserSetting::select('value')
+                ->whereColumn('user_settings.user_id', 'users.id')
+                ->where('key', 'theme'), 
+            $direction
+        );
+    })
+    ->searchable(function($query, $term) {
+        $query->orWhereHas('settings', function($q) use ($term) {
+            $q->where('key', 'theme')->where('value', 'like', "%$term%");
+        });
+    });
+```
+
 ## Filters
 `[Filter]::make(string label, ?string $column)`
 
@@ -740,6 +809,21 @@ By default it will compare `true` and `false`, but you can pass an array `["true
 
 ```
 FilterBool::make('isprimary')
+```
+
+
+### Custom Filter Logic
+`->query(callable $callback)`
+
+For complex scenarios where standard filtering isn't enough (e.g., filtering by a value in a `HasMany` relation), you can define a custom query callback.
+
+```php
+FilterString::make('Theme', 'theme_setting')->query(function($query, $value, $filter) {
+    // $value is the user input
+    $query->whereHas('settings', function($q) use ($value) {
+        $q->where('key', 'theme')->where('value', 'like', "%$value%");
+    });
+});
 ```
 
 ## Options

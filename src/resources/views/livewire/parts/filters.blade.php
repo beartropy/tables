@@ -19,38 +19,38 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         @foreach($filters as $key => $filter)
             <div class="flex flex-col space-y-1">
-                @if($filter->type === 'string')
+                @if($filter['type'] === 'string')
                     <x-beartropy-ui::input
                         wire:model.live.debounce.500ms="filters.{{ $key }}.input"
-                        label="{{ucfirst($filter->label)}}"
+                        label="{{ucfirst($filter['label'])}}"
                         clearable
                         color="{{ $theme }}"
-                        placeholder="{{ucfirst($filter->label)}}..."
+                        placeholder="{{ucfirst($filter['label'])}}..."
                     />
 
-                @elseif($filter->type === 'daterange')
+                @elseif($filter['type'] === 'daterange')
                     <x-beartropy-ui::datetime 
                         wire:model.live="filters.{{ $key }}.input"
-                        label="{{ $filter->label }}"
+                        label="{{ $filter['label'] }}"
                         color="{{ $theme }}"
                         range
                     />
 
-                @elseif($filter->type === 'select')
+                @elseif($filter['type'] === 'select')
                     <x-beartropy-ui::select 
-                        label="{{ $filter->label }}"
+                        label="{{ $filter['label'] }}"
                         color="{{ $theme }}"
                         wire:model.live="filters.{{ $key }}.input"
-                        :options="$filter->options"
+                        :options="$filter['options']"
                         placeholder="{{ucfirst(__('yat::yat.all'))}}"
                         clearable
                     />
 
-                @elseif($filter->type === 'bool')
+                @elseif($filter['type'] === 'bool')
                     {{-- <div class="w-full h-full flex items-center mt-4">
                         <x-beartropy-ui::toggle
                             wire:model.live="filters.{{ $key }}.input"
-                            label="{{ $filter->label }}"
+                            label="{{ $filter['label'] }}"
                             color="{{ $theme }}"
                         />                
                     </div> --}}
@@ -62,7 +62,7 @@
                         ];
                     @endphp
                     <x-beartropy-ui::select 
-                        label="{{ $filter->label }}"
+                        label="{{ $filter['label'] }}"
                         color="{{ $theme }}"
                         wire:model.live="filters.{{ $key }}.input"
                         :options="$boolOptions"
@@ -81,7 +81,7 @@
         $hasActiveFilters = false;
         if(isset($filters)) { // ensure variable exists
              foreach($filters as $filter) {
-                if(isset($filter->input) && $filter->input !== '' && $filter->input !== null) {
+                if(isset($filter['input']) && $filter['input'] !== '' && $filter['input'] !== null) {
                     $hasActiveFilters = true;
                     break;
                 }

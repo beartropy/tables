@@ -22,7 +22,12 @@ class GenericExport implements FromCollection, WithHeadings, WithStyles, WithCol
     public function __construct($data,$strip_tags = true, $sheetName = null)
     {
         $this->sheetName = $sheetName;
-        $this->data = $data;
+        // Clean data: remove _original keys to prevent duplicates in export
+        $this->data = $data->map(function ($item) {
+            return collect($item)->reject(function ($value, $key) {
+                return str_ends_with($key, '_original');
+            })->all();
+        });
         $this->strip_tags = $strip_tags;
     }
 
