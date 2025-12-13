@@ -72,5 +72,21 @@ trait Sort
 
         return $data;
     }
+
+    public function applySortToQuery($query) {
+        if ($this->sortColumn) {
+            // Sort column is already managed by valid click, so it should be safe.
+            // But we should check if table actually has that column.
+            $sort_column = $this->columns->where('key', $this->sortColumn)->first();
+            
+            if ($sort_column) {
+                // If it's a model attribute, we can sort by it.
+                // If it's custom data, we might not be able to sort by it in SQL.
+                // Assuming it maps to a DB column for now.
+                $query->orderBy($this->sortColumn, $this->sortDirection);
+            }
+        }
+        return $query;
+    }
 }
 

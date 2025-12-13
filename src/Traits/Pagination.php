@@ -47,25 +47,61 @@ trait Pagination
     }
 
     public function paginateData() {
-        $data = $this->getAfterFiltersData();
-        
-        // Apply sorting before pagination
-        $data = $this->sortData($data);
-        
-        $currentPage = $this->currentPageNumber = \Illuminate\Pagination\Paginator::resolveCurrentPage();
-        if ($this->forcePageNumber) {
-            $currentPage = $this->forcePageNumber;
+        if ($this->model) {
+            $query = $this->model::query();
+            
+            // Apply Search
+            if (method_exists($this, 'applySearchToQuery')) {
+                $this->applySearchToQuery($query);
+            }
+            
+            // Apply Filters
+            if (method_exists($this, 'applyFiltersToQuery')) {
+                $this->applyFiltersToQuery($query);
+            }
+            
+            // Apply Sort
+            if (method_exists($this, 'applySortToQuery')) {
+                $this->applySortToQuery($query);
+            }
+            
+            $currentPage = $this->currentPageNumber = \Illuminate\Pagination\Paginator::resolveCurrentPage();
+            if ($this->forcePageNumber) {
+                $currentPage = $this->forcePageNumber;
+            }
+
+            // Paginate
+            $paginatedData = $query->paginate($this->perPage, ['*'], 'page', $currentPage);
+            
+            // Transform the data using our new Data trait method
+            // We need to support the processCollection logic but on the collection inside paginator
+            $transformedCollection = $this->processCollection($paginatedData->getCollection());
+            $paginatedData->setCollection($transformedCollection);
+            
+            $this->forcePageNumber = false;
+            return $paginatedData;
+
+        } else {
+            $data = $this->getAfterFiltersData();
+            
+            // Apply sorting before pagination
+            $data = $this->sortData($data);
+            
+            $currentPage = $this->currentPageNumber = \Illuminate\Pagination\Paginator::resolveCurrentPage();
+            if ($this->forcePageNumber) {
+                $currentPage = $this->forcePageNumber;
+            }
+            
+            $paginatedData = new \Illuminate\Pagination\LengthAwarePaginator(
+                $data->forPage($currentPage, $this->perPage),
+                $data->count(),
+                $this->perPage,
+                $currentPage,
+                ['path' => request()->url(), 'query' => request()->query()]
+            );
+            $this->forcePageNumber = false;
+            return $paginatedData;
         }
-        
-        $paginatedData = new \Illuminate\Pagination\LengthAwarePaginator(
-            $data->forPage($currentPage, $this->perPage),
-            $data->count(),
-            $this->perPage,
-            $currentPage,
-            ['path' => request()->url(), 'query' => request()->query()]
-        );
-        $this->forcePageNumber = false;
-        return $paginatedData;
     }
 
     public function getPageData($currentPage) {

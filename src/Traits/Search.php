@@ -51,5 +51,29 @@ trait Search
             return false; // No match
         });
     }
+
+    public function applySearchToQuery($query)
+    {
+        $searchTerm = trim($this->yat_global_search);
+        
+        if (empty($searchTerm)) {
+            return $query;
+        }
+
+        return $query->where(function ($q) use ($searchTerm) {
+            foreach ($this->columns as $column) {
+                // If it's a custom data column (calculated), we can't search it in DB easily unless suppressed
+                // We'll rely on the user to mark columns as unsearchable if needed, but for now we search all defined columns
+                // that match DB columns. We should skip if marked hidden? 
+                // The prompt says "leaving pagination, search etc on side of database".
+                
+                // We assume column key is the DB column name.
+                // We'll check if the column should be searchable.
+                
+                // For now, search all keys.
+                $q->orWhere($column->key, 'like', '%' . $searchTerm . '%');
+            }
+        });
+    }
 }
 

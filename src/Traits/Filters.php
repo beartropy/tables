@@ -124,6 +124,39 @@ trait Filters
         });
     }
 
+    public function applyFiltersToQuery($query) {
+        if (!$this->has_filters) return $query;
+        
+        foreach ($this->filters as $filter) {
+            if ($filter->type == "string") {
+                if ($filter->input) {
+                    $query->where($filter->key, 'like', '%' . $filter->input . '%');
+                }
+            }
+            if ($filter->type == "select") {
+                if ($filter->input) {
+                    $query->where($filter->key, $filter->input);
+                }
+            }
+            if ($filter->type == "bool") {
+                if ($filter->input === 'all' || $filter->input === '' || is_null($filter->input)) {
+                    continue;
+                }
+                $boolVal = filter_var($filter->input, FILTER_VALIDATE_BOOLEAN);
+                $query->where($filter->key, $boolVal);
+            }
+            if ($filter->type == "daterange") {
+                if (isset($filter->daterange['start'], $filter->daterange['end'])) {
+                   $query->whereBetween($filter->key, [
+                       $filter->daterange['start'], 
+                       $filter->daterange['end']
+                   ]);
+                }
+            }
+        }
+        return $query;
+    }
+
     public function clearAllFilters($selectAll=false) {
         $this->yat_global_search = '';
         if ($this->filters) {

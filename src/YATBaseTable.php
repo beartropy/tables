@@ -42,6 +42,8 @@ class YATBaseTable extends Component
         Spinner
         ;
 
+    public $model;
+
     private $userData;
 
     #[On('refresh')]
@@ -54,8 +56,10 @@ class YATBaseTable extends Component
         $this->gatherEnvData();
         $this->setColumns();
         $this->settings();
-        $this->parseData();
-        $this->cacheData();
+        if (!$this->model) {
+            $this->parseData();
+            $this->cacheData();
+        }
         $this->setOptions();
         $this->setTableState();
         $this->setFilters();
