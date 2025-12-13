@@ -72,8 +72,14 @@ class YATBaseTable extends Component
             $paginatedData = $this->sortData($paginatedData);
         }
         
-        return view('yat::livewire.yat-table', [
+        $view = view('yat::livewire.yat-table', [
             'rows' => $paginatedData
         ]);
+
+        if ($this->layout) {
+            $view->layout($this->layout);
+        }
+
+        return $view;
     }
 }

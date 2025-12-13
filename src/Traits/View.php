@@ -111,4 +111,10 @@ trait View
     public function setLessRightView(string $view) {
         $this->yat_less_right_view = $view;
     }
+
+    public $layout;
+
+    public function setLayout($layout) {
+        $this->layout = $layout;
+    }
 }
