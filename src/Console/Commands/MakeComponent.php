@@ -15,7 +15,7 @@ use Livewire\Features\SupportConsoleCommands\Commands\ComponentParser;
 class MakeComponent extends Command implements PromptsForMissingInput
 {
 
-    protected $signature = 'make:yatable {name}';
+    protected $signature = 'make:yatable {name} {--m|model= : The model class (e.g. User)}';
     protected $description = 'Create a new table';
 
     protected ComponentParser $parser;
@@ -63,6 +63,40 @@ class MakeComponent extends Command implements PromptsForMissingInput
     public function generateFileFromStub() {
 
         $title = ucfirst(strtolower(preg_replace('/(?<!^)([A-Z])/', ' $1', $this->parser->className())));
+        
+        $modelOption = $this->option('model');
+        $stubName = 'YATableComponent.stub';
+        $columnsCode = "";
+        $modelNamespace = "";
+        $modelBase = "";
+
+        if ($modelOption) {
+            $stubName = 'YATableComponentModel.stub';
+            
+            $modelClass = $modelOption;
+            if (!str_contains($modelClass, '\\')) {
+                $modelClass = 'App\\Models\\' . $modelClass;
+            }
+            
+            if (class_exists($modelClass)) {
+                $modelInstance = new $modelClass();
+                $table = $modelInstance->getTable();
+                $columns = Schema::getColumnListing($table);
+                
+                $columnsArr = [];
+                foreach($columns as $col) {
+                    $label = ucwords(str_replace('_', ' ', $col));
+                    $columnsArr[] = "Column::make('$label', '$col')";
+                }
+                $columnsCode = implode(",\n            ", $columnsArr);
+                
+                $modelNamespace = $modelClass;
+                $modelBase = class_basename($modelClass);
+            } else {
+                 $this->error("Model $modelClass not found! Falling back to standard stub.");
+                 $stubName = 'YATableComponent.stub';
+            }
+        }
 
         if (Schema::hasTable('yat_user_table_config')) {
             $stateHandlerBool = "true";
@@ -77,9 +111,9 @@ class MakeComponent extends Command implements PromptsForMissingInput
         }
 
         return str_replace(
-            ['[namespace]', '[class]','[title]','[stateHandleBool]','[state-handler-notice]','[comment-state-handler-open]','[comment-state-handler-close]'],
-            [$this->parser->classNamespace(), $this->parser->className(), $title, $stateHandlerBool,$stateHandlerNotice,$stateHandlerOpenComment,$stateHandlerCloseComment],
-            file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'YATableComponent.stub')
+            ['[namespace]', '[class]','[title]','[stateHandleBool]','[state-handler-notice]','[comment-state-handler-open]','[comment-state-handler-close]', '[model_namespace]', '[model_base]', '[columns]'],
+            [$this->parser->classNamespace(), $this->parser->className(), $title, $stateHandlerBool,$stateHandlerNotice,$stateHandlerOpenComment,$stateHandlerCloseComment, $modelNamespace, $modelBase, $columnsCode],
+            file_get_contents(__DIR__.DIRECTORY_SEPARATOR.$stubName)
         );
     }
 
