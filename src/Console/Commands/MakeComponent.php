@@ -15,7 +15,7 @@ use Livewire\Features\SupportConsoleCommands\Commands\ComponentParser;
 class MakeComponent extends Command implements PromptsForMissingInput
 {
 
-    protected $signature = 'make:yatable {name} {--m|model= : The model class (e.g. User)}';
+    protected $signature = 'make:btable {name} {--m|model= : The model class (e.g. User)}';
     protected $description = 'Create a new table';
 
     protected ComponentParser $parser;
