@@ -208,8 +208,11 @@ trait Filters
                 }
                 if ($type == "daterange") {
                     if (isset($filter['daterange']['start'], $filter['daterange']['end'])) {
-                        // ... legacy daterange logic
-                        // skipping detailed impl for in-memory as user focused on DB
+                        $itemDate = Carbon::parse($item[$filter['key']]); // Assume your data has a 'date' field
+            
+                        if (!$itemDate->between($filter['daterange']['start'], $filter['daterange']['end'])) {
+                            return false; // Exclude if the date is not in range
+                        }
                     }
                 }
             }
