@@ -24,6 +24,8 @@ trait View
 
     public $yat_custom_buttons = [];
 
+    public $yat_button_variant = 'outline';
+
     public string $theme = 'slate';
 
     public ?string $bulkThemeOverride = null;
@@ -110,6 +112,16 @@ trait View
 
     public function setLessRightView(string $view) {
         $this->yat_less_right_view = $view;
+    }
+
+    public function setButtonVariant(string $variant) {
+        $this->yat_button_variant = $variant;
+    }
+
+    public $showOptionsOnlyOnRowSelect = false;
+
+    public function showOptionsOnlyOnRowSelect(bool $value = true) {
+        $this->showOptionsOnlyOnRowSelect = $value;
     }
 
     public $layout;

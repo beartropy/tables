@@ -11,7 +11,7 @@
                     @if($has_filters)
                         <x-beartropy-ui::button 
                             @click="showFilters = ! showFilters" 
-                            outline
+                            variant="{{ $yat_button_variant }}"
                             color="{{ $theme }}"
                         >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter mr-2">
@@ -45,7 +45,7 @@
                 <div class="flex items-center space-x-2">
                     @includeWhen($yat_less_right_view, $yat_less_right_view)
                     @includeWhen($yat_custom_buttons, 'yat::livewire.parts.custom-buttons')
-                    @includeWhen($options, 'yat::livewire.parts.options')
+                    @includeWhen(($options && (!$showOptionsOnlyOnRowSelect || count($yat_selected_checkbox) > 0)), 'yat::livewire.parts.options')
                     @includeWhen($show_column_toggle, 'yat::livewire.parts.column-toggle')
                     @includeWhen($with_pagination, 'yat::livewire.parts.select-perpage')
                     @includeWhen($yat_most_right_view, $yat_most_right_view)
@@ -56,7 +56,7 @@
             <div class="flex flex-col space-y-2 mb-2">
                 @includeWhen($yat_most_left_view, $yat_most_left_view)
                 @includeWhen($yat_less_left_view, $yat_less_left_view)
-                @includeWhen($options, 'yat::livewire.parts.options')
+                @includeWhen(($options && (!$showOptionsOnlyOnRowSelect || count($yat_selected_checkbox) > 0)), 'yat::livewire.parts.options')
                 @includeWhen($show_column_toggle, 'yat::livewire.parts.column-toggle')
                 @includeWhen($with_pagination, 'yat::livewire.parts.select-perpage')
                 @includeWhen($yat_less_right_view, $yat_less_right_view)
@@ -89,7 +89,7 @@
                             @endif
                         @if ($has_bulk)
                             <th class="text-left px-5">
-                                <x-beartropy-ui::checkbox wire:model.live="selectAll" color="{{ $bulkThemeOverride ?? $theme }}" />
+                                <x-beartropy-ui::checkbox sm wire:model.live="selectAll" color="{{ $bulkThemeOverride ?? $theme }}" />
                             </th>
                         @endif
                         @foreach ($columns as $column)
@@ -145,7 +145,7 @@
                             @endif
                             @if ($has_bulk)
                                 <td class="px-5">
-                                    <x-beartropy-ui::checkbox 
+                                    <x-beartropy-ui::checkbox sm
                                         value="{{ $row[$column_id] }}"
                                         id="{{ $row[$column_id] }}"
                                         wire:model.live="yat_selected_checkbox"

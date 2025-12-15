@@ -232,11 +232,12 @@ trait Filters
             return $filter;
         });
 
+        // Get stored filters values to access by index
+        $storedFilters = $this->filters ? $this->filters->values() : collect();
+
         // Merge state from stored $this->filters (Arrays)
-        return $freshFilters->map(function($filter) {
-             $storedData = $this->filters->first(function($item) use ($filter) {
-                 return isset($item['key']) && $item['key'] === $filter->key;
-             });
+        return $freshFilters->map(function($filter, $index) use ($storedFilters) {
+             $storedData = $storedFilters->get($index);
              
              if ($storedData) {
                  $filter->input = $storedData['input'];

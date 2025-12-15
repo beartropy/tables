@@ -9,7 +9,7 @@
         class="whitespace-nowrap"
         :color="$color"
         :wire:click="$button['action'] ?? null"
-        outline
+        variant="{{ $yat_button_variant }}"
         class="w-full"
     >
         {!! $button['label'] !!}

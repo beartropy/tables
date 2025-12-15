@@ -2,7 +2,7 @@
 <div x-data="{ isOpenOptionsToggle: false}" class="relative" @keydown.esc.window="isOpenOptionsToggle = false">
     <!-- Toggle Button -->
     <x-beartropy-ui::button 
-        outline
+        variant="{{ $yat_button_variant }}"
         color="{{ $theme }}"
         @click="isOpenOptionsToggle = ! isOpenOptionsToggle"
         class="w-full"

@@ -2,7 +2,7 @@
 <div x-data="{ isOpenColumnToggle: $wire.entangle('column_toggle_dd_status') }" class="relative " @keydown.esc.window="isOpenColumnToggle = false">
     <x-beartropy-ui::button 
         @click="isOpenColumnToggle = ! isOpenColumnToggle"
-        outline
+        variant="{{ $yat_button_variant }}"
         color="{{ $theme }}"
         class="w-full"
     >
