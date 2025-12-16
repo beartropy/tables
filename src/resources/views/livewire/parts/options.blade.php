@@ -47,7 +47,7 @@
         <!-- Backdrop click handler for mobile -->
         <div class="absolute inset-0 md:hidden" @click="isOpenOptionsToggle = false"></div>
 
-        <ul class="relative w-[90%] max-w-md md:min-w-52 md:w-auto md:max-w-none max-h-[80vh] overflow-y-auto md:overflow-visible shadow-xl rounded-md text-base md:text-sm font-medium z-10 {{ $themeConfig['dropdowns']['bg'] }} {{ $themeConfig['dropdowns']['border'] }} {{ $themeConfig['dropdowns']['text'] }}">
+        <ul class="relative w-[90%] max-w-md md:min-w-52 md:w-max md:max-w-none max-h-[80vh] overflow-y-auto md:overflow-visible shadow-xl rounded-md text-base md:text-sm font-medium z-10 {{ $themeConfig['dropdowns']['bg'] }} {{ $themeConfig['dropdowns']['border'] }} {{ $themeConfig['dropdowns']['text'] }} md:whitespace-nowrap">
             @if($yat_is_mobile)
                 <li class="w-full border-b border-gray-200 dark:border-gray-600">
                     <div class="p-3">
