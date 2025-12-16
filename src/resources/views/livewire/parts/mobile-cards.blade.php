@@ -67,7 +67,11 @@
                                         @php
                                             $link_data = json_decode($row[$column->key],true);
                                         @endphp
-                                        <a href="{{$link_data[0]}}" class="{{$column->tag_classes ?? 'cursor-pointer'}}" target="{{ $column->target ?? '' }}">{!! $link_data[1] !!}</a>
+                                        @if(is_array($link_data) && count($link_data) >= 2)
+                                            <a href="{{$link_data[0]}}" class="{{$column->tag_classes ?? 'cursor-pointer'}}" target="{{ $column->target ?? '' }}">{!! $link_data[1] !!}</a>
+                                        @else
+                                            {{ $row[$column->key] ?? '' }}
+                                        @endif
                                     @else
                                         {{ $row[$column->key] ?? '' }}
                                     @endif
