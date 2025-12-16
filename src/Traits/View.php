@@ -24,7 +24,7 @@ trait View
 
     public $yat_custom_buttons = [];
 
-    public $yat_button_variant = 'outline';
+    public $yat_button_variant = 'glass';
 
     public string $theme = 'slate';
 

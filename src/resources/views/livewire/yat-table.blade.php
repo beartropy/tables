@@ -88,7 +88,7 @@
                                 <td class="pl-2">#</td>
                             @endif
                         @if ($has_bulk)
-                            <th class="text-left px-5">
+                            <th class="text-left px-5 {{ $themeConfig['table']['th'] }}">
                                 <x-beartropy-ui::checkbox sm wire:model.live="selectAll" color="{{ $bulkThemeOverride ?? $theme }}" />
                             </th>
                         @endif
