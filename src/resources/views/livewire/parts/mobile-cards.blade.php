@@ -1,18 +1,18 @@
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
     @foreach ($rows as $row)
-        <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 space-y-3">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border {{ $themeConfig['table']['wrapper'] }}">
              @php
                 $titleColumn = collect($columns)->first(function($col) {
                     return property_exists($col, 'cardTitle') && $col->cardTitle;
                 });
             @endphp
 
-            <div class="flex justify-between items-start border-b pb-2 mb-2 dark:border-gray-700">
+            <div class="flex justify-between items-start mb-2 px-4 py-3 rounded-t-lg {{ $themeConfig['table']['tr_thead'] }}">
                 <div 
-                    class="font-bold text-lg break-words text-gray-900 dark:text-gray-100 flex-1 pr-2 cursor-pointer flex items-center gap-2 group"
+                    class="font-bold text-lg break-words flex-1 pr-2 cursor-pointer flex items-center gap-2 group"
                     wire:click="openMobileCardDetails('{{ $row[$column_id] }}')"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 opacity-50 group-hover:opacity-100 transition-opacity">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                     </svg>
@@ -39,7 +39,7 @@
                 @endif
             </div>
 
-            <div class="space-y-3">
+            <div class="space-y-3 p-4 pt-0">
                 @foreach ($columns as $column)
                     @if ((!$titleColumn || $column->key !== $titleColumn->key) && property_exists($column, 'showOnCard') && $column->showOnCard)
                         <div class="flex flex-col gap-1">
