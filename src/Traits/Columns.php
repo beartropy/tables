@@ -20,6 +20,9 @@ trait Columns
         $this->mobileCollapsedColumns = [];
         $this->columns = collect($this->columns());
         $this->columns = $this->columns->map(function ($column) {
+            if ($column->show_on_mobile && !$this->yat_is_mobile) {
+                $column->isVisible = false;
+            }
             if ($this->yat_is_mobile) {
                 if ($column->hide_on_mobile) {
                     $column->isVisible = false;
@@ -68,6 +71,11 @@ trait Columns
 
     public function hideOnMobile(Bool $bool): self {
         $this->hide_on_mobile = true;
+        return $this;
+    }
+
+    public function showOnMobile(Bool $bool = true): self {
+        $this->show_on_mobile = $bool;
         return $this;
     }
 

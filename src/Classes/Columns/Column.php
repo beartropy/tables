@@ -21,6 +21,7 @@ class Column
     public $has_modified_data = false;
     public $hide_on_mobile = false;
     public $collapseOnMobile = false;
+    public $show_on_mobile = false;
     
     public $sortableCallback = null;
     public $searchableCallback = null;
