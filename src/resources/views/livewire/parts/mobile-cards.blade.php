@@ -7,7 +7,7 @@
                 });
             @endphp
 
-            <div class="flex justify-between items-start mb-2 px-4 py-3 rounded-t-lg {{ $themeConfig['table']['tr_thead'] }}">
+            <div class="flex justify-between items-center mb-2 px-4 py-3 rounded-t-lg {{ $themeConfig['table']['tr_thead'] }}">
                 <div 
                     class="font-bold text-lg break-words flex-1 pr-2 cursor-pointer flex items-center gap-2 group"
                     wire:click="openMobileCardDetails('{{ $row[$column_id] }}')"
