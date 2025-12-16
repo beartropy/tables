@@ -198,6 +198,9 @@ public function mount() {
 - [Set Table Theme](#set-table-theme)
 - [Add Custom Buttons](#add-custom-buttons)
 - [Custom View Slots](#custom-view-slots)
+- [Mobile Cards (Automatic)](#mobile-cards-automatic)
+- [Force Card View](#force-card-view)
+- [Mobile Modal Buttons](#mobile-modal-buttons)
 
 ### [Sorting](#sorting-1)
 - [Set default sort column](#set-default-sort-column)
@@ -235,6 +238,8 @@ public function mount() {
 - [Hide column by default](#hide-column-by-default)
 - [Boolean columns](#boolean-columns)
 - [Link columns](#link-columns)
+- [Mobile Card Title](#mobile-card-title)
+- [Show on Card Body](#show-on-card-body)
 
 ## [Filters](#filters-1)
 
@@ -388,8 +393,45 @@ The table provides several slots to inject custom Blade views at specific positi
 - `setMostRightView(string $view)`: Far right, after pagination.
 
 ```php
-$this->setMostLeftView('my.custom.sidebar-toggle');
 $this->setMostRightView('my.custom.settings-icon');
+```
+
+#### Mobile Cards (Automatic)
+`showCardsOnMobile(bool $bool)`
+
+Use this to automatically switch to a card view layout when a mobile device is detected.
+
+```php
+$this->showCardsOnMobile(true);
+```
+
+#### Force Card View
+`useCards(bool $bool)`
+
+Use this to force the card view layout regardless of the device type (e.g. for a card grid view on desktop). On desktop, cards will be arranged in a responsive grid.
+
+```php
+$this->useCards(true);
+```
+
+#### Mobile Modal Buttons
+`addCardModalButtons(array $buttons)`
+
+When clicking a card title (if configured), a details modal appears. You can add custom action buttons to the footer of this modal.
+The action method will automatically receive the **entire row data** as a parameter.
+
+```php
+$this->addCardModalButtons([
+    ["label" => 'Edit', "action" => "editRow", "color" => "blue"],
+    ["label" => 'Delete', "action" => "deleteRow", "color" => "red"]
+]);
+```
+
+```php
+public function editRow($row) {
+    // $row contains all the row data
+    // $id = $row['id'];
+}
 ```
 
 
@@ -713,6 +755,25 @@ LinkColumn::make('Edit user','id')
     })
 ```
 
+
+
+#### Mobile Card Title
+`cardTitle(bool $bool)`
+
+Sets this column as the primary title for the mobile card view. The title becomes clickable and opens the details modal.
+
+```php
+Column::make('Name', 'name')->cardTitle()
+```
+
+#### Show on Card Body
+`showOnCard(bool $bool)`
+
+Explicitly includes this column in the body of the mobile card. Columns without this (or `cardTitle`) will not be shown on the card itself, but will still appear in the details modal.
+
+```php
+Column::make('Description', 'desc')->showOnCard()
+```
 
 
 #### Custom Sorting & Searching

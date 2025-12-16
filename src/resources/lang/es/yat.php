@@ -17,6 +17,9 @@ return [
     'select_filter_warning' => 'Se seleccionaron <b>:filtered_count</b> registros de <b>:all_data_count</b>. Para seleccionar todos los registros debe ',
     'remove_all_filters' => 'eliminar los filtros',
     'per_page_display' => 'Filas por página',
-    'loading_data' => 'Cargando datos...'
+    'loading_data' => 'Cargando datos...',
+    'select_row' => 'Seleccionar fila',
+    'details' => 'Detalles',
+    'close' => 'Cerrar',
 
 ];

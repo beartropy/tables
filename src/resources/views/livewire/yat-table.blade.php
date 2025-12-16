@@ -46,7 +46,7 @@
                     @includeWhen($yat_less_right_view, $yat_less_right_view)
                     @includeWhen($yat_custom_buttons, 'yat::livewire.parts.custom-buttons')
                     @includeWhen(($options && (!$showOptionsOnlyOnRowSelect || count($yat_selected_checkbox) > 0)), 'yat::livewire.parts.options')
-                    @includeWhen($show_column_toggle, 'yat::livewire.parts.column-toggle')
+                    @includeWhen($show_column_toggle && !(($yat_is_mobile && $showCardsOnMobile) || $useCards), 'yat::livewire.parts.column-toggle')
                     @includeWhen($with_pagination, 'yat::livewire.parts.select-perpage')
                     @includeWhen($yat_most_right_view, $yat_most_right_view)
                 </div>
@@ -57,7 +57,7 @@
                 @includeWhen($yat_most_left_view, $yat_most_left_view)
                 @includeWhen($yat_less_left_view, $yat_less_left_view)
                 @includeWhen(($options && (!$showOptionsOnlyOnRowSelect || count($yat_selected_checkbox) > 0)), 'yat::livewire.parts.options')
-                @includeWhen($show_column_toggle, 'yat::livewire.parts.column-toggle')
+                @includeWhen($show_column_toggle && !(($yat_is_mobile && $showCardsOnMobile) || $useCards), 'yat::livewire.parts.column-toggle')
                 @includeWhen($with_pagination, 'yat::livewire.parts.select-perpage')
                 @includeWhen($yat_less_right_view, $yat_less_right_view)
                 @includeWhen($yat_most_right_view, $yat_most_right_view)
@@ -81,6 +81,9 @@
                 @includeWhen($loading_table_spinner_custom_view, $loading_table_spinner_custom_view)
             </div>
             @endif
+            @if(($yat_is_mobile && $showCardsOnMobile) || $useCards)
+                @include('yat::livewire.parts.mobile-cards')
+            @else
             <table class="min-w-full border-collapse border {{ $themeConfig['table']['wrapper'] }}">
                 <thead class="min-w-full {{ $themeConfig['table']['thead_bg'] }} {{ $sticky_header ? 'sticky -top-[0.125rem]' : '' }}">
                     <tr class="md:border-none uppercase text-sm leading-normal {{ $themeConfig['table']['tr_thead'] }}">
@@ -242,11 +245,14 @@
                     @endforelse
                 </tbody>
             </table>
+            @endif
         </div>
 
         <!-- Pagination -->
         @includeWhen($with_pagination, 'yat::livewire.parts.pagination')
     </div>
+
+    @include('yat::livewire.parts.mobile-card-details-modal')
 
     @includeWhen($modals_view,$modals_view)
 

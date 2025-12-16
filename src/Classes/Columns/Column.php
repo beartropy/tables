@@ -22,6 +22,8 @@ class Column
     public $hide_on_mobile = false;
     public $collapseOnMobile = false;
     public $show_on_mobile = false;
+    public $cardTitle = false;
+    public $showOnCard = false;
     
     public $sortableCallback = null;
     public $searchableCallback = null;
@@ -43,6 +45,16 @@ class Column
 
     public function collapseOnMobile(bool $bool = true): self {
         $this->collapseOnMobile = $bool;
+        return $this;
+    }
+
+    public function cardTitle(bool $bool = true): self {
+        $this->cardTitle = $bool;
+        return $this;
+    }
+
+    public function showOnCard(bool $bool = true): self {
+        $this->showOnCard = $bool;
         return $this;
     }
 

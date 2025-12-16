@@ -282,7 +282,7 @@ trait Data
             $parsedRow[$column->key] = $parsedValue;
         }
 
-        if ($this->has_bulk && $this->custom_column_id) {
+        if ($this->custom_column_id) {
             $parsedRow['id'] = $rowArray[$this->custom_column_id] ?? null;
         }
         

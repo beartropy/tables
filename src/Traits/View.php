@@ -20,6 +20,9 @@ trait View
     public $yat_most_right_view;
     public $yat_less_right_view;
 
+    public $showCardsOnMobile = false;
+    public $useCards = false;
+
     public $yat_is_mobile = false;
 
     public $yat_custom_buttons = [];
@@ -59,8 +62,35 @@ trait View
         $this->yat_custom_buttons = $buttons;
     }
 
+    public $yat_card_modal_buttons = [];
+
+    public function addCardModalButtons(array $buttons) {
+        $this->yat_card_modal_buttons = $buttons;
+    }
+
     public function showCounter(bool $bool) {
         $this->has_counter = $bool;
+    }
+
+    public function showCardsOnMobile(bool $bool = true) {
+        $this->showCardsOnMobile = $bool;
+    }
+
+    public function useCards(bool $bool = true) {
+        $this->useCards = $bool;
+    }
+
+    public $mobileDetailsModalOpen = false;
+    public $mobileDetailsRow = [];
+
+    public function openMobileCardDetails($rowId) {
+        $this->mobileDetailsRow = $this->getAllData()->firstWhere($this->column_id, $rowId);
+        $this->mobileDetailsModalOpen = true;
+    }
+
+    public function closeMobileCardDetails() {
+        $this->mobileDetailsModalOpen = false;
+        $this->mobileDetailsRow = [];
     }
 
     public function setTitle($title) {
