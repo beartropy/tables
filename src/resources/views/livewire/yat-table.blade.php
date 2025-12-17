@@ -140,7 +140,7 @@
 
                     @forelse ($rows as $key => $row)
                         <tr
-                            class="md:border-none transition-colors even:bg-white {{ $themeConfig['table']['tr_body_hover'] }} {{ $themeConfig['table']['border_b'] }} {{ $themeConfig['table']['tr_body_odd'] }} {{ $themeConfig['table']['tr_body_even'] }}"
+                            class="md:border-none transition-colors {{ $themeConfig['table']['tr_body_hover'] }} {{ $themeConfig['table']['border_b'] }} {{ $themeConfig['table']['tr_body_odd'] }} {{ $themeConfig['table']['tr_body_even'] }}"
 
                         >
                             @if($has_counter)
