@@ -159,4 +159,18 @@ trait View
     public function setLayout($layout) {
         $this->layout = $layout;
     }
+
+    public $stripRows = true;
+
+    public function stripRows(bool $strip = true) {
+        $this->stripRows = $strip;
+    }
+
+    public function getRowStripingClasses() {
+        if ($this->stripRows) {
+            return $this->themeConfig['table']['tr_body_odd'] . ' ' . $this->themeConfig['table']['tr_body_even'];
+        }
+
+        return str_replace(['odd:', 'even:'], '', $this->themeConfig['table']['tr_body_odd']);
+    }
 }
