@@ -32,6 +32,8 @@ trait View
     public string $theme = 'slate';
 
     public ?string $bulkThemeOverride = null;
+    public ?string $buttonThemeOverride = null;
+    public ?string $inputThemeOverride = null;
 
     public array $themeConfig = [];
 
@@ -43,6 +45,14 @@ trait View
 
     public function setBulkThemeOverride(?string $theme) {
         $this->bulkThemeOverride = $theme;
+    }
+
+    public function setButtonThemeOverride(?string $theme) {
+        $this->buttonThemeOverride = $theme;
+    }
+
+    public function setInputThemeOverride(?string $theme) {
+        $this->inputThemeOverride = $theme;
     }
 
     public function mountView() {
