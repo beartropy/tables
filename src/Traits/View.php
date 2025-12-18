@@ -32,8 +32,8 @@ trait View
     public string $theme = 'gray';
 
     public ?string $bulkThemeOverride = 'gray';
-    public ?string $buttonThemeOverride = 'gray';
-    public ?string $inputThemeOverride = 'gray';
+    public ?string $buttonThemeOverride = 'beartropy';
+    public ?string $inputThemeOverride = 'beartropy';
 
     public array $themeConfig = [];
 
