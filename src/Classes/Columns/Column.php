@@ -18,6 +18,7 @@ class Column
     public $customData = null;
     public $classes = '';
     public $th_classes = '';
+    public $th_wrapper_classes = '';
     public $has_modified_data = false;
     public $hide_on_mobile = false;
     public $collapseOnMobile = false;
@@ -75,6 +76,24 @@ class Column
         } else {
             $this->isSearchable = $callback;
         }
+        return $this;
+    }
+
+    public function pushLeft(): self {
+        $this->classes .= ' text-left';
+        if (!isset($this->th_wrapper_classes)) {
+            $this->th_wrapper_classes = '';
+        }
+        $this->th_wrapper_classes .= ' text-left';
+        return $this;
+    }
+
+    public function pushRight(): self {
+        $this->classes .= ' text-right';
+        if (!isset($this->th_wrapper_classes)) {
+            $this->th_wrapper_classes = '';
+        }
+        $this->th_wrapper_classes .= ' text-right';
         return $this;
     }
 

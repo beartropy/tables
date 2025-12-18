@@ -92,7 +92,7 @@
                 <thead class="min-w-full {{ $themeConfig['table']['thead_bg'] }} {{ $sticky_header ? 'sticky -top-[0.125rem]' : '' }}">
                     <tr class="md:border-none uppercase text-sm leading-normal {{ $themeConfig['table']['tr_thead'] }}">
                         @if($has_counter)
-                                <th class="{{ $themeConfig['table']['th'] }}">#</th>
+                                <th class="text-left pl-2 {{ $themeConfig['table']['th'] }}">#</th>
                             @endif
                         @if ($has_bulk)
                             <th class="text-left px-5 {{ $themeConfig['table']['th'] }}">
