@@ -27,20 +27,24 @@ trait View
 
     public $yat_custom_buttons = [];
 
-    public $yat_button_variant = 'glass';
+    public $yat_button_variant = 'outline';
 
-    public string $theme = 'slate';
+    public string $theme = 'gray';
 
-    public ?string $bulkThemeOverride = null;
-    public ?string $buttonThemeOverride = null;
-    public ?string $inputThemeOverride = null;
+    public ?string $bulkThemeOverride = 'gray';
+    public ?string $buttonThemeOverride = 'gray';
+    public ?string $inputThemeOverride = 'gray';
 
     public array $themeConfig = [];
 
     public function setTheme(string $theme) {
         $this->theme = $theme;
+        $this->themeConfig = $this->getThemeConfig($theme);
+    }
+
+    public function getThemeConfig(string $theme) {
         $presets = require __DIR__ . '/../resources/views/livewire/table-presets.php';
-        $this->themeConfig = $presets[$theme] ?? $presets['slate'];
+        return $presets[$theme] ?? $presets['gray'];
     }
 
     public function setBulkThemeOverride(?string $theme) {

@@ -24,7 +24,7 @@
                         wire:model.live.debounce.500ms="filters.{{ $key }}.input"
                         label="{{ucfirst($filter['label'])}}"
                         clearable
-                        color="{{ $theme }}"
+                        color="{{ $inputThemeOverride ?? $theme }}"
                         placeholder="{{ucfirst($filter['label'])}}..."
                     />
 
@@ -32,14 +32,14 @@
                     <x-beartropy-ui::datetime 
                         wire:model.live="filters.{{ $key }}.input"
                         label="{{ $filter['label'] }}"
-                        color="{{ $theme }}"
+                        color="{{ $inputThemeOverride ?? $theme }}"
                         range
                     />
 
                 @elseif($filter['type'] === 'select')
                     <x-beartropy-ui::select 
                         label="{{ $filter['label'] }}"
-                        color="{{ $theme }}"
+                        color="{{ $inputThemeOverride ?? $theme }}"
                         wire:model.live="filters.{{ $key }}.input"
                         :options="$filter['options']"
                         placeholder="{{ucfirst(__('yat::yat.all'))}}"
@@ -63,7 +63,7 @@
                     @endphp
                     <x-beartropy-ui::select 
                         label="{{ $filter['label'] }}"
-                        color="{{ $theme }}"
+                        color="{{ $inputThemeOverride ?? $theme }}"
                         wire:model.live="filters.{{ $key }}.input"
                         :options="$boolOptions"
                         placeholder="{{ucfirst(__('yat::yat.all'))}}"

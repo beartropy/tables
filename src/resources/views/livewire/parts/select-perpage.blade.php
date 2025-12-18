@@ -3,7 +3,7 @@
     <x-beartropy-ui::button 
         @click="isSelectPerPageOpen = ! isSelectPerPageOpen"
         outline
-        color="{{ $theme }}"
+        color="{{ $buttonThemeOverride ?? $theme }}"
         class="w-full"
     >
         <div class="flex justify-between items-center w-full">

@@ -3,7 +3,7 @@
     <!-- Toggle Button -->
     <x-beartropy-ui::button 
         variant="{{ $yat_button_variant }}"
-        color="{{ $theme }}"
+        color="{{ $buttonThemeOverride ?? $theme }}"
         @click="isOpenOptionsToggle = ! isOpenOptionsToggle"
         class="w-full"
     >
