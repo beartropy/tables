@@ -7,6 +7,11 @@ trait Search
 
     public $yat_global_search = ''; // Search input binding
     public $yat_global_search_label;
+    public $useGlobalSearch = true;
+
+    public function useGlobalSearch(bool $status = true) {
+        $this->useGlobalSearch = $status;
+    }
 
     public function setSearchLabel(string $label) {
         $this->yat_global_search_label = $label;

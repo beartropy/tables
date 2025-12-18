@@ -67,6 +67,12 @@ class YATBaseTable extends Component
         $this->mountView();
     }
 
+    public function showOnlyTable(bool $status = true) {
+        $this->useGlobalSearch(!$status);
+        $this->usePagination(!$status);
+        $this->showColumnToggle(!$status);
+    }
+
     public function render()
     {
         

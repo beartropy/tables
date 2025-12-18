@@ -38,7 +38,9 @@
                         </div>
                     </x-beartropy-ui::button>
                     @endif
-                    @include('yat::livewire.parts.global-search')
+                    @if($useGlobalSearch)
+                        @include('yat::livewire.parts.global-search')
+                    @endif
                     @includeWhen($yat_less_left_view, $yat_less_left_view)
                 </div>
 
@@ -62,7 +64,9 @@
                 @includeWhen($yat_less_right_view, $yat_less_right_view)
                 @includeWhen($yat_most_right_view, $yat_most_right_view)
                 @includeWhen($yat_custom_buttons, 'yat::livewire.parts.custom-buttons')
-                @include('yat::livewire.parts.global-search')
+                @if($useGlobalSearch)
+                    @include('yat::livewire.parts.global-search')
+                @endif
             </div>
         @endif
 
