@@ -26,6 +26,11 @@ class Column
     public $cardTitle = false;
     public $showOnCard = false;
     
+    public $isEditable = false;
+    public $editableType = 'input'; // input, select
+    public $editableOptions = [];
+    public $editableCallback = null;
+
     public $sortableCallback = null;
     public $searchableCallback = null;
     public $isSortable = false;
@@ -35,7 +40,7 @@ class Column
 
     public function __construct(string $label, ?string $index = null) {
         $this->label = trim($label);
-        $this->key = $this->generateUniqueKey($label);
+        $this->key = $index ?? $this->generateUniqueKey($label);
         $this->index = $index ?? $this->key;
     }
 
@@ -76,6 +81,14 @@ class Column
         } else {
             $this->isSearchable = $callback;
         }
+        return $this;
+    }
+
+    public function editable($type = 'input', $options = [], $onUpdate = null): self {
+        $this->isEditable = true;
+        $this->editableType = $type;
+        $this->editableOptions = $options;
+        $this->editableCallback = $onUpdate;
         return $this;
     }
 

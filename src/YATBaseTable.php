@@ -19,6 +19,7 @@ use Beartropy\Tables\Traits\Spinner;
 use Beartropy\Tables\Traits\Pagination;
 use Beartropy\Tables\Traits\StateHandler;
 use Beartropy\Tables\Traits\RowManipulators;
+use Beartropy\Tables\Traits\Editable;
 
 class YATBaseTable extends Component
 {
@@ -39,7 +40,8 @@ class YATBaseTable extends Component
         RowManipulators,
         View,
         Filters,
-        Spinner
+        Spinner,
+        Editable
         ;
 
     public $model;
