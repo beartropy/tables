@@ -280,6 +280,15 @@ trait Data
             }
             
             $parsedRow[$column->key] = $parsedValue;
+
+            if ($column->updateField) {
+                if (is_object($row)) {
+                     $updateValue = data_get($row, $column->updateField);
+                } else {
+                     $updateValue = data_get($rowArray, $column->updateField, '');
+                }
+                $parsedRow[$column->updateField] = $updateValue;
+            }
         }
 
         if ($this->custom_column_id) {

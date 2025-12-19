@@ -21,5 +21,6 @@ return [
     'select_row' => 'Seleccionar fila',
     'details' => 'Detalles',
     'close' => 'Cerrar',
+    'select_an_option' => 'Seleccione una opción',
 
 ];

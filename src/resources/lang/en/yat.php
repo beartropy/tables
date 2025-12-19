@@ -29,5 +29,6 @@ return [
     'select_row' => 'Select row',
     'details' => 'Details',
     'close' => 'Close',
+    'select_an_option' => 'Select an option',
 
 ];

@@ -144,6 +144,7 @@
 
                     @forelse ($rows as $key => $row)
                         <tr
+                            wire:key="{{ $row[$column_id] }}"
                             class="md:border-none transition-colors {{ $themeConfig['table']['tr_body_hover'] }} {{ $themeConfig['table']['border_b'] }} {{ $this->getRowStripingClasses() }}"
 
                         >
@@ -199,9 +200,18 @@
                                             class="w-full"
                                             x-data="{ 
                                                 isEditing: false, 
-                                                value: @js($row[$column->key]), 
-                                                originalValue: @js($row[$column->key]),
+                                                value: @js($row[$column->updateField ?? $column->key]), 
+                                                originalValue: @js($row[$column->updateField ?? $column->key]),
+                                                options: @js($column->editableOptions),
                                                 status: 'idle', // idle, saving, success, error
+                                                getDisplayValue() {
+                                                    if (!this.options) return this.value;
+                                                    if (Array.isArray(this.options) && this.options.length > 0 && typeof this.options[0] === 'object') {
+                                                        let found = this.options.find(o => o.value == this.value);
+                                                        return found ? found.label : this.value;
+                                                    }
+                                                    return this.options[this.value] !== undefined ? this.options[this.value] : this.value;
+                                                },
                                                 focus() { 
                                                     $nextTick(() => { $refs.input.focus() }); 
                                                 },
@@ -232,7 +242,7 @@
                                                 @dblclick="isEditing = true; focus()"
                                                 class="group flex items-center justify-between cursor-pointer relative p-2 -m-2 rounded-md hover:bg-cyan-400/30 dark:hover:bg-cyan-700/50 transition-colors duration-200"
                                             >
-                                                <span x-text="value" :class="{'text-green-600': status === 'success', 'text-red-600': status === 'error'}"></span>
+                                                <span x-text="getDisplayValue()" :class="{'text-green-600': status === 'success', 'text-red-600': status === 'error'}"></span>
                                                 
                                                 <!-- Status Icons -->
                                                 <div class="flex items-center">
@@ -267,8 +277,9 @@
                                                         {{-- @blur="save()"  --}}
                                                         @keydown.enter="save()"
                                                         @keydown.escape="cancel()"
-                                                        class="w-full text-sm border-gray-300 rounded-md focus:border-blue-500 focus:ring-blue-500 py-1 pl-2 pr-8"
+                                                        class="w-full text-sm border-gray-300 rounded-md focus:border-blue-500 focus:ring-blue-500 py-1 pl-2 pr-8 dark:bg-gray-700 dark:text-white dark:border-gray-600"
                                                     >
+                                                        <option value="">{{__('yat::yat.select_an_option')}}</option>
                                                         @foreach($column->editableOptions as $optKey => $optLabel)
                                                             @if(is_array($optLabel) || is_object($optLabel))
                                                                 <option value="{{ $optLabel['value'] ?? $optLabel->value }}">{{ $optLabel['label'] ?? $optLabel->label }}</option>

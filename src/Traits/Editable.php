@@ -42,10 +42,14 @@ trait Editable
                             $value = null;
                         }
                         
-                        $record->$field = $value;
+                        $saveField = $column->updateField ?? $field;
+                        $record->$saveField = $value;
                         $saved = $record->save();
                         
-                        \Illuminate\Support\Facades\Log::info("YATBaseTable Saved ($id): Field=$field Value=" . var_export($value, true) . " Result=" . ($saved ? 'true' : 'false'));
+                        // Invalidate cache to ensure persistence across pagination
+                        $this->clearData();
+
+                        \Illuminate\Support\Facades\Log::info("YATBaseTable Saved ($id): Field=$saveField Value=" . var_export($value, true) . " Result=" . ($saved ? 'true' : 'false'));
                         return $saved;
                     } else {
                         \Illuminate\Support\Facades\Log::warning("YATBaseTable Record not found: $id");

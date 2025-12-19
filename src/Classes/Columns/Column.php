@@ -92,6 +92,13 @@ class Column
         return $this;
     }
 
+    public $updateField = null;
+
+    public function setUpdateField($field): self {
+        $this->updateField = $field;
+        return $this;
+    }
+
     public function pushLeft(): self {
         $this->classes .= ' text-left';
         if (!isset($this->th_wrapper_classes)) {
