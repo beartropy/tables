@@ -33,7 +33,7 @@ class Column
 
     public $sortableCallback = null;
     public $searchableCallback = null;
-    public $isSortable = false;
+    public $isSortable = true;
     public $isSearchable = true;
 
     protected static $existingKeys = [];

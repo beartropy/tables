@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `setUpdateField()` method to `Column` to support updating relationship IDs while displaying names.
 - Added translations for "Select an option" placeholder.
 
+## [2.4.2] - 2025-12-24
+
+### Changed
+- Changed columns to be Sortable and Searchable by default.
+- Added `sortable(bool)` and `searchable(bool)` modifiers to `Column` class to explicitly enable/disable these features.
+
 ## [2.4.0] - 2025-12-19
 
 ### Changed
