@@ -9,8 +9,19 @@ class Column
 {
     use Columns;
 
+    /**
+     * @var string
+     */
     public $label;
+
+    /**
+     * @var string
+     */
     public $key;
+
+    /**
+     * @var string
+     */
     public $index;
     public $isVisible = true;
     public $isHidden = false;
@@ -38,6 +49,12 @@ class Column
 
     protected static $existingKeys = [];
 
+    /**
+     * Create a new Column instance.
+     *
+     * @param string $label
+     * @param string|null $index
+     */
     public function __construct(string $label, ?string $index = null)
     {
         $this->label = trim($label);
@@ -45,11 +62,24 @@ class Column
         $this->index = $index ?? $this->key;
     }
 
+    /**
+     * static Constructor.
+     *
+     * @param string $label
+     * @param string|null $key
+     * @return static
+     */
     public static function make(string $label, ?string $key = null): Column
     {
         return new static($label, $key);
     }
 
+    /**
+     * Set the column to collapse on mobile devices.
+     *
+     * @param bool $bool
+     * @return self
+     */
     public function collapseOnMobile(bool $bool = true): self
     {
         $this->collapseOnMobile = $bool;
@@ -68,6 +98,12 @@ class Column
         return $this;
     }
 
+    /**
+     * Mark the column as sortable.
+     *
+     * @param bool|callable $callback
+     * @return self
+     */
     public function sortable($callback = true): self
     {
         if (is_callable($callback)) {
@@ -79,6 +115,12 @@ class Column
         return $this;
     }
 
+    /**
+     * Mark the column as searchable.
+     *
+     * @param bool|callable $callback
+     * @return self
+     */
     public function searchable($callback = true): self
     {
         if (is_callable($callback)) {
@@ -90,6 +132,14 @@ class Column
         return $this;
     }
 
+    /**
+     * Mark the column as editable.
+     *
+     * @param string $type
+     * @param array $options
+     * @param callable|null $onUpdate
+     * @return self
+     */
     public function editable($type = 'input', $options = [], $onUpdate = null): self
     {
         $this->isEditable = true;

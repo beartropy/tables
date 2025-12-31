@@ -5,36 +5,73 @@ namespace Beartropy\Tables\Traits;
 trait Search
 {
 
+    /**
+     * @var string
+     */
     public $yat_global_search = ''; // Search input binding
+
+    /**
+     * @var string|null
+     */
     public $yat_global_search_label;
+
+    /**
+     * @var bool
+     */
     public $useGlobalSearch = true;
 
-    public function useGlobalSearch(bool $status = true) {
+    /**
+     * Enable or disable global search.
+     *
+     * @param bool $status
+     * @return void
+     */
+    public function useGlobalSearch(bool $status = true)
+    {
         $this->useGlobalSearch = $status;
     }
 
-    public function setSearchLabel(string $label) {
+    /**
+     * Set the label for the global search input.
+     *
+     * @param string $label
+     * @return void
+     */
+    public function setSearchLabel(string $label)
+    {
         $this->yat_global_search_label = $label;
     }
 
+    /**
+     * Handle updates to the global search input.
+     *
+     * Resets pagination when search query changes.
+     *
+     * @return void
+     */
     public function updatingSearch()
     {
         $this->resetPage();
     }
 
+    /**
+     * Filter the data based on global search (Array mode).
+     *
+     * @return \Illuminate\Support\Collection
+     */
     public function filteredData()
     {
 
         $data = $this->getAllData();
-        
+
         // Ensure the search term is properly trimmed and lowercased
         $searchTerm = strtolower(trim($this->yat_global_search));
-    
+
         // If no search term, return the original collection
         if (empty($searchTerm)) {
             return $data;
         }
-        
+
         // Preprocess the keys to search
         $searchableKeys = $this->getFreshColumns()->filter(function ($column) {
             return $column->isSearchable;
@@ -54,10 +91,16 @@ trait Search
         });
     }
 
+    /**
+     * Apply global search to the Eloquent query.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function applySearchToQuery($query)
     {
         $searchTerm = trim($this->yat_global_search);
-        
+
         if (empty($searchTerm)) {
             return $query;
         }
@@ -66,8 +109,8 @@ trait Search
             foreach ($this->getFreshColumns() as $column) {
                 // Check for custom search callback
                 if (property_exists($column, 'searchableCallback') && is_callable($column->searchableCallback)) {
-                     call_user_func($column->searchableCallback, $q, $searchTerm);
-                     continue;
+                    call_user_func($column->searchableCallback, $q, $searchTerm);
+                    continue;
                 }
 
                 // If not explicitly searchable, we might skip? 
@@ -86,7 +129,7 @@ trait Search
                     $parts = explode('.', $targetObject);
                     $attribute = array_pop($parts);
                     $relation = implode('.', $parts);
-                    
+
                     $q->orWhereHas($relation, function ($relQuery) use ($attribute, $searchTerm) {
                         $relQuery->where($attribute, 'like', '%' . $searchTerm . '%');
                     });
@@ -97,4 +140,3 @@ trait Search
         });
     }
 }
-

@@ -7,11 +7,22 @@ use Illuminate\Database\Eloquent\Model;
 
 trait Editable
 {
+    /**
+     * Update a specific field for a row.
+     *
+     * Handles inline editing updates. Supports callbacks, Eloquent models, and array data.
+     * Dispatches 'table-field-updated' event.
+     *
+     * @param mixed $id The row ID.
+     * @param string $field The field/column key to update.
+     * @param mixed $value The new value.
+     * @return bool|void Returns true if successful, false otherwise.
+     */
     public function updateField($id, $field, $value)
     {
         // Find the column definition
         $column = \collect($this->columns)->firstWhere('key', $field);
-        
+
         if (!$column) {
             return;
         }
@@ -34,18 +45,18 @@ trait Editable
         // 3. Eloquent Model Update
         if ($this->model) {
             if (class_exists($this->model)) {
-                 try {
-                     $record = $this->model::find($id);
+                try {
+                    $record = $this->model::find($id);
                     if ($record) {
                         // Convert empty strings to null
                         if ($value === '') {
                             $value = null;
                         }
-                        
+
                         $saveField = $column->updateField ?? $field;
                         $record->$saveField = $value;
                         $saved = $record->save();
-                        
+
                         // Invalidate cache to ensure persistence across pagination
                         $this->clearData();
 
@@ -55,15 +66,15 @@ trait Editable
                         \Illuminate\Support\Facades\Log::warning("YATBaseTable Record not found: $id");
                         return false;
                     }
-                 } catch (\Exception $e) {
-                     // Log error to help debugging
-                     \Illuminate\Support\Facades\Log::error("YATBaseTable Editable Error: " . $e->getMessage());
-                     return false;
-                 }
+                } catch (\Exception $e) {
+                    // Log error to help debugging
+                    \Illuminate\Support\Facades\Log::error("YATBaseTable Editable Error: " . $e->getMessage());
+                    return false;
+                }
             }
             return false;
         }
-        
+
         // 4. Array Data Update (Fallback)
         $this->updateRowOnTable($id, [$field => $value]);
         return true;

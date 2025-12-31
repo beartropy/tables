@@ -5,9 +5,22 @@ namespace Beartropy\Tables\Traits;
 trait Options
 {
 
+    /**
+     * Options available for the table (e.g. for select filters or other UI elements).
+     *
+     * @var array
+     */
     public $options;
 
-    public function setOptions() {
+    /**
+     * Initialize and normalize options.
+     *
+     * Converts string options to ['label' => '...', 'icon' => null] format.
+     *
+     * @return void
+     */
+    public function setOptions()
+    {
         try {
             $this->options = collect($this->options())
                 ->map(function ($value) {
@@ -19,6 +32,7 @@ trait Options
                     return array_merge(['label' => '', 'icon' => null], $value);
                 })
                 ->all();
-        } catch (\Throwable $th) {}
+        } catch (\Throwable $th) {
+        }
     }
 }

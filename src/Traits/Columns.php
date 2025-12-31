@@ -8,15 +8,57 @@ use Illuminate\Support\Str;
 
 trait Columns
 {
+    /**
+     * The unique identifier column for rows.
+     *
+     * @var string
+     */
     public $column_id = 'id';
+
+    /**
+     * A custom column ID override.
+     *
+     * @var string
+     */
     public $custom_column_id = 'id';
+
+    /**
+     * Collection of defined columns.
+     *
+     * @var \Illuminate\Support\Collection|null
+     */
     public $columns;
+
+    /**
+     * Whether to show the column toggle dropdown.
+     *
+     * @var bool
+     */
     public $show_column_toggle = true;
+
+    /**
+     * Status of the column toggle dropdown (open/closed).
+     *
+     * @var bool
+     */
     public $column_toggle_dd_status = false;
+
+    /**
+     * Indicates if there are columns collapsed on mobile view.
+     *
+     * @var bool
+     */
     public $hasMobileCollapsedColumns = false;
+
+    /**
+     * Array of columns that are collapsed on mobile.
+     *
+     * @var array
+     */
     public $mobileCollapsedColumns = [];
 
-    public function setColumns() {
+    public function setColumns()
+    {
         $this->mobileCollapsedColumns = [];
         $this->columns = collect($this->columns());
         $this->columns = $this->columns->map(function ($column) {
@@ -54,132 +96,156 @@ trait Columns
         });
     }
 
-    public function getFreshColumns() {
+    public function getFreshColumns()
+    {
         if (method_exists(\Beartropy\Tables\Classes\Columns\Column::class, 'resetStaticKeys')) {
             \Beartropy\Tables\Classes\Columns\Column::resetStaticKeys();
         }
         return collect($this->columns());
     }
 
-    public function showColumnToggle(bool $bool) {
+    public function showColumnToggle(bool $bool)
+    {
         $this->show_column_toggle = $bool;
     }
 
-    public function setColumnID(String $column_id) {
+    public function setColumnID(String $column_id)
+    {
         $this->custom_column_id = $column_id;
     }
 
-    public function hideOnMobile(Bool $bool): self {
+    public function hideOnMobile(Bool $bool): self
+    {
         $this->hide_on_mobile = true;
         return $this;
     }
 
-    public function showOnMobile(Bool $bool = true): self {
+    public function showOnMobile(Bool $bool = true): self
+    {
         $this->show_on_mobile = $bool;
         return $this;
     }
 
-    public function view($view): self {
+    public function view($view): self
+    {
         $this->hasView = true;
         $this->view = $view;
         return $this;
     }
 
-    public function styling(String $classes): self {
+    public function styling(String $classes): self
+    {
         $this->classes = $classes;
         return $this;
     }
 
-    public function thStyling(String $classes): self {
+    public function thStyling(String $classes): self
+    {
         $this->th_classes = $classes;
         return $this;
     }
 
-    public function thWrapperStyling(String $classes): self {
+    public function thWrapperStyling(String $classes): self
+    {
         $this->th_wrapper_classes = $classes;
         return $this;
     }
 
-    public function disableToggleWhen(Closure $function): self {
+    public function disableToggleWhen(Closure $function): self
+    {
         $this->disableToggleWhen = $function;
         return $this;
     }
-    public function hideToggleWhen(Closure $function): self {
+    public function hideToggleWhen(Closure $function): self
+    {
         $this->hideToggleWhen = $function;
         return $this;
     }
 
-    public function trigger(String $trigger): self {
+    public function trigger(String $trigger): self
+    {
         $this->trigger = $trigger;
         return $this;
     }
 
-    public function isBool(): self {
+    public function isBool(): self
+    {
         $this->isBool = true;
         return $this;
     }
 
-    public function trueIs($true): self {
+    public function trueIs($true): self
+    {
         $this->what_is_true = $true;
         return $this;
     }
 
-    public function trueLabel($string): self {
+    public function trueLabel($string): self
+    {
         $this->true_icon = $string;
         return $this;
     }
 
-    public function falseLabel($string): self {
+    public function falseLabel($string): self
+    {
         $this->false_icon = $string;
         return $this;
     }
 
-    public function toHtml(): self {
+    public function toHtml(): self
+    {
         $this->isHtml = true;
         return $this;
     }
 
-    public function text($text): self {
+    public function text($text): self
+    {
         if ($this->isLink) {
             $this->text = $text;
         }
         return $this;
     }
 
-    public function href(Closure $function): self {
+    public function href(Closure $function): self
+    {
         if ($this->isLink) {
             $this->href = $function;
         }
         return $this;
     }
 
-    public function target(string $target): self {
+    public function target(string $target): self
+    {
         if ($this->isLink) {
             $this->target = $target;
         }
         return $this;
     }
 
-    public function popup(array $array = ["width" => 750,"height"=>800]): self {
+    public function popup(array $array = ["width" => 750, "height" => 800]): self
+    {
         if ($this->isLink) {
             $this->popup = $array;
         }
         return $this;
     }
 
-    public function classes($classes): self {
+    public function classes($classes): self
+    {
         if ($this->isLink) {
             $this->tag_classes = $classes;
         }
         return $this;
     }
 
-    public function customData(Closure $function): self {
+    public function customData(Closure $function): self
+    {
         $this->customData = $function;
         return $this;
     }
 
-    public function hideWhen(Bool $bool): self {
+    public function hideWhen(Bool $bool): self
+    {
         $this->isHidden = $bool;
         if ($bool) {
             $this->hideFromSelector = true;
@@ -187,22 +253,25 @@ trait Columns
         return $this;
     }
 
-    public function hideFromSelector(Bool $bool): self {
+    public function hideFromSelector(Bool $bool): self
+    {
         $this->hideFromSelector = $bool;
         return $this;
     }
 
-    public function isVisible(Bool $bool): self {
+    public function isVisible(Bool $bool): self
+    {
         $this->isVisible = $bool;
         return $this;
     }
 
-    public function sortColumnBy(String $column): self {
+    public function sortColumnBy(String $column): self
+    {
         $this->sortColumnBy = $column;
         return $this;
     }
 
-/*     public function generateTempID() {
+    /*     public function generateTempID() {
         if ($this->has_bulk) {
             if (!$this->yatTableData->isEmpty()) {
                 $idColumn = $this->column_id;
@@ -225,4 +294,3 @@ trait Columns
         }
     } */
 }
-

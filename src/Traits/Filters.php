@@ -8,11 +8,32 @@ use Carbon\Carbon;
 trait Filters
 {
 
+    /**
+     * Collection of defined filters.
+     *
+     * @var \Illuminate\Support\Collection|array
+     */
     public $filters;
+
+    /**
+     * @var bool
+     */
     public $has_filters = false;
+
+    /**
+     * @var bool
+     */
     public $show_filters = false;
 
-    public function setFilters() {
+    /**
+     * Initialize filters.
+     *
+     * Processes defined filters, resolving keys, options (for magic-select), and serializing them for Livewire.
+     *
+     * @return void
+     */
+    public function setFilters()
+    {
         try {
             $this->filters = collect($this->filters());
         } catch (\Throwable $th) {
@@ -20,16 +41,16 @@ trait Filters
         }
         $this->filters = $this->filters->mapWithKeys(function ($item) {
             $key = substr(str_shuffle(str_repeat('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 5)), 0, 10);
-            
+
             // Note: We don't need to explicitly strip closures if we use get_object_vars 
             // because proper serialization will just ignore the closure property if we don't return it? 
             // Actually get_object_vars returns the property.
             // We MUST ensure the closure is not in the array we return for storage.
-            
+
             if (isset($item->queryCallback)) {
                 $item->queryCallback = null;
             }
-            
+
             // Store as Array for safe Livewire serialization
             return [$key => get_object_vars($item)];
         });
@@ -49,105 +70,123 @@ trait Filters
         // But $this->filters items were objects (stdClass).
         // Since we are now converting to Arrays, we should set the key BEFORE mapping or handle it differently.
         // Let's reset the logic to be clean:
-        
+
         // 1. Get objects
         $objects = collect($this->filters());
-        
+
         // 2. Prepare keys on objects
         foreach ($objects as $filter) {
-             if ($filter->column) {
+            if ($filter->column) {
                 $filter->key = $filter->column;
             } else {
                 $filter->key = $this->getColumnKey($filter->label);
             }
             if ($filter->type == 'magic-select') {
                 $pluckKey = $filter->key;
-                
+
                 // If filter key is explicitly the DB column, we need to find the matching Column key (slug)
                 // because getAllData returns data keyed by Column keys.
                 // We trust $this->columns is available (it usually is in YAT tables).
                 if (isset($this->columns)) {
-                     $matchingCol = $this->columns->first(function($c) use ($filter) {
-                         return ($c->index ?? $c->key) === $filter->key;
-                     });
-                     if ($matchingCol) {
-                         $pluckKey = $matchingCol->key;
-                     }
+                    $matchingCol = $this->columns->first(function ($c) use ($filter) {
+                        return ($c->index ?? $c->key) === $filter->key;
+                    });
+                    if ($matchingCol) {
+                        $pluckKey = $matchingCol->key;
+                    }
                 }
 
                 $options = $this->getAllData()->pluck($pluckKey)->unique()->values();
                 // Map objects/arrays to strings if necessary
-                $filter->options = $options->map(function($item) {
-                     if (is_string($item) || is_numeric($item) || is_bool($item)) {
-                         return $item;
-                     }
-                     if (is_object($item)) {
-                         if (method_exists($item, '__toString')) {
-                             return (string) $item;
-                         }
-                         $candidates = ['name', 'label', 'title', 'slug', 'id'];
-                         foreach ($candidates as $candidate) {
-                             if (isset($item->$candidate)) {
-                                 return $item->$candidate;
-                             }
-                         }
-                         // Try array access on object if supported? Or just get vars
-                         // Usually Eloquent models support property access used above.
-                     }
-                     if (is_array($item)) {
-                         $candidates = ['name', 'label', 'title', 'slug', 'id'];
-                         foreach ($candidates as $candidate) {
-                             if (isset($item[$candidate])) {
-                                 return $item[$candidate];
-                             }
-                         }
-                     }
-                     return $item; // Fallback, let it be [object Object] or whatever if we failed
+                $filter->options = $options->map(function ($item) {
+                    if (is_string($item) || is_numeric($item) || is_bool($item)) {
+                        return $item;
+                    }
+                    if (is_object($item)) {
+                        if (method_exists($item, '__toString')) {
+                            return (string) $item;
+                        }
+                        $candidates = ['name', 'label', 'title', 'slug', 'id'];
+                        foreach ($candidates as $candidate) {
+                            if (isset($item->$candidate)) {
+                                return $item->$candidate;
+                            }
+                        }
+                        // Try array access on object if supported? Or just get vars
+                        // Usually Eloquent models support property access used above.
+                    }
+                    if (is_array($item)) {
+                        $candidates = ['name', 'label', 'title', 'slug', 'id'];
+                        foreach ($candidates as $candidate) {
+                            if (isset($item[$candidate])) {
+                                return $item[$candidate];
+                            }
+                        }
+                    }
+                    return $item; // Fallback, let it be [object Object] or whatever if we failed
                 })->filter()->unique()->values();
-                
+
                 $filter->type = 'select';
             }
         }
-        
+
         // 3. Serialize to Arrays
-        $this->filters = $objects->mapWithKeys(function($item) {
-             $key = substr(str_shuffle(str_repeat('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 5)), 0, 10);
-             if (isset($item->queryCallback)) {
+        $this->filters = $objects->mapWithKeys(function ($item) {
+            $key = substr(str_shuffle(str_repeat('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 5)), 0, 10);
+            if (isset($item->queryCallback)) {
                 $item->queryCallback = null;
-             }
-             return [$key => (array) get_object_vars($item)];
+            }
+            return [$key => (array) get_object_vars($item)];
         });
-        
+
         if (!$this->filters->isEmpty()) {
             $this->has_filters = true;
         }
     }
 
-    public function getColumnKey($filter_label) {
+    /**
+     * Identify the column key from a filter label.
+     *
+     * @param string $filter_label
+     * @return string
+     * @throws Exception
+     */
+    public function getColumnKey($filter_label)
+    {
         try {
             return $this->columns->filter(function ($column) use ($filter_label) {
                 return strtolower($column->label) === strtolower($filter_label);
             })->first()->key;
         } catch (\Throwable $th) {
-            throw new Exception("No column with label ".$filter_label." to associate with filter.");
+            throw new Exception("No column with label " . $filter_label . " to associate with filter.");
         }
     }
 
-    public function updatedFilters($key,$value) {
-        if(is_array($key)) return;
+    /**
+     * Handle updates to filter inputs.
+     *
+     * Triggered by Livewire when filter properties change.
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     */
+    public function updatedFilters($key, $value)
+    {
+        if (is_array($key)) return;
 
-        if (!str_contains($key,'filters.')) {
+        if (!str_contains($key, 'filters.')) {
             return;
         }
-        
-        $key = str_replace(array('filters.','.input'),'',$key);
-        
+
+        $key = str_replace(array('filters.', '.input'), '', $key);
+
         $filter = $this->filters->get($key);
-        
+
         if (!$filter) return;
 
         // Array access
-        if (in_array($filter['type'],array("string","select"))) {
+        if (in_array($filter['type'], array("string", "select"))) {
             $filter['input'] = trim($filter['input']);
         }
         if ($filter['type'] == "bool") {
@@ -167,18 +206,25 @@ trait Filters
                 ];
             }
         }
-        
+
         $this->filters->put($key, $filter);
     }
 
-    public function applyFilters($data) {
+    /**
+     * Apply filters to the data collection (Array/Collection mode).
+     *
+     * @param \Illuminate\Support\Collection $data
+     * @return \Illuminate\Support\Collection
+     */
+    public function applyFilters($data)
+    {
         if (!$this->has_filters) return $data;
-        
+
         // Used for In-Memory filtering.
         // We use $this->filters (arrays) directly, no need for callbacks usually?
         // If we want callbacks to work on In-Memory data, we'd need getFreshFilters too.
         // But for now, let's just make it compatible with Array syntax.
-        
+
         return $data->filter(function ($item) {
             foreach ($this->filters as $filter) {
                 // $filter is Array
@@ -187,8 +233,8 @@ trait Filters
                 $input = $filter['input'];
 
                 if ($type == "string") {
-                    $suffix = array_key_exists($key."_original",$item) ? '_original' : '';
-                    if ($input && !str_contains(strtolower($item[$key.$suffix]), strtolower($input))) {
+                    $suffix = array_key_exists($key . "_original", $item) ? '_original' : '';
+                    if ($input && !str_contains(strtolower($item[$key . $suffix]), strtolower($input))) {
                         return false;
                     }
                 }
@@ -209,7 +255,7 @@ trait Filters
                 if ($type == "daterange") {
                     if (isset($filter['daterange']['start'], $filter['daterange']['end'])) {
                         $itemDate = Carbon::parse($item[$filter['key']]); // Assume your data has a 'date' field
-            
+
                         if (!$itemDate->between($filter['daterange']['start'], $filter['daterange']['end'])) {
                             return false; // Exclude if the date is not in range
                         }
@@ -219,18 +265,27 @@ trait Filters
             return true;
         });
     }
-    
-    public function getFreshFilters() {
+
+    /**
+     * Get a fresh instance of filters with current state merged.
+     *
+     * Re-initializes filters (e.g. to get closures back) and merges the Livewire state (inputs).
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getFreshFilters()
+    {
         $freshFilters = collect($this->filters());
-        
+
         // Prepare fresh filters (calculate keys)
-        $freshFilters->transform(function($filter) {
+        $freshFilters->transform(function ($filter) {
             if ($filter->column) {
                 $filter->key = $filter->column;
             } else {
                 try {
                     $filter->key = $this->getColumnKey($filter->label);
-                } catch(\Throwable $e) {}
+                } catch (\Throwable $e) {
+                }
             }
             return $filter;
         });
@@ -239,39 +294,46 @@ trait Filters
         $storedFilters = $this->filters ? $this->filters->values() : collect();
 
         // Merge state from stored $this->filters (Arrays)
-        return $freshFilters->map(function($filter, $index) use ($storedFilters) {
-             $storedData = $storedFilters->get($index);
-             
-             if ($storedData) {
-                 $filter->input = $storedData['input'];
-                 if (isset($storedData['daterange'])) {
-                     $filter->daterange = $storedData['daterange'] ?? null;
-                 }
-                 // We don't overwrite queryCallback, so fresh one stands.
-             }
-             return $filter;
+        return $freshFilters->map(function ($filter, $index) use ($storedFilters) {
+            $storedData = $storedFilters->get($index);
+
+            if ($storedData) {
+                $filter->input = $storedData['input'];
+                if (isset($storedData['daterange'])) {
+                    $filter->daterange = $storedData['daterange'] ?? null;
+                }
+                // We don't overwrite queryCallback, so fresh one stands.
+            }
+            return $filter;
         });
     }
 
-    public function applyFiltersToQuery($query) {
+    /**
+     * Apply filters to the Eloquent query.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function applyFiltersToQuery($query)
+    {
         if (!$this->has_filters) return $query;
-        
+
         // Use fresh filters (Objects)
         $filters = $this->getFreshFilters();
-        
+
         foreach ($filters as $filter) {
-            
+
             // Custom Query Callback
             if (isset($filter->queryCallback) && is_callable($filter->queryCallback)) {
                 if ($filter->input) {
-                     call_user_func($filter->queryCallback, $query, $filter->input, $filter);
+                    call_user_func($filter->queryCallback, $query, $filter->input, $filter);
                 }
-                continue; 
+                continue;
             }
 
             $key = $filter->key;
             $dbColumn = $key;
-            
+
             // Resolve actual DB column if key is a slug
             if (isset($this->columns)) {
                 $col = $this->columns->firstWhere('key', $key);
@@ -292,7 +354,7 @@ trait Filters
             if ($filter->type == "string") {
                 if ($filter->input) {
                     if ($relation) {
-                        $query->whereHas($relation, function($q) use ($column, $filter) {
+                        $query->whereHas($relation, function ($q) use ($column, $filter) {
                             $q->where($column, 'like', '%' . $filter->input . '%');
                         });
                     } else {
@@ -302,8 +364,8 @@ trait Filters
             }
             if ($filter->type == "select" || $filter->type == "magic-select") {
                 if ($filter->input) {
-                   if ($relation) {
-                        $query->whereHas($relation, function($q) use ($column, $filter) {
+                    if ($relation) {
+                        $query->whereHas($relation, function ($q) use ($column, $filter) {
                             $q->where($column, $filter->input);
                         });
                     } else {
@@ -317,7 +379,7 @@ trait Filters
                 }
                 $boolVal = filter_var($filter->input, FILTER_VALIDATE_BOOLEAN);
                 if ($relation) {
-                    $query->whereHas($relation, function($q) use ($column, $boolVal) {
+                    $query->whereHas($relation, function ($q) use ($column, $boolVal) {
                         $q->where($column, $boolVal);
                     });
                 } else {
@@ -326,18 +388,18 @@ trait Filters
             }
             if ($filter->type == "daterange") {
                 if (isset($filter->daterange['start'], $filter->daterange['end'])) {
-                     if ($relation) {
-                        $query->whereHas($relation, function($q) use ($column, $filter) {
+                    if ($relation) {
+                        $query->whereHas($relation, function ($q) use ($column, $filter) {
                             $q->whereBetween($column, [
-                               $filter->daterange['start'], 
-                               $filter->daterange['end']
-                           ]);
+                                $filter->daterange['start'],
+                                $filter->daterange['end']
+                            ]);
                         });
                     } else {
-                       $query->whereBetween($dbColumn, [
-                           $filter->daterange['start'], 
-                           $filter->daterange['end']
-                       ]);
+                        $query->whereBetween($dbColumn, [
+                            $filter->daterange['start'],
+                            $filter->daterange['end']
+                        ]);
                     }
                 }
             }
@@ -345,7 +407,14 @@ trait Filters
         return $query;
     }
 
-    public function clearAllFilters($selectAll=false) {
+    /**
+     * Clear all active filters and search.
+     *
+     * @param bool $selectAll Whether to select all data after clearing.
+     * @return void
+     */
+    public function clearAllFilters($selectAll = false)
+    {
         $this->yat_global_search = '';
         if ($this->filters) {
             $this->filters->transform(function ($filter) {
