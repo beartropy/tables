@@ -25,7 +25,7 @@ class Column
     public $show_on_mobile = false;
     public $cardTitle = false;
     public $showOnCard = false;
-    
+
     public $isEditable = false;
     public $editableType = 'input'; // input, select
     public $editableOptions = [];
@@ -38,7 +38,8 @@ class Column
 
     protected static $existingKeys = [];
 
-    public function __construct(string $label, ?string $index = null) {
+    public function __construct(string $label, ?string $index = null)
+    {
         $this->label = trim($label);
         $this->key = $index ?? $this->generateUniqueKey($label);
         $this->index = $index ?? $this->key;
@@ -49,22 +50,26 @@ class Column
         return new static($label, $key);
     }
 
-    public function collapseOnMobile(bool $bool = true): self {
+    public function collapseOnMobile(bool $bool = true): self
+    {
         $this->collapseOnMobile = $bool;
         return $this;
     }
 
-    public function cardTitle(bool $bool = true): self {
+    public function cardTitle(bool $bool = true): self
+    {
         $this->cardTitle = $bool;
         return $this;
     }
 
-    public function showOnCard(bool $bool = true): self {
+    public function showOnCard(bool $bool = true): self
+    {
         $this->showOnCard = $bool;
         return $this;
     }
 
-    public function sortable($callback = true): self {
+    public function sortable($callback = true): self
+    {
         if (is_callable($callback)) {
             $this->sortableCallback = $callback;
             $this->isSortable = true;
@@ -74,7 +79,8 @@ class Column
         return $this;
     }
 
-    public function searchable($callback = true): self {
+    public function searchable($callback = true): self
+    {
         if (is_callable($callback)) {
             $this->searchableCallback = $callback;
             $this->isSearchable = true;
@@ -84,7 +90,8 @@ class Column
         return $this;
     }
 
-    public function editable($type = 'input', $options = [], $onUpdate = null): self {
+    public function editable($type = 'input', $options = [], $onUpdate = null): self
+    {
         $this->isEditable = true;
         $this->editableType = $type;
         $this->editableOptions = $options;
@@ -94,35 +101,40 @@ class Column
 
     public $updateField = null;
 
-    public function setUpdateField($field): self {
+    public function setUpdateField($field): self
+    {
         $this->updateField = $field;
         return $this;
     }
 
-    public function pushLeft(): self {
+    public function pushLeft(): self
+    {
         $this->classes .= ' text-left';
         if (!isset($this->th_wrapper_classes)) {
             $this->th_wrapper_classes = '';
         }
-        $this->th_wrapper_classes .= ' text-left';
+        $this->th_wrapper_classes .= ' flex justify-start text-left';
         return $this;
     }
 
-    public function pushRight(): self {
+    public function pushRight(): self
+    {
         $this->classes .= ' text-right';
         if (!isset($this->th_wrapper_classes)) {
             $this->th_wrapper_classes = '';
         }
-        $this->th_wrapper_classes .= ' text-right';
+        $this->th_wrapper_classes .= ' flex justify-end text-right';
         return $this;
     }
 
-    public static function resetStaticKeys() {
+    public static function resetStaticKeys()
+    {
         static::$existingKeys = [];
     }
 
-    protected function generateUniqueKey(string $label): string {
-        
+    protected function generateUniqueKey(string $label): string
+    {
+
         // Convert label to a slug with underscore separator
         if ($label == "#") $label = "hash";
         $baseKey = Str::slug($label, '_');
@@ -131,7 +143,7 @@ class Column
 
         // Ensure uniqueness across all created Column objects
         while (in_array($key, static::$existingKeys)) {
-            $key = $baseKey."_".$counter++;
+            $key = $baseKey . "_" . $counter++;
         }
 
         // Store the key to prevent future duplicates
@@ -139,5 +151,4 @@ class Column
 
         return $key;
     }
-
 }
