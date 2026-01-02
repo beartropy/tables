@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2026-01-02
+
+### Added
+- Comprehensive test suite using PestPHP:
+    - **Unit Tests**: `Column` logic (instantiation, unique keys, modifiers) and `Options` logic.
+    - **Feature Tests**: Table rendering, pagination (per page, navigation), global search, and column sorting.
+- Test infrastructure: `TestCase` setup with SQLite in-memory database and `Pest` configuration.
+- Structural improvements in `yat-table.blade.php`:
+    - Better handling of row expansion and mobile layout.
+    - Improved empty search results display.
+    - Enhanced data-attribute handling for accessibility and styling.
+
+### Changed
+- Improved project documentation structure and meta-information.
+- Refactored `yat-table.blade.php` for better readability and performance.
+- Updated `YATableComponent.stub` with improved code styling and type hints.
+
 ## [2.4.4] - 2025-12-31
 
 ### Fixed
