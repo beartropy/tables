@@ -19,6 +19,17 @@
             "Beartropy\\Tables\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0",
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0",
+        "livewire/livewire": "^3.7"
+    },
     "authors": [
         {
             "name": "Beartropy"
@@ -29,6 +40,11 @@
             "providers": [
                 "Beartropy\\Tables\\YATProvider"
             ]
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
         }
     }
 }
