@@ -429,6 +429,25 @@ trait Data
                 }
             }
 
+            // Handle Date formatting
+            if (property_exists($column, 'isDate') && $column->isDate) {
+                if ($parsedValue !== null && $parsedValue !== '') {
+                    try {
+                        $date = $column->inputFormat
+                            ? \DateTime::createFromFormat($column->inputFormat, $parsedValue)
+                            : new \DateTime($parsedValue);
+
+                        if ($date) {
+                            $parsedValue = $date->format($column->outputFormat ?? 'Y-m-d');
+                        }
+                    } catch (\Exception $e) {
+                        // Keep original value if parsing fails
+                    }
+                } else {
+                    $parsedValue = $column->emptyValue ?? '';
+                }
+            }
+
             $parsedRow[$column->key] = $parsedValue;
 
             if ($column->updateField) {
