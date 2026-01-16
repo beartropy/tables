@@ -177,6 +177,16 @@ class Column
         return $this;
     }
 
+    public function centered(): self
+    {
+        $this->classes .= ' text-center';
+        if (!isset($this->th_wrapper_classes)) {
+            $this->th_wrapper_classes = '';
+        }
+        $this->th_wrapper_classes .= ' flex justify-center text-center';
+        return $this;
+    }
+
     public static function resetStaticKeys()
     {
         static::$existingKeys = [];

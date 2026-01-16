@@ -98,7 +98,7 @@
                                 <th class="text-left pl-2 {{ $themeConfig['table']['th'] }}">#</th>
                             @endif
                             @if ($has_bulk)
-                                <th class="text-left px-5 {{ $themeConfig['table']['th'] }}">
+                                <th class="w-1 text-left px-5 {{ $themeConfig['table']['th'] }}">
                                     <x-beartropy-ui::checkbox sm wire:model.live="selectAll"
                                         color="{{ $bulkThemeOverride ?? $theme }}" />
                                 </th>
@@ -173,7 +173,7 @@
                                         {{ $loop->iteration }}</td>
                                 @endif
                                 @if ($has_bulk)
-                                    <td class="px-5">
+                                    <td class="w-1 px-5">
                                         <x-beartropy-ui::checkbox sm value="{{ $row[$column_id] }}"
                                             id="{{ $row[$column_id] }}" wire:model.live="yat_selected_checkbox"
                                             color="{{ $bulkThemeOverride ?? $theme }}" />
