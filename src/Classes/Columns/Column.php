@@ -35,6 +35,8 @@ class Column
     public $collapseOnMobile = false;
     public $show_on_mobile = false;
     public $cardTitle = false;
+    public $cardTitleCallback = null;
+    public $triggerCardInfoModal = true;
     public $showOnCard = false;
 
     public $isEditable = false;
@@ -86,9 +88,26 @@ class Column
         return $this;
     }
 
-    public function cardTitle(bool $bool = true): self
+    /**
+     * Set the column as the card title for mobile devices.
+     * 
+     * @param bool|callable $callback
+     * @return self
+     */
+    public function cardTitle($callback = true): self
     {
-        $this->cardTitle = $bool;
+        if (is_callable($callback)) {
+            $this->cardTitleCallback = $callback;
+            $this->cardTitle = true;
+        } else {
+            $this->cardTitle = $callback;
+        }
+        return $this;
+    }
+
+    public function triggerCardInfoModal(bool $bool = true): self
+    {
+        $this->triggerCardInfoModal = $bool;
         return $this;
     }
 

@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.0] - 2026-01-16
+
+### Added
+- Added `triggerCardInfoModal(bool)` method to `Column` class to optionally disable opening the info modal when clicking the card title on mobile.
+- Support for closure callbacks in `cardTitle()` method to allow dynamic content generation for mobile card titles.
+
+### Changed
+- Refactored `Data` trait and `Column` serialization logic to support passing closures to views, enabling more dynamic UI definitions.
 ## [2.6.3] - 2026-01-16
 
 ### Added

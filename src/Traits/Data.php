@@ -319,8 +319,10 @@ trait Data
         // essentially ensuring we have the column definitions ready.
         // In current implementation $this->columns is a collection/array already set.
 
-        $processed = $collection->map(function ($row) use ($customData, $linkColumns, $toggleColumns) {
-            return $this->transformRow($row, $customData, $linkColumns, $toggleColumns);
+        $cardTitleCallbacks = $this->getCardTitleCallbacks();
+
+        $processed = $collection->map(function ($row) use ($customData, $linkColumns, $toggleColumns, $cardTitleCallbacks) {
+            return $this->transformRow($row, $customData, $linkColumns, $toggleColumns, $cardTitleCallbacks);
         });
 
         // The original implementation had a map at the end to remove _original
@@ -379,7 +381,7 @@ trait Data
      * @param array $toggleColumns
      * @return array The transformed row data.
      */
-    public function transformRow($row, $customData, $linkColumns, $toggleColumns)
+    public function transformRow($row, $customData, $linkColumns, $toggleColumns, $cardTitleCallbacks = [])
     {
         $parsedRow = [];
         // Support object or array row
@@ -458,6 +460,11 @@ trait Data
                 }
                 $parsedRow[$column->updateField] = $updateValue;
             }
+
+            // Handle Card Title Callback
+            if (isset($cardTitleCallbacks[$column->key])) {
+                $parsedRow[$column->key . '_card_title'] = call_user_func_array($cardTitleCallbacks[$column->key]['function'], [$row, $parsedValue ?? null]);
+            }
         }
 
         if ($this->custom_column_id) {
@@ -530,6 +537,24 @@ trait Data
             }
         }
         return $toggleColumns;
+    }
+
+    /**
+     * Get columns with card title callback.
+     *
+     * @return array
+     */
+    public function getCardTitleCallbacks()
+    {
+        $callbacks = [];
+        foreach ($this->getFreshColumns() as $column) {
+            if (property_exists($column, 'cardTitleCallback') && is_callable($column->cardTitleCallback)) {
+                $callbacks[$column->key] = [
+                    'function' => $column->cardTitleCallback,
+                ];
+            }
+        }
+        return $callbacks;
     }
 
     /**

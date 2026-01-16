@@ -49,3 +49,19 @@ it('can be configured for mobile', function () {
     $column = Column::make('Name')->collapseOnMobile();
     expect($column->collapseOnMobile)->toBeTrue();
 });
+
+it('can accept a callback for card title', function () {
+    $callback = function($row) { return 'Title: ' . $row['name']; };
+    $column = Column::make('Name')->cardTitle($callback);
+
+    expect($column->cardTitle)->toBeTrue();
+    expect($column->cardTitleCallback)->toBe($callback);
+});
+
+it('can configure modal trigger', function () {
+    $column = Column::make('Name')->triggerCardInfoModal(false);
+    expect($column->triggerCardInfoModal)->toBeFalse();
+    
+    $column->triggerCardInfoModal(true);
+    expect($column->triggerCardInfoModal)->toBeTrue();
+});
