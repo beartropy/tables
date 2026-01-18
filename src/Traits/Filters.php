@@ -78,6 +78,9 @@ trait Filters
         foreach ($objects as $filter) {
             if ($filter->column) {
                 $filter->key = $filter->column;
+            } elseif (isset($filter->queryCallback) && is_callable($filter->queryCallback)) {
+                // Virtual filter with custom query callback - use a generated key
+                $filter->key = '_virtual_' . \Illuminate\Support\Str::slug($filter->label);
             } else {
                 $filter->key = $this->getColumnKey($filter->label);
             }
@@ -281,6 +284,9 @@ trait Filters
         $freshFilters->transform(function ($filter) {
             if ($filter->column) {
                 $filter->key = $filter->column;
+            } elseif (isset($filter->queryCallback) && is_callable($filter->queryCallback)) {
+                // Virtual filter with custom query callback - use a generated key
+                $filter->key = '_virtual_' . \Illuminate\Support\Str::slug($filter->label);
             } else {
                 try {
                     $filter->key = $this->getColumnKey($filter->label);
