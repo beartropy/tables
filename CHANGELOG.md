@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.8.0] - 2026-02-14
+
+### Added
+- **MCP Tools**: Three MCP tools (ComponentDocs, ListComponents, ProjectContext) for Laravel Boost integration.
+- **Skills**: Setup skill (bt-tables-setup) and docs maintenance skill for AI assistants.
+- **Docs**: LLM reference docs and user docs for all 12 components (docs/llms/, docs/components/).
+- **Docs**: AI assistant documentation with universal guide, Cursor rules, and code examples (docs/ai-assistants/).
+- **Docs**: Doc templates for LLM and user documentation (docs/llms/_template.md, docs/components/_template.md).
+- **Tests**: Comprehensive test suite expanded from 39 to 243 tests covering all column types, filter types, traits, bulk actions, inline editing, filters integration, row manipulation, and export.
+- **Tests**: MCP integrity tests ensuring documentation stays in sync with code.
+- **Translations**: 8 missing Spanish translation keys added.
+
+### Changed
+- **Code Quality**: Type hints added to 60 properties across all traits and classes.
+- **Code Quality**: PHPDoc blocks added or corrected across 68 issues in all src/ files.
+- **Code Quality**: Magic number replaced with PHP_INT_MAX constant.
+- **Security**: Input validation and null safety improvements across multiple traits.
+- **Cleanup**: Dead code, duplicate PHPDoc blocks, and Spanish comments removed.
+
+### Fixed
+- **Migration**: Corrected `down()` method to properly reverse migration.
+- **Pagination**: Fixed typo in pagination property name.
+- **Null Safety**: Added null checks to prevent errors with empty data sets.
+
 ## [2.7.1] - 2026-01-18
 
 ### Fixed
