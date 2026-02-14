@@ -1,0 +1,5 @@
+{
+    "prefix": "bt-tables",
+    "excludeSkills": ["bt-tables-docs-maintenance"],
+    "componentDocs": "docs/llms"
+}
