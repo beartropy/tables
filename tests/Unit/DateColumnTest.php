@@ -1,7 +1,7 @@
 <?php
 
-use Beartropy\Tables\Classes\Columns\DateColumn;
 use Beartropy\Tables\Classes\Columns\Column;
+use Beartropy\Tables\Classes\Columns\DateColumn;
 
 beforeEach(function () {
     Column::resetStaticKeys();

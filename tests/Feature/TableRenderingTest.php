@@ -1,9 +1,9 @@
 <?php
 
-use Beartropy\Tables\YATBaseTable;
 use Beartropy\Tables\Classes\Columns\Column;
-use Livewire\Livewire;
+use Beartropy\Tables\YATBaseTable;
 use Illuminate\Database\Eloquent\Model;
+use Livewire\Livewire;
 
 class User extends Model
 {
@@ -12,11 +12,6 @@ class User extends Model
 
 class UserTable extends YATBaseTable
 {
-    public function query()
-    {
-        return User::query();
-    }
-
     public function columns()
     {
         return [
@@ -28,6 +23,51 @@ class UserTable extends YATBaseTable
     public function settings()
     {
         $this->model = User::class;
+    }
+}
+
+class ArrayTable extends YATBaseTable
+{
+    public function columns()
+    {
+        return [
+            Column::make('Name', 'name'),
+            Column::make('Email', 'email'),
+        ];
+    }
+
+    public function data()
+    {
+        return [
+            ['id' => 1, 'name' => 'Alice Array', 'email' => 'alice@array.com'],
+            ['id' => 2, 'name' => 'Bob Array', 'email' => 'bob@array.com'],
+        ];
+    }
+
+    public function settings() {}
+}
+
+class CustomColumnIdTable extends YATBaseTable
+{
+    public function columns()
+    {
+        return [
+            Column::make('Code', 'code'),
+            Column::make('Label', 'label'),
+        ];
+    }
+
+    public function data()
+    {
+        return [
+            ['code' => 'A1', 'label' => 'Item A'],
+            ['code' => 'B2', 'label' => 'Item B'],
+        ];
+    }
+
+    public function settings()
+    {
+        $this->setColumnID('code');
     }
 }
 
@@ -47,4 +87,42 @@ it('renders columns correctly', function () {
     Livewire::test(UserTable::class)
         ->assertSee('Name')
         ->assertSee('Email');
+});
+
+it('renders array-based table', function () {
+    Livewire::test(ArrayTable::class)
+        ->assertStatus(200)
+        ->assertSee('Alice Array')
+        ->assertSee('bob@array.com');
+});
+
+it('renders with custom column_id', function () {
+    Livewire::test(CustomColumnIdTable::class)
+        ->assertStatus(200)
+        ->assertSee('Item A')
+        ->assertSee('Item B');
+});
+
+it('showOnlyTable hides search and pagination', function () {
+    $tableClass = new class extends YATBaseTable
+    {
+        public function columns()
+        {
+            return [
+                Column::make('Name'),
+                Column::make('Email'),
+            ];
+        }
+
+        public function settings()
+        {
+            $this->model = User::class;
+            $this->showOnlyTable(true);
+        }
+    };
+
+    Livewire::test($tableClass::class)
+        ->assertSet('useGlobalSearch', false)
+        ->assertSet('with_pagination', false)
+        ->assertSet('show_column_toggle', false);
 });

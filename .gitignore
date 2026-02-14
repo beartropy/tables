@@ -2,3 +2,7 @@ vendor
 composer.lock
 .agent/
 .phpunit.cache/
+.claude/
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/bt-tables-setup/

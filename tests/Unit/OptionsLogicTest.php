@@ -1,39 +1,75 @@
 <?php
 
-namespace Tests\Unit;
-
 use Beartropy\Tables\YATBaseTable;
-use Livewire\Livewire;
-use Tests\TestCase;
-use Workbench\App\Models\User;
 
-class OptionsLogicTest extends TestCase
-{
-    /** @test */
-    public function it_shows_options_by_default()
+it('shows options by default', function () {
+    $component = new class extends YATBaseTable
     {
-        // Mocking the component or a simplified version
-        $component = new class extends YATBaseTable {
-            public function options() {
-                return ['export' => 'Export'];
-            }
-        };
-        
-        $this->assertFalse($component->showOptionsOnlyOnRowSelect);
-        // We can't easily test blade conditional rendering without a full integration test environment setup here easily
-        // But we can check property state.
-    }
+        public function options()
+        {
+            return ['export' => 'Export'];
+        }
+    };
 
-    /** @test */
-    public function it_can_enable_show_options_only_on_row_select()
+    expect($component->showOptionsOnlyOnRowSelect)->toBeFalse();
+});
+
+it('can enable show options only on row select', function () {
+    $component = new class extends YATBaseTable
     {
-        $component = new class extends YATBaseTable {
-             public function options() {
-                return ['export' => 'Export'];
-            }
-        };
+        public function options()
+        {
+            return ['export' => 'Export'];
+        }
+    };
 
-        $component->showOptionsOnlyOnRowSelect(true);
-        $this->assertTrue($component->showOptionsOnlyOnRowSelect);
-    }
-}
+    $component->showOptionsOnlyOnRowSelect(true);
+    expect($component->showOptionsOnlyOnRowSelect)->toBeTrue();
+});
+
+it('normalizes string options to array with label and icon', function () {
+    $component = new class extends YATBaseTable
+    {
+        public function options()
+        {
+            return ['export' => 'Export', 'delete' => 'Delete'];
+        }
+    };
+
+    $component->setOptions();
+
+    expect($component->options['export'])->toBe(['label' => 'Export', 'icon' => null]);
+    expect($component->options['delete'])->toBe(['label' => 'Delete', 'icon' => null]);
+});
+
+it('merges array options with defaults', function () {
+    $component = new class extends YATBaseTable
+    {
+        public function options()
+        {
+            return [
+                'export' => ['label' => 'Export', 'icon' => 'download'],
+                'delete' => ['label' => 'Delete'],
+            ];
+        }
+    };
+
+    $component->setOptions();
+
+    expect($component->options['export'])->toBe(['label' => 'Export', 'icon' => 'download']);
+    expect($component->options['delete'])->toBe(['label' => 'Delete', 'icon' => null]);
+});
+
+it('silently handles exception in options method', function () {
+    $component = new class extends YATBaseTable
+    {
+        public function options()
+        {
+            throw new \RuntimeException('Boom');
+        }
+    };
+
+    $component->setOptions();
+
+    expect($component->options)->toBeNull();
+});

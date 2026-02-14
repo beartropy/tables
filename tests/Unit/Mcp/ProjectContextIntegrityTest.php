@@ -8,7 +8,6 @@
  * Since `laravel/mcp` is not a dev dependency, we test the raw data sources
  * rather than instantiating the tool class.
  */
-
 $basePath = dirname(__DIR__, 3);
 $composerPath = $basePath.'/composer.json';
 

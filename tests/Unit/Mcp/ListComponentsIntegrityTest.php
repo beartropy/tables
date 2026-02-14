@@ -9,7 +9,6 @@
  * Since `laravel/mcp` is not a dev dependency, we parse the CATEGORIES constant
  * directly from the source file rather than loading the class.
  */
-
 $docsPath = dirname(__DIR__, 3).'/docs/llms';
 $sourcePath = dirname(__DIR__, 3).'/src/Mcp/Tools/ListComponents.php';
 

@@ -1,0 +1,245 @@
+# Beartropy Tables - Cursor Rules
+
+## Project Context
+This project uses **Beartropy Tables**, a Livewire data table component for the TALL stack (Tailwind, Alpine, Laravel, Livewire).
+
+## Table Architecture
+
+### Base Class
+All tables extend `Beartropy\Tables\YATBaseTable` (a Livewire component):
+
+```php
+use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\Classes\Columns\Column;
+
+class MyTable extends YATBaseTable
+{
+    public $model = \App\Models\MyModel::class;
+
+    public function columns(): array
+    {
+        return [
+            Column::make('Name', 'name')->sortable()->searchable(),
+        ];
+    }
+}
+```
+
+### Two Data Modes
+```php
+# Model-based (Eloquent)
+public $model = User::class;
+
+# Array-based (no model)
+public function data(): array
+{
+    return [['id' => 1, 'name' => 'Foo']];
+}
+```
+
+## Column Types
+
+```php
+use Beartropy\Tables\Classes\Columns\Column;
+use Beartropy\Tables\Classes\Columns\BoolColumn;
+use Beartropy\Tables\Classes\Columns\DateColumn;
+use Beartropy\Tables\Classes\Columns\LinkColumn;
+use Beartropy\Tables\Classes\Columns\ToggleColumn;
+
+# Basic
+Column::make('Name', 'name')->sortable()->searchable()
+
+# Boolean
+BoolColumn::make('Verified', 'email_verified_at')
+    ->trueIs(fn($v) => !is_null($v))->centered()
+
+# Date
+DateColumn::make('Created', 'created_at')
+    ->outputFormat('M d, Y')->sortable()
+
+# Link
+LinkColumn::make('Email', 'email')
+    ->href(fn($row) => "mailto:{$row->email}")
+
+# Toggle
+ToggleColumn::make('Active', 'is_active')
+    ->disableToggleWhen(fn($row) => !auth()->user()->can('update', $row))
+```
+
+## Filter Types
+
+```php
+use Beartropy\Tables\Classes\Filters\FilterString;
+use Beartropy\Tables\Classes\Filters\FilterSelect;
+use Beartropy\Tables\Classes\Filters\FilterBool;
+use Beartropy\Tables\Classes\Filters\FilterDateRange;
+use Beartropy\Tables\Classes\Filters\FilterSelectMagic;
+
+# Text search
+FilterString::make('Name', 'name')
+
+# Select dropdown
+FilterSelect::make('Status', ['pending', 'approved', 'rejected'], 'status')
+
+# Boolean toggle
+FilterBool::make('Active', null, 'is_active')
+
+# Date range
+FilterDateRange::make('Created', 'created_at')
+
+# Auto-populated select
+FilterSelectMagic::make('Role', 'role')
+```
+
+## Key Table Properties
+
+```php
+public $model = User::class;           // Eloquent model (null for array)
+public array $with = ['profile'];       // Eager load
+public string $column_id = 'id';        // Primary key
+public bool $with_pagination = true;    // Pagination
+public bool $has_bulk = false;          // Bulk selection
+public bool $has_counter = true;        // Row counter
+public bool $useGlobalSearch = true;    // Global search
+public bool $show_column_toggle = true; // Column visibility toggle
+public bool $useCards = false;          // Card layout
+public bool $showCardsOnMobile = false; // Cards on mobile
+public bool $sticky_header = false;     // Sticky header
+```
+
+## Fluent Column Methods
+
+```php
+Column::make('Label', 'index')
+    ->sortable()                    // Enable sorting
+    ->searchable()                  // Enable searching
+    ->editable('select', $options)  // Inline editing
+    ->setUpdateField('db_field')    // Different DB field
+    ->pushLeft() / ->pushRight() / ->centered()  // Alignment
+    ->customData(fn($row) => ...)   // Transform data
+    ->view('custom.view')           // Custom Blade view
+    ->styling('text-red-500')       // TD CSS classes
+    ->hideWhen(!$isAdmin)           // Conditional visibility
+    ->hideFromSelector()            // Hide from column toggle
+    ->toHtml()                      // Raw HTML output
+    ->hideOnMobile()                // Hide on mobile
+    ->collapseOnMobile()            // Collapse on mobile
+    ->cardTitle()                   // Card title
+    ->showOnCard()                  // Show in card view
+```
+
+## Custom Query Callbacks
+
+```php
+# Custom sort
+Column::make('Priority', 'priority')
+    ->sortable(function ($query, $direction) {
+        $query->orderByRaw("FIELD(priority, 'high', 'medium', 'low') $direction");
+    })
+
+# Custom search
+Column::make('Full Name')
+    ->customData(fn($row) => $row->first_name . ' ' . $row->last_name)
+    ->searchable(function ($query, $term) {
+        $query->where('first_name', 'like', "%$term%")
+              ->orWhere('last_name', 'like', "%$term%");
+    })
+
+# Custom filter query (receives $query, $value, $filter)
+FilterSelect::make('Type', ['recent', 'archived'], 'type')
+    ->query(function ($query, $value) {
+        return match ($value) {
+            'recent' => $query->recent(),
+            'archived' => $query->archived(),
+            default => $query,
+        };
+    })
+```
+
+## Dot Notation for Relationships
+
+```php
+# Column — auto-resolves belongsTo/hasOne
+Column::make('Bio', 'profile.bio')->sortable()->searchable()
+
+# Filter — auto-applies whereHas()
+FilterString::make('Bio', 'profile.bio')
+
+# For hasMany — use customData + custom callbacks
+Column::make('Theme', 'theme_setting')
+    ->customData(fn($row) => $row->settings->firstWhere('key', 'theme')?->value)
+    ->sortable(fn($query, $dir) => $query->orderBy(...))
+    ->searchable(fn($query, $term) => $query->orWhereHas(...))
+```
+
+## Inline Editing
+
+```php
+# Basic
+Column::make('Name', 'name')->editable()
+
+# Select
+Column::make('Status', 'status')
+    ->editable('select', [
+        ['value' => 'draft', 'label' => 'Draft'],
+        ['value' => 'published', 'label' => 'Published'],
+    ])
+
+# With callback
+Column::make('Priority', 'priority')
+    ->editable('select', $options, 'handlePriorityUpdate')
+
+# Authorization (override in table class)
+public function authorizeFieldUpdate(Model $record, string $field, mixed $value): bool
+{
+    return auth()->user()->can('update', $record);
+}
+```
+
+## Blade Usage
+
+```blade
+{{-- Standard --}}
+<livewire:users-table />
+
+{{-- Show only table (no wrapper) --}}
+<livewire:products-table :show-only-table="true" />
+```
+
+## Rules for Code Generation
+
+1. **Always extend `YATBaseTable`** for table components
+2. **Always implement `columns()`** — it is required
+3. **Set `$model`** for Eloquent tables, or implement `data()` for array tables
+4. **Use `$with`** to eager load relationships
+5. **Use dot notation** for simple relationship columns/filters
+6. **Use `customData()` + custom callbacks** for hasMany relationships
+7. **Use `sortable()` and `searchable()`** on key columns
+8. **Use `FilterSelectMagic`** when options come from distinct values
+9. **Override `authorizeFieldUpdate()`** for inline editing security
+10. **Never build table components from scratch** — extend YATBaseTable
+
+## Don't Suggest
+
+- Custom table HTML when Beartropy Tables can handle it
+- Manual pagination logic (use `$with_pagination`)
+- Manual search implementation (use `searchable()`)
+- Manual sort logic (use `sortable()`)
+- Raw database queries for filtering (use Filter classes)
+
+## Do Suggest
+
+- Extending `YATBaseTable` for all data tables
+- Appropriate column types (BoolColumn, DateColumn, etc.)
+- Filter types matching the data (FilterString, FilterSelect, etc.)
+- Dot notation for relationship data
+- Mobile-responsive options (`showCardsOnMobile`, `hideOnMobile`)
+- Inline editing with authorization
+
+## Quick Reference
+
+Need help? Reference: `vendor/beartropy/tables/docs/ai-assistants/BEARTROPY_GUIDE.md`
+
+---
+
+**When generating table code, ALWAYS extend YATBaseTable and use the provided column/filter classes.**

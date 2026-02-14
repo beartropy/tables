@@ -6,7 +6,6 @@
  * Verifies that every component listed by the tool has valid documentation
  * files and that those files contain the expected structure.
  */
-
 $docsPath = dirname(__DIR__, 3).'/docs';
 
 it('has an LLM doc for every component', function () use ($docsPath) {

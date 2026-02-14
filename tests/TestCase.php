@@ -2,9 +2,9 @@
 
 namespace Tests;
 
-use Orchestra\Testbench\TestCase as Orchestra;
 use Beartropy\Tables\YATProvider;
 use Livewire\LivewireServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
@@ -16,6 +16,7 @@ class TestCase extends Orchestra
         \Illuminate\Support\Facades\Cache::flush();
         \Beartropy\Tables\Classes\Columns\Column::resetStaticKeys();
     }
+
     protected function tearDown(): void
     {
         \Illuminate\Support\Facades\Schema::dropIfExists('users');
@@ -36,7 +37,7 @@ class TestCase extends Orchestra
         config()->set('database.default', 'testing');
 
         $app['config']->set('view.paths', [
-            __DIR__ . '/../resources/views',
+            __DIR__.'/../resources/views',
             resource_path('views'),
         ]);
 
