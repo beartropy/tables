@@ -30,5 +30,13 @@ return [
     'details' => 'Detalles',
     'close' => 'Cerrar',
     'select_an_option' => 'Seleccione una opción',
+    'selected_x_of_y_filtered' => 'Se seleccionaron :selected de :total registros.',
+    'click_here_to_select_all' => 'Haga click aquí',
+    'to_select_all_records' => 'para seleccionar todos los registros.',
+    'filters_applied' => 'Existen filtros aplicados',
+    'selected_x_of_y_page' => 'Se seleccionaron :selected de :total registros (página actual).',
+    'all_records_selected' => 'Se seleccionaron todos los registros.',
+    'click_here_to_select_page' => 'Haga click aquí',
+    'to_select_current_page' => 'para seleccionar la página actual.',
 
 ];

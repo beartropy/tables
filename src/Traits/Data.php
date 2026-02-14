@@ -192,23 +192,9 @@ trait Data
                 return null;
             }
 
-            // We return the transformed row to maintain consistency
-            // because other methods return transformed rows (arrays).
-            // However, verify if getRowByID usually is used for editing where we might want the object?
-            // The original implementation: `return $this->getAllData()->where('id', $id)->first();`
-            // `getAllData` calls `getCachedData` which calls `parseData`.
-            // `parseData` populates `userData` with transformed arrays.
-            // So existing implementation returns an ARRAY.
+            $metadata = $this->getColumnMetadata();
 
-            // We should transform this single row.
-            // But processCollection works on collection.
-            // We have `transformRow`.
-
-            $customData = $this->getCustomData();
-            $linkColumns = $this->getLinkColumns();
-            $toggleColumns = $this->getToggleColumns();
-
-            return $this->transformRow($row, $customData, $linkColumns, $toggleColumns);
+            return $this->transformRow($row, $metadata['customData'], $metadata['linkColumns'], $metadata['toggleColumns'], $metadata['cardTitleCallbacks']);
         }
 
         return $this->getAllData()->where('id', $id)->first();
@@ -269,64 +255,19 @@ trait Data
      */
     public function processCollection($collection)
     {
-        $customData = $this->getCustomData();
-        $linkColumns = $this->getLinkColumns();
-        $toggleColumns = $this->getToggleColumns();
+        $metadata = $this->getColumnMetadata();
 
-        // We'll calculate columns upfront if not already done,
-        // to avoid repeated getter calls if we were using getters,
-        // essentially ensuring we have the column definitions ready.
-        // In current implementation $this->columns is a collection/array already set.
-
-        $cardTitleCallbacks = $this->getCardTitleCallbacks();
-
-        $processed = $collection->map(function ($row) use ($customData, $linkColumns, $toggleColumns, $cardTitleCallbacks) {
-            return $this->transformRow($row, $customData, $linkColumns, $toggleColumns, $cardTitleCallbacks);
+        $processed = $collection->map(function ($row) use ($metadata) {
+            return $this->transformRow(
+                $row,
+                $metadata['customData'],
+                $metadata['linkColumns'],
+                $metadata['toggleColumns'],
+                $metadata['cardTitleCallbacks'],
+            );
         });
 
-        // The original implementation had a map at the end to remove _original
-        // But looking at transformRow logic closer, it seems we might want to keep _original
-        // if we want to allow searching on original values in the array implementation.
-        // However, the original code did:
-        // $this->userData->push($parsedRow); AND THEN $this->userData->map(... except(['_original']))
-        // Wait, if we remove _original, searching traits that rely on it might break?
-        // Let's check Traits/Search.php line 36: if (str_ends_with($key, '_original'))
-        // So the original code REMOVES _original from $this->userData?
-
-        // Let's re-read the original Data.php carefully.
-        // Line 131: $this->userData = $this->userData->map(function ($item) { return collect($item)->except(['_original'])->toArray(); });
-        // Yes, it specifically removes it.
-        // So we should replicate that behavior for userData, BUT, Search.php line 40 checks for _original?
-        // Ah, Search.php::filteredData() calls $this->getAllData().
-        // getAllData() -> getCachedData().
-        // If cached data doesn't have _original, search might fail if it relies on it.
-
-        // Let's look closely at `Data.php`:
-        // 131: except(['_original'])
-        // Traits/Search.php line 40: !array_key_exists($baseKey . '_original', $data->first())
-
-        // Use cases for _original:
-        // 1. stripModifiedRows calls getAllData() which gets cached data.
-
-        // Wait, if parseData consistently removes `_original`, then `_original` effectively never exists in the cache?
-        // If so, `stripModifiedRows` logic:
-        // if (str_ends_with($key, '_original')) ...
-        // would never find anything.
-
-        // Let's check parseData again in the file view I got.
-        // 131: $this->userData = $this->userData->map(function ($item) {
-        // 132:    return collect($item)->except(['_original'])->toArray();
-        // 133: });
-
-        // If `except(['_original'])` is called, it removes the key literally named "_original" (if it existed), OR does it remove keys ENDING in _original?
-        // Laravel collection `except` takes keys.
-        // The code in loop (104, 111) does: $parsedRow[strtolower($column->key."_original")] = ...
-        // So the keys are like `name_original`, `status_original`.
-        // `except(['_original'])` would only remove a key named exactly "_original".
-        // It WON'T remove `name_original`.
-        // So my previous assumption that it clears them was based on a misunderstanding of `except` vs wildcard.
-        // Unless I missed something, `except(['_original'])` is likely a bug or a leftover if there aren't keys literally named `_original`.
-        // But okay, I will strictly follow the existing logic which preserves `name_original`.
+        // Keys like `name_original` are intentionally preserved for search/filter access on unmodified values.
 
         return $processed;
     }
@@ -431,61 +372,36 @@ trait Data
             $parsedRow['id'] = $rowArray[$this->custom_column_id] ?? null;
         }
 
-        // If the original `except(['_original'])` was intended to remove something specific, I'll keep it here just in case,
-        // but applied to the collected row if needed.
-        // For now, I'll return the array.
         return $parsedRow;
     }
 
     /**
-     * Get columns with custom data closure.
+     * Get all column metadata in a single pass over getFreshColumns().
      *
-     * @return array
+     * Consolidates custom data, link columns, toggle columns, and card title callbacks
+     * to avoid iterating the column definitions multiple times.
+     *
+     * @return array{customData: array, linkColumns: array, toggleColumns: array, cardTitleCallbacks: array}
      */
-    public function getCustomData()
+    public function getColumnMetadata(): array
     {
         $customData = [];
+        $linkColumns = [];
+        $toggleColumns = [];
+        $cardTitleCallbacks = [];
+
         foreach ($this->getFreshColumns() as $column) {
             if (property_exists($column, 'customData') && is_callable($column->customData)) {
                 $customData[$column->key] = [
                     'function' => $column->customData,
                 ];
             }
-        }
 
-        return $customData;
-    }
-
-    /**
-     * Get columns configured as links.
-     *
-     * @return array
-     */
-    public function getLinkColumns()
-    {
-        $linkColumns = [];
-        foreach ($this->getFreshColumns() as $column) {
-            if (property_exists($column, 'isLink') && $column->isLink) {
-                if (property_exists($column, 'href')) {
-                    $linkColumns[$column->key] = [
-                        'function' => $column->href,
-                    ];
-                }
+            if (property_exists($column, 'isLink') && $column->isLink && property_exists($column, 'href')) {
+                $linkColumns[$column->key] = [
+                    'function' => $column->href,
+                ];
             }
-        }
-
-        return $linkColumns;
-    }
-
-    /**
-     * Get columns with toggle functionality.
-     *
-     * @return array
-     */
-    public function getToggleColumns()
-    {
-        $toggleColumns = [];
-        foreach ($this->getFreshColumns() as $column) {
 
             if (property_exists($column, 'disableToggleWhen') && is_callable($column->disableToggleWhen)) {
                 $toggleColumns['disable'][$column->key] = [
@@ -497,28 +413,20 @@ trait Data
                     'function' => $column->hideToggleWhen,
                 ];
             }
-        }
 
-        return $toggleColumns;
-    }
-
-    /**
-     * Get columns with card title callback.
-     *
-     * @return array
-     */
-    public function getCardTitleCallbacks()
-    {
-        $callbacks = [];
-        foreach ($this->getFreshColumns() as $column) {
             if (property_exists($column, 'cardTitleCallback') && is_callable($column->cardTitleCallback)) {
-                $callbacks[$column->key] = [
+                $cardTitleCallbacks[$column->key] = [
                     'function' => $column->cardTitleCallback,
                 ];
             }
         }
 
-        return $callbacks;
+        return [
+            'customData' => $customData,
+            'linkColumns' => $linkColumns,
+            'toggleColumns' => $toggleColumns,
+            'cardTitleCallbacks' => $cardTitleCallbacks,
+        ];
     }
 
     /**

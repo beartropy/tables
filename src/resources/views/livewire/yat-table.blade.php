@@ -139,25 +139,24 @@
                                     <div
                                         class="px-5 py-3 whitespace-nowrap text-pretty text-base font-normal {{ $themeConfig['table']['empty_text'] }}">
                                         @if ($filtered_data_count && $filtered_data_count != $all_data_count)
-                                            Se seleccionaron {{ count($yat_selected_checkbox) }} de
-                                            {{ $filtered_data_count }} registros. Haga <span
-                                                class="cursor-pointer font-bold underline link"
-                                                wire:click="select_all_data(true)">click aquí</span> para seleccionar
-                                            todos los registros.<br> Existen filtros aplicados <span
-                                                class="cursor-pointer font-bold underline link"
+                                            {{ __('yat::yat.selected_x_of_y_filtered', ['selected' => count($yat_selected_checkbox), 'total' => $filtered_data_count]) }}
+                                            <span class="cursor-pointer font-bold underline link"
+                                                wire:click="select_all_data(true)">{{ __('yat::yat.click_here_to_select_all') }}</span>
+                                            {{ __('yat::yat.to_select_all_records') }}<br>
+                                            {{ __('yat::yat.filters_applied') }}
+                                            <span class="cursor-pointer font-bold underline link"
                                                 wire:click="clearAllFilters(true)">{{ __('yat::yat.remove_all_filters') }}</span>
                                         @else
                                             @if ($pageSelected)
-                                                Se seleccionaron {{ count($yat_selected_checkbox) }} de
-                                                {{ $all_data_count }} registros (página actual). Haga <span
-                                                    class="cursor-pointer font-bold underline link"
-                                                    wire:click="select_all_data(true)">click aquí</span> para
-                                                seleccionar todos los registros.
+                                                {{ __('yat::yat.selected_x_of_y_page', ['selected' => count($yat_selected_checkbox), 'total' => $all_data_count]) }}
+                                                <span class="cursor-pointer font-bold underline link"
+                                                    wire:click="select_all_data(true)">{{ __('yat::yat.click_here_to_select_all') }}</span>
+                                                {{ __('yat::yat.to_select_all_records') }}
                                             @else
-                                                Se seleccionaron todos los registros. Haga <span
-                                                    class="cursor-pointer font-bold underline link"
-                                                    wire:click="selectCurrentPage(true)">click aquí</span> para
-                                                seleccionar la página actual.
+                                                {{ __('yat::yat.all_records_selected') }}
+                                                <span class="cursor-pointer font-bold underline link"
+                                                    wire:click="selectCurrentPage(true)">{{ __('yat::yat.click_here_to_select_page') }}</span>
+                                                {{ __('yat::yat.to_select_current_page') }}
                                             @endif
                                         @endif
                                     </div>
@@ -177,13 +176,6 @@
                                         <x-beartropy-ui::checkbox sm value="{{ $row[$column_id] }}"
                                             id="{{ $row[$column_id] }}" wire:model.live="yat_selected_checkbox"
                                             color="{{ $bulkThemeOverride ?? $theme }}" />
-                                        {{-- <input
-                                        type="checkbox"
-                                        value="{{ $row[$column_id] }}"
-                                        id="{{ $row[$column_id] }}"
-                                        wire:model.live="yat_selected_checkbox"
-                                        class="cursor-pointer text-gray-500 bg-gray-100 border-gray-400 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                                    > --}}
                                     </td>
                                 @endif
                                 @foreach ($columns as $column)

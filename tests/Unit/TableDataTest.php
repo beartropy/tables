@@ -34,11 +34,11 @@ it('calculates card title from callback in transformRow', function () {
     
     // Get fresh columns to access closures before they might be stripped (in real app)
     // Here we just use the table instance which uses Data trait
-    $cardTitleCallbacks = $table->getCardTitleCallbacks();
-    
-    expect($cardTitleCallbacks)->toHaveKey('name');
-    
-    $transformed = $table->transformRow($row, [], [], [], $cardTitleCallbacks);
+    $metadata = $table->getColumnMetadata();
+
+    expect($metadata['cardTitleCallbacks'])->toHaveKey('name');
+
+    $transformed = $table->transformRow($row, [], [], [], $metadata['cardTitleCallbacks']);
     
     expect($transformed)->toHaveKey('name_card_title');
     expect($transformed['name_card_title'])->toBe('Title: John Doe');

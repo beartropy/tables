@@ -123,10 +123,10 @@ trait Search
                     $relation = implode('.', $parts);
 
                     $q->orWhereHas($relation, function ($relQuery) use ($attribute, $searchTerm) {
-                        $relQuery->where($attribute, 'like', '%'.$searchTerm.'%');
+                        $relQuery->whereRaw('LOWER('.$attribute.') LIKE ?', ['%'.strtolower($searchTerm).'%']);
                     });
                 } else {
-                    $q->orWhere($targetObject, 'like', '%'.$searchTerm.'%');
+                    $q->orWhereRaw('LOWER('.$targetObject.') LIKE ?', ['%'.strtolower($searchTerm).'%']);
                 }
             }
         });

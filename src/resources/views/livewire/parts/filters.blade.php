@@ -1,11 +1,19 @@
-<!-- Flatpickr CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+@php
+    $hasDaterangeFilter = collect($filters)->contains(fn($filter) => ($filter['type'] ?? null) === 'daterange');
+@endphp
 
-<!-- Flatpickr JS -->
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+@if ($hasDaterangeFilter)
+    @once
+        <!-- Flatpickr CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
-<div 
-    x-show="showFilters" 
+        <!-- Flatpickr JS -->
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    @endonce
+@endif
+
+<div
+    x-show="showFilters"
     x-transition:enter="transition ease-out duration-200"
     x-transition:enter-start="opacity-0 -translate-y-2"
     x-transition:enter-end="opacity-100 translate-y-0"
@@ -29,7 +37,7 @@
                     />
 
                 @elseif($filter['type'] === 'daterange')
-                    <x-beartropy-ui::datetime 
+                    <x-beartropy-ui::datetime
                         wire:model.live="filters.{{ $key }}.input"
                         label="{{ $filter['label'] }}"
                         color="{{ $inputThemeOverride ?? $theme }}"
@@ -37,7 +45,7 @@
                     />
 
                 @elseif($filter['type'] === 'select')
-                    <x-beartropy-ui::select 
+                    <x-beartropy-ui::select
                         label="{{ $filter['label'] }}"
                         color="{{ $inputThemeOverride ?? $theme }}"
                         wire:model.live="filters.{{ $key }}.input"
@@ -47,13 +55,6 @@
                     />
 
                 @elseif($filter['type'] === 'bool')
-                    {{-- <div class="w-full h-full flex items-center mt-4">
-                        <x-beartropy-ui::toggle
-                            wire:model.live="filters.{{ $key }}.input"
-                            label="{{ $filter['label'] }}"
-                            color="{{ $theme }}"
-                        />                
-                    </div> --}}
                     @php
                         $boolOptions = [
                             ['value' => "all", 'label' => ucfirst(__('yat::yat.all'))],
@@ -61,7 +62,7 @@
                             ['value' => "false", 'label' => ucfirst(__('yat::yat.no'))]
                         ];
                     @endphp
-                    <x-beartropy-ui::select 
+                    <x-beartropy-ui::select
                         label="{{ $filter['label'] }}"
                         color="{{ $inputThemeOverride ?? $theme }}"
                         wire:model.live="filters.{{ $key }}.input"
@@ -76,29 +77,4 @@
             </div>
         @endforeach
     </div>
-
-    @php
-        $hasActiveFilters = false;
-        if(isset($filters)) { // ensure variable exists
-             foreach($filters as $filter) {
-                if(isset($filter['input']) && $filter['input'] !== '' && $filter['input'] !== null) {
-                    $hasActiveFilters = true;
-                    break;
-                }
-            }
-        }
-    @endphp
-
-    {{-- @if($hasActiveFilters)
-        <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-end">
-            <x-beartropy-ui::button 
-                wire:click="clearAllFilters"
-                icon-start="trash"
-                label="{{ucfirst(__('yat::yat.remove_filters'))}}"
-                color="red"
-                size="sm"
-                outline
-            />
-        </div>
-    @endif --}}
 </div>

@@ -28,44 +28,10 @@ trait Filters
     public function setFilters()
     {
         try {
-            $this->filters = collect($this->filters());
+            $objects = collect($this->filters());
         } catch (\Throwable $th) {
             return;
         }
-        $this->filters = $this->filters->mapWithKeys(function ($item) {
-            $key = substr(str_shuffle(str_repeat('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 5)), 0, 10);
-
-            // Note: We don't need to explicitly strip closures if we use get_object_vars
-            // because proper serialization will just ignore the closure property if we don't return it?
-            // Actually get_object_vars returns the property.
-            // We MUST ensure the closure is not in the array we return for storage.
-
-            if (isset($item->queryCallback)) {
-                $item->queryCallback = null;
-            }
-
-            // Store as Array for safe Livewire serialization
-            return [$key => get_object_vars($item)];
-        });
-
-        // Key generation happens in loop above via $item->key modification?
-        // Wait, original code iterated $this->filters and set ->key.
-        // We need to replicate that BEFORE mapping.
-        // Re-reading original logic:
-        // It did a foreach loop AFTER mapping?
-        // No, original logic:
-        /*
-        $this->filters = $this->filters->mapWithKeys(...);
-        foreach ($this->filters as $filter) {
-           // update key
-        }
-        */
-        // But $this->filters items were objects (stdClass).
-        // Since we are now converting to Arrays, we should set the key BEFORE mapping or handle it differently.
-        // Let's reset the logic to be clean:
-
-        // 1. Get objects
-        $objects = collect($this->filters());
 
         // 2. Prepare keys on objects
         foreach ($objects as $filter) {
@@ -80,19 +46,24 @@ trait Filters
             if ($filter->type == 'magic-select') {
                 $pluckKey = $filter->key;
 
-                // If filter key is explicitly the DB column, we need to find the matching Column key (slug)
-                // because getAllData returns data keyed by Column keys.
-                // We trust $this->columns is available (it usually is in YAT tables).
+                // Resolve the DB column and collection key for this filter
+                $dbColumn = $filter->key;
                 if (isset($this->columns)) {
                     $matchingCol = $this->columns->first(function ($c) use ($filter) {
                         return ($c->index ?? $c->key) === $filter->key;
                     });
                     if ($matchingCol) {
                         $pluckKey = $matchingCol->key;
+                        $dbColumn = $matchingCol->index ?? $matchingCol->key;
                     }
                 }
 
-                $options = $this->getAllData()->pluck($pluckKey)->unique()->values();
+                // For model-based tables, use a targeted DISTINCT query instead of loading all data
+                if ($this->model && class_exists($this->model) && ! str_contains($dbColumn, '.')) {
+                    $options = $this->model::query()->select($dbColumn)->distinct()->pluck($dbColumn);
+                } else {
+                    $options = $this->getAllData()->pluck($pluckKey)->unique()->values();
+                }
                 // Map objects/arrays to strings if necessary
                 $filter->options = $options->map(function ($item) {
                     if (is_string($item) || is_numeric($item) || is_bool($item)) {

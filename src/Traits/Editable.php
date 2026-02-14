@@ -8,6 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 trait Editable
 {
     /**
+     * Authorize a field update before persisting.
+     *
+     * Override this method in your table component to add policy checks or custom authorization logic.
+     *
+     * @param  Model  $record  The Eloquent model being updated.
+     * @param  string  $field  The field/column key being updated.
+     * @param  mixed  $value  The new value.
+     */
+    public function authorizeFieldUpdate(Model $record, string $field, mixed $value): bool
+    {
+        return true;
+    }
+
+    /**
      * Update a specific field for a row.
      *
      * Handles inline editing updates. Supports callbacks, Eloquent models, and array data.
@@ -20,14 +34,12 @@ trait Editable
      */
     public function updateField($id, $field, $value)
     {
-        // Find the column definition
         $column = \collect($this->columns)->firstWhere('key', $field);
 
         if (! $column) {
             return;
         }
 
-        // Emit expanded event for UI feedback if needed
         $this->dispatch('table-field-updated', id: $id, field: $field, value: $value);
 
         // 1. Component Method by Name (String)
@@ -50,19 +62,18 @@ trait Editable
                 try {
                     $record = $this->model::find($id);
                     if ($record) {
-                        // Convert empty strings to null
+                        if (! $this->authorizeFieldUpdate($record, $field, $value)) {
+                            return false;
+                        }
+
                         if ($value === '') {
                             $value = null;
                         }
 
                         $saveField = $column->updateField ?? $field;
-                        $record->$saveField = $value;
-                        $saved = $record->save();
+                        $saved = $record->update([$saveField => $value]);
 
-                        // Invalidate cache to ensure persistence across pagination
                         $this->clearData();
-
-                        \Illuminate\Support\Facades\Log::info("YATBaseTable Saved ($id): Field=$saveField Value=".var_export($value, true).' Result='.($saved ? 'true' : 'false'));
 
                         return $saved;
                     } else {
@@ -71,7 +82,6 @@ trait Editable
                         return false;
                     }
                 } catch (\Exception $e) {
-                    // Log error to help debugging
                     \Illuminate\Support\Facades\Log::error('YATBaseTable Editable Error: '.$e->getMessage());
 
                     return false;

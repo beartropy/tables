@@ -30,5 +30,13 @@ return [
     'details' => 'Details',
     'close' => 'Close',
     'select_an_option' => 'Select an option',
+    'selected_x_of_y_filtered' => ':selected of :total records selected.',
+    'click_here_to_select_all' => 'Click here',
+    'to_select_all_records' => 'to select all records.',
+    'filters_applied' => 'Filters are applied',
+    'selected_x_of_y_page' => ':selected of :total records selected (current page).',
+    'all_records_selected' => 'All records selected.',
+    'click_here_to_select_page' => 'Click here',
+    'to_select_current_page' => 'to select the current page.',
 
 ];
