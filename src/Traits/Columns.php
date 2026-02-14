@@ -3,24 +3,18 @@
 namespace Beartropy\Tables\Traits;
 
 use Closure;
-use Exception;
-use Illuminate\Support\Str;
 
 trait Columns
 {
     /**
      * The unique identifier column for rows.
-     *
-     * @var string
      */
-    public $column_id = 'id';
+    public string $column_id = 'id';
 
     /**
      * A custom column ID override.
-     *
-     * @var string
      */
-    public $custom_column_id = 'id';
+    public string $custom_column_id = 'id';
 
     /**
      * Collection of defined columns.
@@ -31,38 +25,37 @@ trait Columns
 
     /**
      * Whether to show the column toggle dropdown.
-     *
-     * @var bool
      */
-    public $show_column_toggle = true;
+    public bool $show_column_toggle = true;
 
     /**
      * Status of the column toggle dropdown (open/closed).
-     *
-     * @var bool
      */
-    public $column_toggle_dd_status = false;
+    public bool $column_toggle_dd_status = false;
 
     /**
      * Indicates if there are columns collapsed on mobile view.
-     *
-     * @var bool
      */
-    public $hasMobileCollapsedColumns = false;
+    public bool $hasMobileCollapsedColumns = false;
 
     /**
      * Array of columns that are collapsed on mobile.
-     *
-     * @var array
      */
-    public $mobileCollapsedColumns = [];
+    public array $mobileCollapsedColumns = [];
 
+    /**
+     * Initialize and process column definitions.
+     *
+     * Handles mobile visibility, collapse behavior, and strips closures for Livewire serialization.
+     *
+     * @return void
+     */
     public function setColumns()
     {
         $this->mobileCollapsedColumns = [];
         $this->columns = collect($this->columns());
         $this->columns = $this->columns->map(function ($column) {
-            if ($column->show_on_mobile && !$this->yat_is_mobile) {
+            if ($column->show_on_mobile && ! $this->yat_is_mobile) {
                 $column->isVisible = false;
             }
             if ($this->yat_is_mobile) {
@@ -82,6 +75,7 @@ trait Columns
                     $this->mobileCollapsedColumns[] = (object) $colVars;
                 }
             }
+
             return $column;
         });
 
@@ -92,205 +86,310 @@ trait Columns
                     $vars[$key] = null;
                 }
             }
+
             return (object) $vars;
         });
     }
 
+    /**
+     * Get a fresh collection of column instances with closures intact.
+     *
+     * @return \Illuminate\Support\Collection
+     */
     public function getFreshColumns()
     {
         if (method_exists(\Beartropy\Tables\Classes\Columns\Column::class, 'resetStaticKeys')) {
             \Beartropy\Tables\Classes\Columns\Column::resetStaticKeys();
         }
+
         return collect($this->columns());
     }
 
+    /**
+     * Show or hide the column toggle dropdown.
+     *
+     * @return void
+     */
     public function showColumnToggle(bool $bool)
     {
         $this->show_column_toggle = $bool;
     }
 
-    public function setColumnID(String $column_id)
+    /**
+     * Set the primary key column used to identify rows.
+     *
+     * @return void
+     */
+    public function setColumnID(string $column_id)
     {
         $this->custom_column_id = $column_id;
     }
 
-    public function hideOnMobile(Bool $bool): self
+    /**
+     * Hide this column on mobile devices.
+     */
+    public function hideOnMobile(bool $bool): self
     {
         $this->hide_on_mobile = true;
+
         return $this;
     }
 
-    public function showOnMobile(Bool $bool = true): self
+    /**
+     * Show this column only on mobile devices.
+     */
+    public function showOnMobile(bool $bool = true): self
     {
         $this->show_on_mobile = $bool;
+
         return $this;
     }
 
+    /**
+     * Set a custom Blade view for rendering the column cell.
+     *
+     * @param  string  $view
+     */
     public function view($view): self
     {
         $this->hasView = true;
         $this->view = $view;
+
         return $this;
     }
 
-    public function styling(String $classes): self
+    /**
+     * Set CSS classes for the column's table cell (td).
+     */
+    public function styling(string $classes): self
     {
         $this->classes = $classes;
+
         return $this;
     }
 
-    public function thStyling(String $classes): self
+    /**
+     * Set CSS classes for the column's table header (th).
+     */
+    public function thStyling(string $classes): self
     {
         $this->th_classes = $classes;
+
         return $this;
     }
 
-    public function thWrapperStyling(String $classes): self
+    /**
+     * Set CSS classes for the column's header wrapper element.
+     */
+    public function thWrapperStyling(string $classes): self
     {
         $this->th_wrapper_classes = $classes;
+
         return $this;
     }
 
+    /**
+     * Set a closure that determines when the toggle should be disabled.
+     */
     public function disableToggleWhen(Closure $function): self
     {
         $this->disableToggleWhen = $function;
+
         return $this;
     }
+
+    /**
+     * Set a closure that determines when the toggle should be hidden.
+     */
     public function hideToggleWhen(Closure $function): self
     {
         $this->hideToggleWhen = $function;
+
         return $this;
     }
 
-    public function trigger(String $trigger): self
+    /**
+     * Set the method name to call when a toggle column is toggled.
+     */
+    public function trigger(string $trigger): self
     {
         $this->trigger = $trigger;
+
         return $this;
     }
 
+    /**
+     * Mark this column as a boolean column.
+     */
     public function isBool(): self
     {
         $this->isBool = true;
+
         return $this;
     }
 
+    /**
+     * Set the value that represents "true" for boolean columns.
+     *
+     * @param  mixed  $true
+     */
     public function trueIs($true): self
     {
         $this->what_is_true = $true;
+
         return $this;
     }
 
+    /**
+     * Set the display label/icon for the "true" state.
+     *
+     * @param  string  $string
+     */
     public function trueLabel($string): self
     {
         $this->true_icon = $string;
+
         return $this;
     }
 
+    /**
+     * Set the display label/icon for the "false" state.
+     *
+     * @param  string  $string
+     */
     public function falseLabel($string): self
     {
         $this->false_icon = $string;
+
         return $this;
     }
 
+    /**
+     * Allow the column value to be rendered as raw HTML.
+     */
     public function toHtml(): self
     {
         $this->isHtml = true;
+
         return $this;
     }
 
+    /**
+     * Set the display text for a link column.
+     *
+     * @param  string  $text
+     */
     public function text($text): self
     {
         if ($this->isLink) {
             $this->text = $text;
         }
+
         return $this;
     }
 
+    /**
+     * Set a closure that resolves the URL for a link column.
+     */
     public function href(Closure $function): self
     {
         if ($this->isLink) {
             $this->href = $function;
         }
+
         return $this;
     }
 
+    /**
+     * Set the target attribute for a link column (e.g. '_blank').
+     */
     public function target(string $target): self
     {
         if ($this->isLink) {
             $this->target = $target;
         }
+
         return $this;
     }
 
-    public function popup(array $array = ["width" => 750, "height" => 800]): self
+    /**
+     * Open the link in a popup window with the given dimensions.
+     *
+     * @param  array{width: int, height: int}  $array
+     */
+    public function popup(array $array = ['width' => 750, 'height' => 800]): self
     {
         if ($this->isLink) {
             $this->popup = $array;
         }
+
         return $this;
     }
 
+    /**
+     * Set CSS classes for a link column's anchor tag.
+     *
+     * @param  string  $classes
+     */
     public function classes($classes): self
     {
         if ($this->isLink) {
             $this->tag_classes = $classes;
         }
+
         return $this;
     }
 
+    /**
+     * Set a closure to transform the column's display value.
+     */
     public function customData(Closure $function): self
     {
         $this->customData = $function;
+
         return $this;
     }
 
-    public function hideWhen(Bool $bool): self
+    /**
+     * Conditionally hide the column and remove it from the column selector.
+     */
+    public function hideWhen(bool $bool): self
     {
         $this->isHidden = $bool;
         if ($bool) {
             $this->hideFromSelector = true;
         }
+
         return $this;
     }
 
-    public function hideFromSelector(Bool $bool): self
+    /**
+     * Hide this column from the column toggle selector.
+     */
+    public function hideFromSelector(bool $bool): self
     {
         $this->hideFromSelector = $bool;
+
         return $this;
     }
 
-    public function isVisible(Bool $bool): self
+    /**
+     * Set the column's initial visibility.
+     */
+    public function isVisible(bool $bool): self
     {
         $this->isVisible = $bool;
+
         return $this;
     }
 
-    public function sortColumnBy(String $column): self
+    /**
+     * Set an alternative column key to use when sorting this column.
+     */
+    public function sortColumnBy(string $column): self
     {
         $this->sortColumnBy = $column;
+
         return $this;
     }
-
-    /*     public function generateTempID() {
-        if ($this->has_bulk) {
-            if (!$this->yatTableData->isEmpty()) {
-                $idColumn = $this->column_id;
-                if (is_array($this->yatTableData->first())) {
-                    if (!array_key_exists($idColumn, $this->yatTableData->first())) {
-                        $this->yatTableData = $this->yatTableData->map(function ($item, $index) use ($idColumn) {
-                            $item[$idColumn] = 'yat-' . $index; // Create a temporary ID
-                            return $item;
-                        });
-                    }
-                } else {
-                    if(!property_exists($this->yatTableData->first(), $idColumn)) {
-                        $this->yatTableData = $this->yatTableData->map(function ($item, $index) use ($idColumn) {
-                            $item->$idColumn = 'yat-' . $index; // Create a temporary ID
-                            return $item;
-                        });
-                    }
-                }
-            }
-        }
-    } */
 }

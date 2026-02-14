@@ -64,22 +64,17 @@
                             wire:loading.attr="disabled"
                             wire:loading.class="opacity-50"
                         >
-                            {{-- 1. ICONO CON CLASE TAILWIND --}}
+                            {{-- 1. ICON --}}
                             @if($option['icon'])
-                                {{-- 
-                                    Aquí inyectamos la clase directamente. 
-                                    Si es null, no pasa nada. 
-                                    Ejemplo resultante: class="mr-2 text-base leading-none text-blue-600"
-                                --}}
                                 <span class="mr-2 -ml-2 text-lg md:text-base leading-none">
                                     {!! $option['icon'] !!}
                                 </span>
                             @endif
 
-                            {{-- 2. LABEL --}}
+                            {{-- 2. Label --}}
                             <span>{!! $option['label'] !!}</span>
 
-                            {{-- 3. SPINNER --}}
+                            {{-- 3. Spinner --}}
                             <span wire:loading wire:target="{{$function}}" class="ml-2 flex items-center"> 
                                 <svg class="w-4 h-4 animate-spin {{ $themeConfig['loading']['text'] }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

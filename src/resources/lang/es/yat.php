@@ -2,6 +2,14 @@
 
 return [
 
+    'showing' => 'Mostrando',
+    'to' => 'a',
+    'of' => 'de',
+    'entries' => 'registros',
+    'filter_options' => 'Opciones de filtro',
+    'remove_filters' => 'Eliminar filtros',
+    'reset_columns' => 'Restablecer columnas',
+    'from' => 'Desde',
     'search' => 'buscar',
     'options' => 'opciones',
     'columns' => 'columnas',

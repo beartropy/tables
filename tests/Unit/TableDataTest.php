@@ -7,8 +7,8 @@ use Beartropy\Tables\Traits\Columns;
 class TestTableWithData {
     use Data, Columns;
     
-    public $model = null;
-    public $custom_column_id = 'id';
+    public mixed $model = null;
+    public string $custom_column_id = 'id';
     
     public function columns() {
         return [

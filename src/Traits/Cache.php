@@ -2,7 +2,6 @@
 
 namespace Beartropy\Tables\Traits;
 
-use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache as CacheFacade;
 
@@ -10,27 +9,23 @@ trait Cache
 {
     /**
      * Prefix for cache keys.
-     *
-     * @var string
      */
-    public $cachePrefix = '';
+    public string $cachePrefix = '';
 
     /**
      * Timestamp of the cached data.
-     *
-     * @var int|null
      */
-    public $cacheTimeStamp;
+    public ?int $cacheTimeStamp = null;
 
     /**
      * Set the cache prefix.
      *
-     * @param string $string The prefix string.
+     * @param  string  $string  The prefix string.
      * @return void
      */
     public function setCachePrefix(string $string)
     {
-        $this->cachePrefix = $string . "_";
+        $this->cachePrefix = $string.'_';
     }
 
     /**
@@ -40,8 +35,9 @@ trait Cache
      */
     protected function getCacheKey()
     {
-        $identifier = Auth::check() ? Auth::user()->username : 'guest_' . session()->getId();
-        return $this->cachePrefix . static::class . '\\' . $identifier;
+        $identifier = Auth::check() ? Auth::user()->username : 'guest_'.session()->getId();
+
+        return $this->cachePrefix.static::class.'\\'.$identifier;
     }
 
     /**
@@ -54,7 +50,7 @@ trait Cache
     public function cacheData()
     {
         $this->all_data_count = count($this->userData);
-        if (!CacheFacade::has($this->getCacheKey())) {
+        if (! CacheFacade::has($this->getCacheKey())) {
             CacheFacade::put($this->getCacheKey(), $this->userData, now()->addMinutes(60));
             $this->cacheTimeStamp = now()->getTimestampMs();
         }
@@ -79,9 +75,10 @@ trait Cache
      */
     public function getCachedData()
     {
-        if (!CacheFacade::has($this->getCacheKey())) {
+        if (! CacheFacade::has($this->getCacheKey())) {
             $this->mount();
         }
+
         return CacheFacade::get($this->getCacheKey());
     }
 
@@ -90,7 +87,7 @@ trait Cache
      *
      * Clears current selection and updates the cache with the new data set.
      *
-     * @param mixed $data The new data to cache.
+     * @param  mixed  $data  The new data to cache.
      * @return void
      */
     public function updateCacheData($data)

@@ -4,26 +4,15 @@ namespace Beartropy\Tables\Traits;
 
 trait Search
 {
+    public string $yat_global_search = '';
 
-    /**
-     * @var string
-     */
-    public $yat_global_search = ''; // Search input binding
+    public ?string $yat_global_search_label = null;
 
-    /**
-     * @var string|null
-     */
-    public $yat_global_search_label;
-
-    /**
-     * @var bool
-     */
-    public $useGlobalSearch = true;
+    public bool $useGlobalSearch = true;
 
     /**
      * Enable or disable global search.
      *
-     * @param bool $status
      * @return void
      */
     public function useGlobalSearch(bool $status = true)
@@ -34,7 +23,6 @@ trait Search
     /**
      * Set the label for the global search input.
      *
-     * @param string $label
      * @return void
      */
     public function setSearchLabel(string $label)
@@ -82,11 +70,14 @@ trait Search
         // Filter the collection
         return $data->filter(function ($item) use ($searchTerm, $searchableKeys) {
             foreach ($searchableKeys as $key) {
-                if (isset($item[$key]) && is_array($item[$key])) $item[$key] = implode(' ', $item[$key]);
+                if (isset($item[$key]) && is_array($item[$key])) {
+                    $item[$key] = implode(' ', $item[$key]);
+                }
                 if (isset($item[$key]) && str_contains(strtolower($item[$key]), strtolower($searchTerm))) {
                     return true; // Match found
                 }
             }
+
             return false; // No match
         });
     }
@@ -94,7 +85,7 @@ trait Search
     /**
      * Apply global search to the Eloquent query.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function applySearchToQuery($query)
@@ -110,11 +101,12 @@ trait Search
                 // Check for custom search callback
                 if (property_exists($column, 'searchableCallback') && is_callable($column->searchableCallback)) {
                     call_user_func($column->searchableCallback, $q, $searchTerm);
+
                     continue;
                 }
 
-                // If not explicitly searchable, we might skip? 
-                // Existing implementation searched everything. 
+                // If not explicitly searchable, we might skip?
+                // Existing implementation searched everything.
                 // But now we have $column->isSearchable.
                 // Assuming default true for backward compat.
                 if (property_exists($column, 'isSearchable') && $column->isSearchable === false) {
@@ -131,10 +123,10 @@ trait Search
                     $relation = implode('.', $parts);
 
                     $q->orWhereHas($relation, function ($relQuery) use ($attribute, $searchTerm) {
-                        $relQuery->where($attribute, 'like', '%' . $searchTerm . '%');
+                        $relQuery->where($attribute, 'like', '%'.$searchTerm.'%');
                     });
                 } else {
-                    $q->orWhere($targetObject, 'like', '%' . $searchTerm . '%');
+                    $q->orWhere($targetObject, 'like', '%'.$searchTerm.'%');
                 }
             }
         });

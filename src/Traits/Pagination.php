@@ -4,55 +4,42 @@ namespace Beartropy\Tables\Traits;
 
 trait Pagination
 {
-
     /**
      * The pagination theme to use (e.g. 'tailwind', 'bootstrap').
-     *
-     * @var string
      */
-    public $paginationTheme = 'tailwind'; // Use Tailwind for pagination
+    public string $paginationTheme = 'tailwind';
 
     /**
      * Number of items per page.
-     *
-     * @var int|string
      */
-    public $perPage = "10";
+    public int|string $perPage = 10;
 
     /**
      * Display value for per page selector.
-     *
-     * @var string
      */
-    public $perPageDisplay = "10";
+    public int|string $perPageDisplay = 10;
 
     /**
      * Available options for items per page.
      *
      * @var array<string>
      */
-    public $perPageOptions = ["10", "15", "25", "50", "100", "Total"];
+    public array $perPageOptions = ['10', '15', '25', '50', '100', 'Total'];
 
     /**
      * Whether pagination is enabled.
-     *
-     * @var bool
      */
-    public $with_pagination = true;
+    public bool $with_pagination = true;
 
     /**
      * Current page number.
-     *
-     * @var int|null
      */
-    public $currentPageNumber;
+    public ?int $currentPageNumber = null;
 
     /**
      * Force a specific page number.
-     *
-     * @var int|false
      */
-    public $forcePageNumber = false;
+    public int|bool $forcePageNumber = false;
 
     /**
      * Update the per-page display value.
@@ -60,13 +47,13 @@ trait Pagination
      * Handles the 'Total' option to show all records.
      * Resets selection when page size changes.
      *
-     * @param string|int $value
+     * @param  string|int  $value
      * @return void
      */
     public function updatedPerPageDisplay($value)
     {
         if ($value == 'Total') {
-            $this->perPage = 9999999999999;
+            $this->perPage = PHP_INT_MAX;
             $this->perPageDisplay = 'Total';
         } else {
             $this->perPage = $value;
@@ -75,13 +62,12 @@ trait Pagination
         $this->updatedSelectAll(false);
         $this->selectAll = false;
         $this->allSelected = false;
-        $this->pageSeleted = false;
+        $this->pageSelected = false;
     }
 
     /**
      * Enable or disable pagination.
      *
-     * @param bool $bool
      * @return void
      */
     public function usePagination(bool $bool)
@@ -92,13 +78,13 @@ trait Pagination
     /**
      * Set the default items per page.
      *
-     * @param int $number Passing 0 sets it to 'Total' (all items).
+     * @param  int  $number  Passing 0 sets it to 'Total' (all items).
      * @return void
      */
-    public function setPerPageDefault(Int $number)
+    public function setPerPageDefault(int $number)
     {
         if ($number == 0) {
-            $this->perPage = 9999999999999;
+            $this->perPage = PHP_INT_MAX;
             $this->perPageDisplay = 'Total';
         } else {
             $this->perPage = $number;
@@ -109,7 +95,6 @@ trait Pagination
     /**
      * Set available per-page options.
      *
-     * @param array $array
      * @return void
      */
     public function setPerPageOptions(array $array)
@@ -130,7 +115,7 @@ trait Pagination
         if ($this->model) {
             $query = $this->model::query();
 
-            if (!empty($this->with)) {
+            if (! empty($this->with)) {
                 $query->with($this->with);
             }
 
@@ -163,6 +148,7 @@ trait Pagination
             $paginatedData->setCollection($transformedCollection);
 
             $this->forcePageNumber = false;
+
             return $paginatedData;
         } else {
             $data = $this->getAfterFiltersData();
@@ -183,6 +169,7 @@ trait Pagination
                 ['path' => request()->url(), 'query' => request()->query()]
             );
             $this->forcePageNumber = false;
+
             return $paginatedData;
         }
     }
@@ -192,7 +179,7 @@ trait Pagination
      *
      * Used for array-based data sources where we slice the collection manually.
      *
-     * @param int $currentPage
+     * @param  int  $currentPage
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function getPageData($currentPage)

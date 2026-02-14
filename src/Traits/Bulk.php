@@ -6,38 +6,30 @@ trait Bulk
 {
     /**
      * Indicates if the table has bulk actions enabled.
-     *
-     * @var bool
      */
-    public $has_bulk = false;
+    public bool $has_bulk = false;
 
     /**
      * Array of selected row IDs for bulk actions.
      *
      * @var array<int|string>
      */
-    public $yat_selected_checkbox = [];
+    public array $yat_selected_checkbox = [];
 
     /**
      * Controls the "Select All" checkbox state.
-     *
-     * @var bool
      */
-    public $selectAll = false; // Controls the "Select All" checkbox
+    public bool $selectAll = false;
 
     /**
      * Indicates if the current page is selected.
-     *
-     * @var bool
      */
-    public $pageSelected = false;
+    public bool $pageSelected = false;
 
     /**
      * Indicates if all data (across all pages) is selected.
-     *
-     * @var bool
      */
-    public $allSelected = false;
+    public bool $allSelected = false;
 
     /**
      * Clear the current selection.
@@ -55,10 +47,9 @@ trait Bulk
     /**
      * Enable or disable bulk actions.
      *
-     * @param bool $bool
      * @return void
      */
-    public function hasBulk(Bool $bool)
+    public function hasBulk(bool $bool)
     {
         $this->has_bulk = $bool;
     }
@@ -68,19 +59,18 @@ trait Bulk
      *
      * This method is triggered by Livewire when $selectAll property changes.
      *
-     * @param bool $value The new value of the checkbox.
+     * @param  bool  $value  The new value of the checkbox.
      * @return void
      */
     public function updatedSelectAll($value)
     {
-        #$this->select_all_data($value);
         $this->selectCurrentPage($value);
     }
 
     /**
      * Select all rows on the current page.
      *
-     * @param bool $value If true, selects all rows on the current page. If false, deselects them.
+     * @param  bool  $value  If true, selects all rows on the current page. If false, deselects them.
      * @return void
      */
     public function selectCurrentPage($value)
@@ -95,7 +85,7 @@ trait Bulk
     /**
      * Select all rows across all pages (after filters).
      *
-     * @param bool $value If true, selects all matching rows. If false, clears selection.
+     * @param  bool  $value  If true, selects all matching rows. If false, clears selection.
      * @return void
      */
     public function select_all_data($value)
@@ -106,17 +96,6 @@ trait Bulk
         $this->pageSelected = false;
         $this->allSelected = true;
     }
-
-/*     public function changeYatSelectedCheckbox($id)
-    {
-
-        if (in_array($id, $this->yat_selected_checkbox)) {
-            $this->yat_selected_checkbox = array_diff($this->yat_selected_checkbox, [$id]);
-        } else {
-            $this->yat_selected_checkbox[] = $id;
-        }
-
-    } */
 
     /**
      * Get the list of selected row IDs.

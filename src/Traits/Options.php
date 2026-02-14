@@ -4,13 +4,10 @@ namespace Beartropy\Tables\Traits;
 
 trait Options
 {
-
     /**
      * Options available for the table (e.g. for select filters or other UI elements).
-     *
-     * @var array
      */
-    public $options;
+    public ?array $options = null;
 
     /**
      * Initialize and normalize options.
@@ -24,11 +21,12 @@ trait Options
         try {
             $this->options = collect($this->options())
                 ->map(function ($value) {
-                    // Si es string, lo convertimos a la estructura deseada
+                    // If string, convert to the expected structure
                     if (is_string($value)) {
                         return ['label' => $value, 'icon' => null];
                     }
-                    // Si es array, rellenamos lo que falte con nulos
+
+                    // If array, fill in missing keys with nulls
                     return array_merge(['label' => '', 'icon' => null], $value);
                 })
                 ->all();

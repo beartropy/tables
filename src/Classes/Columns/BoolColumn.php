@@ -2,8 +2,6 @@
 
 namespace Beartropy\Tables\Classes\Columns;
 
-
-use Beartropy\Tables\Classes\Columns\Column;
 use Beartropy\Tables\Traits\Columns;
 
 class BoolColumn extends Column
@@ -32,9 +30,6 @@ class BoolColumn extends Column
 
     /**
      * Create a new BoolColumn instance.
-     *
-     * @param string $label
-     * @param string|null $key
      */
     public function __construct(string $label, ?string $key = null)
     {
@@ -43,10 +38,6 @@ class BoolColumn extends Column
 
     /**
      * Static factory method.
-     *
-     * @param string $label
-     * @param string|null $key
-     * @return \Beartropy\Tables\Classes\Columns\Column
      */
     public static function make(string $label, ?string $key = null): Column
     {

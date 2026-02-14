@@ -2,12 +2,11 @@
 
 namespace Beartropy\Tables\Traits;
 
-use Exception;
 use Carbon\Carbon;
+use Exception;
 
 trait Filters
 {
-
     /**
      * Collection of defined filters.
      *
@@ -15,15 +14,9 @@ trait Filters
      */
     public $filters;
 
-    /**
-     * @var bool
-     */
-    public $has_filters = false;
+    public bool $has_filters = false;
 
-    /**
-     * @var bool
-     */
-    public $show_filters = false;
+    public bool $show_filters = false;
 
     /**
      * Initialize filters.
@@ -42,8 +35,8 @@ trait Filters
         $this->filters = $this->filters->mapWithKeys(function ($item) {
             $key = substr(str_shuffle(str_repeat('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 5)), 0, 10);
 
-            // Note: We don't need to explicitly strip closures if we use get_object_vars 
-            // because proper serialization will just ignore the closure property if we don't return it? 
+            // Note: We don't need to explicitly strip closures if we use get_object_vars
+            // because proper serialization will just ignore the closure property if we don't return it?
             // Actually get_object_vars returns the property.
             // We MUST ensure the closure is not in the array we return for storage.
 
@@ -80,7 +73,7 @@ trait Filters
                 $filter->key = $filter->column;
             } elseif (isset($filter->queryCallback) && is_callable($filter->queryCallback)) {
                 // Virtual filter with custom query callback - use a generated key
-                $filter->key = '_virtual_' . \Illuminate\Support\Str::slug($filter->label);
+                $filter->key = '_virtual_'.\Illuminate\Support\Str::slug($filter->label);
             } else {
                 $filter->key = $this->getColumnKey($filter->label);
             }
@@ -126,6 +119,7 @@ trait Filters
                             }
                         }
                     }
+
                     return $item; // Fallback, let it be [object Object] or whatever if we failed
                 })->filter()->unique()->values();
 
@@ -139,10 +133,11 @@ trait Filters
             if (isset($item->queryCallback)) {
                 $item->queryCallback = null;
             }
+
             return [$key => (array) get_object_vars($item)];
         });
 
-        if (!$this->filters->isEmpty()) {
+        if (! $this->filters->isEmpty()) {
             $this->has_filters = true;
         }
     }
@@ -150,8 +145,9 @@ trait Filters
     /**
      * Identify the column key from a filter label.
      *
-     * @param string $filter_label
+     * @param  string  $filter_label
      * @return string
+     *
      * @throws Exception
      */
     public function getColumnKey($filter_label)
@@ -161,7 +157,7 @@ trait Filters
                 return strtolower($column->label) === strtolower($filter_label);
             })->first()->key;
         } catch (\Throwable $th) {
-            throw new Exception("No column with label " . $filter_label . " to associate with filter.");
+            throw new Exception('No column with label '.$filter_label.' to associate with filter.');
         }
     }
 
@@ -170,42 +166,46 @@ trait Filters
      *
      * Triggered by Livewire when filter properties change.
      *
-     * @param string $key
-     * @param mixed $value
+     * @param  string  $key
+     * @param  mixed  $value
      * @return void
      */
     public function updatedFilters($key, $value)
     {
-        if (is_array($key)) return;
-
-        if (!str_contains($key, 'filters.')) {
+        if (is_array($key)) {
             return;
         }
 
-        $key = str_replace(array('filters.', '.input'), '', $key);
+        if (! str_contains($key, 'filters.')) {
+            return;
+        }
+
+        $key = str_replace(['filters.', '.input'], '', $key);
 
         $filter = $this->filters->get($key);
 
-        if (!$filter) return;
+        if (! $filter) {
+            return;
+        }
 
         // Array access
-        if (in_array($filter['type'], array("string", "select"))) {
+        if (in_array($filter['type'], ['string', 'select'])) {
             $filter['input'] = trim($filter['input']);
         }
-        if ($filter['type'] == "bool") {
+        if ($filter['type'] == 'bool') {
             if ($filter['input'] === 'all') {
                 $filter['input'] = null;
             }
         }
-        if ($filter['type'] == "daterange") {
+        if ($filter['type'] == 'daterange') {
             if (empty($value)) {
                 $filter['input'] = null;
                 $filter['daterange'] = null;
             } else {
                 $filter['input'] = json_encode($value);
                 $filter['daterange'] = [
-                    "start" => Carbon::parse($value['start'])->startOfDay(),
-                    "end"   => Carbon::parse($value['end'])->endOfDay()
+                    'start' => Carbon::parse($value['start'])->startOfDay(),
+                    'end' => Carbon::parse($value['end'])->endOfDay(),
                 ];
             }
         }
@@ -216,12 +216,14 @@ trait Filters
     /**
      * Apply filters to the data collection (Array/Collection mode).
      *
-     * @param \Illuminate\Support\Collection $data
+     * @param  \Illuminate\Support\Collection  $data
      * @return \Illuminate\Support\Collection
      */
     public function applyFilters($data)
     {
-        if (!$this->has_filters) return $data;
+        if (! $this->has_filters) {
+            return $data;
+        }
 
         // Used for In-Memory filtering.
         // We use $this->filters (arrays) directly, no need for callbacks usually?
@@ -235,18 +237,18 @@ trait Filters
                 $key = $filter['key'];
                 $input = $filter['input'];
 
-                if ($type == "string") {
-                    $suffix = array_key_exists($key . "_original", $item) ? '_original' : '';
-                    if ($input && !str_contains(strtolower($item[$key . $suffix]), strtolower($input))) {
+                if ($type == 'string') {
+                    $suffix = array_key_exists($key.'_original', $item) ? '_original' : '';
+                    if ($input && ! str_contains(strtolower($item[$key.$suffix]), strtolower($input))) {
                         return false;
                     }
                 }
-                if ($type == "select") {
-                    if ($input && !str_contains(strtolower($item[$key]), strtolower($input))) {
+                if ($type == 'select') {
+                    if ($input && ! str_contains(strtolower($item[$key]), strtolower($input))) {
                         return false;
                     }
                 }
-                if ($type == "bool") {
+                if ($type == 'bool') {
                     if ($input === 'all' || $input === '' || is_null($input)) {
                         continue;
                     }
@@ -255,16 +257,17 @@ trait Filters
                         return false;
                     }
                 }
-                if ($type == "daterange") {
+                if ($type == 'daterange') {
                     if (isset($filter['daterange']['start'], $filter['daterange']['end'])) {
                         $itemDate = Carbon::parse($item[$filter['key']]); // Assume your data has a 'date' field
 
-                        if (!$itemDate->between($filter['daterange']['start'], $filter['daterange']['end'])) {
+                        if (! $itemDate->between($filter['daterange']['start'], $filter['daterange']['end'])) {
                             return false; // Exclude if the date is not in range
                         }
                     }
                 }
             }
+
             return true;
         });
     }
@@ -286,13 +289,14 @@ trait Filters
                 $filter->key = $filter->column;
             } elseif (isset($filter->queryCallback) && is_callable($filter->queryCallback)) {
                 // Virtual filter with custom query callback - use a generated key
-                $filter->key = '_virtual_' . \Illuminate\Support\Str::slug($filter->label);
+                $filter->key = '_virtual_'.\Illuminate\Support\Str::slug($filter->label);
             } else {
                 try {
                     $filter->key = $this->getColumnKey($filter->label);
                 } catch (\Throwable $e) {
                 }
             }
+
             return $filter;
         });
 
@@ -310,6 +314,7 @@ trait Filters
                 }
                 // We don't overwrite queryCallback, so fresh one stands.
             }
+
             return $filter;
         });
     }
@@ -317,12 +322,14 @@ trait Filters
     /**
      * Apply filters to the Eloquent query.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function applyFiltersToQuery($query)
     {
-        if (!$this->has_filters) return $query;
+        if (! $this->has_filters) {
+            return $query;
+        }
 
         // Use fresh filters (Objects)
         $filters = $this->getFreshFilters();
@@ -334,6 +341,7 @@ trait Filters
                 if ($filter->input) {
                     call_user_func($filter->queryCallback, $query, $filter->input, $filter);
                 }
+
                 continue;
             }
 
@@ -357,18 +365,18 @@ trait Filters
                 $relation = implode('.', $parts);
             }
 
-            if ($filter->type == "string") {
+            if ($filter->type == 'string') {
                 if ($filter->input) {
                     if ($relation) {
                         $query->whereHas($relation, function ($q) use ($column, $filter) {
-                            $q->where($column, 'like', '%' . $filter->input . '%');
+                            $q->where($column, 'like', '%'.$filter->input.'%');
                         });
                     } else {
-                        $query->where($dbColumn, 'like', '%' . $filter->input . '%');
+                        $query->where($dbColumn, 'like', '%'.$filter->input.'%');
                     }
                 }
             }
-            if ($filter->type == "select" || $filter->type == "magic-select") {
+            if ($filter->type == 'select' || $filter->type == 'magic-select') {
                 if ($filter->input) {
                     if ($relation) {
                         $query->whereHas($relation, function ($q) use ($column, $filter) {
@@ -379,7 +387,7 @@ trait Filters
                     }
                 }
             }
-            if ($filter->type == "bool") {
+            if ($filter->type == 'bool') {
                 if ($filter->input === 'all' || $filter->input === '' || is_null($filter->input)) {
                     continue;
                 }
@@ -392,31 +400,32 @@ trait Filters
                     $query->where($dbColumn, $boolVal);
                 }
             }
-            if ($filter->type == "daterange") {
+            if ($filter->type == 'daterange') {
                 if (isset($filter->daterange['start'], $filter->daterange['end'])) {
                     if ($relation) {
                         $query->whereHas($relation, function ($q) use ($column, $filter) {
                             $q->whereBetween($column, [
                                 $filter->daterange['start'],
-                                $filter->daterange['end']
+                                $filter->daterange['end'],
                             ]);
                         });
                     } else {
                         $query->whereBetween($dbColumn, [
                             $filter->daterange['start'],
-                            $filter->daterange['end']
+                            $filter->daterange['end'],
                         ]);
                     }
                 }
             }
         }
+
         return $query;
     }
 
     /**
      * Clear all active filters and search.
      *
-     * @param bool $selectAll Whether to select all data after clearing.
+     * @param  bool  $selectAll  Whether to select all data after clearing.
      * @return void
      */
     public function clearAllFilters($selectAll = false)
@@ -425,6 +434,7 @@ trait Filters
         if ($this->filters) {
             $this->filters->transform(function ($filter) {
                 $filter['input'] = null;
+
                 return $filter;
             });
         }

@@ -4,122 +4,55 @@ namespace Beartropy\Tables\Traits;
 
 trait View
 {
-    /**
-     * @var string|null
-     */
-    public $title;
+    public ?string $title = null;
 
-    /**
-     * @var string|null
-     */
-    public $titleClasses;
+    public ?string $titleClasses = null;
 
-    /**
-     * @var string|null
-     */
-    public $customHeader;
+    public ?string $customHeader = null;
 
-    /**
-     * @var string|null
-     */
-    public $main_wrapper_classes;
+    public ?string $main_wrapper_classes = null;
 
-    /**
-     * @var string|null
-     */
-    public $table_classes;
+    public ?string $table_classes = null;
 
-    /**
-     * @var bool
-     */
-    public $override_table_classes = false;
+    public bool $override_table_classes = false;
 
-    /**
-     * @var bool
-     */
-    public $sticky_header = false;
+    public bool $sticky_header = false;
 
-    /**
-     * @var bool
-     */
-    public $has_counter = true;
+    public bool $has_counter = true;
 
-    /**
-     * @var string|null
-     */
-    public $modals_view;
+    public ?string $modals_view = null;
 
-    /**
-     * @var string|null
-     */
-    public $yat_most_left_view;
-    /**
-     * @var string|null
-     */
-    public $yat_less_left_view;
-    /**
-     * @var string|null
-     */
-    public $yat_most_right_view;
-    /**
-     * @var string|null
-     */
-    public $yat_less_right_view;
+    public ?string $yat_most_left_view = null;
 
-    /**
-     * @var bool
-     */
-    public $showCardsOnMobile = false;
+    public ?string $yat_less_left_view = null;
 
-    /**
-     * @var bool
-     */
-    public $useCards = false;
+    public ?string $yat_most_right_view = null;
 
-    /**
-     * @var bool
-     */
-    public $yat_is_mobile = false;
+    public ?string $yat_less_right_view = null;
 
-    /**
-     * @var array
-     */
-    public $yat_custom_buttons = [];
+    public bool $showCardsOnMobile = false;
 
-    /**
-     * @var string
-     */
-    public $yat_button_variant = 'outline';
+    public bool $useCards = false;
 
-    /**
-     * @var string
-     */
+    public bool $yat_is_mobile = false;
+
+    public array $yat_custom_buttons = [];
+
+    public string $yat_button_variant = 'outline';
+
     public string $theme = 'gray';
 
-    /**
-     * @var string|null
-     */
     public ?string $bulkThemeOverride = 'gray';
 
-    /**
-     * @var string|null
-     */
     public ?string $buttonThemeOverride = 'beartropy';
 
-    /**
-     * @var string|null
-     */
     public ?string $inputThemeOverride = 'beartropy';
 
-    /**
-     * @var array
-     */
     public array $themeConfig = [];
 
     /**
      * Set the table theme.
      *
-     * @param string $theme
      * @return void
      */
     public function setTheme(string $theme)
@@ -131,19 +64,18 @@ trait View
     /**
      * Get configuration for a specific theme from presets.
      *
-     * @param string $theme
      * @return array
      */
     public function getThemeConfig(string $theme)
     {
-        $presets = require __DIR__ . '/../resources/views/livewire/table-presets.php';
+        $presets = require __DIR__.'/../resources/views/livewire/table-presets.php';
+
         return $presets[$theme] ?? $presets['gray'];
     }
 
     /**
      * Override the bulk actions theme.
      *
-     * @param string|null $theme
      * @return void
      */
     public function setBulkThemeOverride(?string $theme)
@@ -154,7 +86,6 @@ trait View
     /**
      * Override the button theme.
      *
-     * @param string|null $theme
      * @return void
      */
     public function setButtonThemeOverride(?string $theme)
@@ -165,7 +96,6 @@ trait View
     /**
      * Override specific theme settings.
      *
-     * @param string|null $theme
      * @return void
      */
     public function setInputThemeOverride(?string $theme)
@@ -201,7 +131,6 @@ trait View
     /**
      * Add custom buttons to the table header.
      *
-     * @param array $buttons
      * @return void
      */
     public function addButtons(array $buttons)
@@ -209,15 +138,11 @@ trait View
         $this->yat_custom_buttons = $buttons;
     }
 
-    /**
-     * @var array
-     */
-    public $yat_card_modal_buttons = [];
+    public array $yat_card_modal_buttons = [];
 
     /**
      * Add buttons to the card modal view.
      *
-     * @param array $buttons
      * @return void
      */
     public function addCardModalButtons(array $buttons)
@@ -228,7 +153,6 @@ trait View
     /**
      * Toggle the record counter display.
      *
-     * @param bool $bool
      * @return void
      */
     public function showCounter(bool $bool)
@@ -236,23 +160,34 @@ trait View
         $this->has_counter = $bool;
     }
 
+    /**
+     * Enable or disable card view on mobile devices.
+     *
+     * @return void
+     */
     public function showCardsOnMobile(bool $bool = true)
     {
         $this->showCardsOnMobile = $bool;
     }
 
+    /**
+     * Enable or disable card layout for all devices.
+     *
+     * @return void
+     */
     public function useCards(bool $bool = true)
     {
         $this->useCards = $bool;
     }
 
-    public $mobileDetailsModalOpen = false;
-    public $mobileDetailsRow = [];
+    public bool $mobileDetailsModalOpen = false;
+
+    public array $mobileDetailsRow = [];
 
     /**
      * Open the mobile details modal for a specific row.
      *
-     * @param mixed $rowId
+     * @param  mixed  $rowId
      * @return void
      */
     public function openMobileCardDetails($rowId)
@@ -275,7 +210,7 @@ trait View
     /**
      * Set the table title.
      *
-     * @param string $title
+     * @param  string  $title
      * @return void
      */
     public function setTitle($title)
@@ -286,7 +221,7 @@ trait View
     /**
      * Override default title classes.
      *
-     * @param string $classes
+     * @param  string  $classes
      * @return void
      */
     public function overrideTitleClasses($classes)
@@ -297,7 +232,7 @@ trait View
     /**
      * Set custom HTML content for the header.
      *
-     * @param string $html
+     * @param  string  $html
      * @return void
      */
     public function setCustomHeader($html)
@@ -308,7 +243,6 @@ trait View
     /**
      * Set CSS classes for the main component wrapper.
      *
-     * @param string $classes
      * @return void
      */
     public function setComponentClasses(string $classes)
@@ -319,7 +253,6 @@ trait View
     /**
      * Add CSS classes to the table element.
      *
-     * @param string $classes
      * @return void
      */
     public function addTableClasses(string $classes)
@@ -330,7 +263,6 @@ trait View
     /**
      * Set (overwrite) CSS classes for the table element.
      *
-     * @param string $classes
      * @return void
      */
     public function setTableClasses(string $classes)
@@ -349,12 +281,9 @@ trait View
         $this->sticky_header = true;
     }
 
-
-
     /**
      * Set the view for modals.
      *
-     * @param string $view
      * @return void
      */
     public function setModalsView(string $view)
@@ -365,7 +294,6 @@ trait View
     /**
      * Set the view for the leftmost header area.
      *
-     * @param string $view
      * @return void
      */
     public function setMostLeftView(string $view)
@@ -376,7 +304,6 @@ trait View
     /**
      * Set the view for the inner left header area.
      *
-     * @param string $view
      * @return void
      */
     public function setLessLeftView(string $view)
@@ -387,7 +314,6 @@ trait View
     /**
      * Set the view for the rightmost header area.
      *
-     * @param string $view
      * @return void
      */
     public function setMostRightView(string $view)
@@ -398,7 +324,6 @@ trait View
     /**
      * Set the view for the inner right header area.
      *
-     * @param string $view
      * @return void
      */
     public function setLessRightView(string $view)
@@ -409,7 +334,6 @@ trait View
     /**
      * Set the button variant style.
      *
-     * @param string $variant
      * @return void
      */
     public function setButtonVariant(string $variant)
@@ -417,12 +341,11 @@ trait View
         $this->yat_button_variant = $variant;
     }
 
-    public $showOptionsOnlyOnRowSelect = false;
+    public bool $showOptionsOnlyOnRowSelect = false;
 
     /**
      * Configure options visibility based on row selection specific logic.
      *
-     * @param bool $value
      * @return void
      */
     public function showOptionsOnlyOnRowSelect(bool $value = true)
@@ -430,12 +353,12 @@ trait View
         $this->showOptionsOnlyOnRowSelect = $value;
     }
 
-    public $layout;
+    public mixed $layout = null;
 
     /**
      * Set the main layout view.
      *
-     * @param mixed $layout
+     * @param  mixed  $layout
      * @return void
      */
     public function setLayout($layout)
@@ -443,12 +366,11 @@ trait View
         $this->layout = $layout;
     }
 
-    public $stripRows = true;
+    public bool $stripRows = true;
 
     /**
      * Enable or disable striped rows.
      *
-     * @param bool $strip
      * @return void
      */
     public function stripRows(bool $strip = true)
@@ -464,7 +386,7 @@ trait View
     public function getRowStripingClasses()
     {
         if ($this->stripRows) {
-            return $this->themeConfig['table']['tr_body_odd'] . ' ' . $this->themeConfig['table']['tr_body_even'];
+            return $this->themeConfig['table']['tr_body_odd'].' '.$this->themeConfig['table']['tr_body_even'];
         }
 
         return str_replace(['odd:', 'even:'], '', $this->themeConfig['table']['tr_body_odd']);

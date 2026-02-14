@@ -4,24 +4,16 @@ namespace Beartropy\Tables\Traits;
 
 trait Sort
 {
+    public ?string $sortColumn = null;
 
-    /**
-     * @var string|null
-     */
-    public $sortColumn; // Default column to sort by
-
-    /**
-     * @var string
-     */
-    public $sortDirection = 'asc'; // Default sort direction
+    public string $sortDirection = 'asc';
 
     /**
      * Set sort direction to ascending.
      *
-     * @param bool $bool
      * @return void
      */
-    public function setSortDirectionAsc(Bool $bool)
+    public function setSortDirectionAsc(bool $bool)
     {
         if ($bool) {
             $this->sortDirection = 'asc';
@@ -31,10 +23,9 @@ trait Sort
     /**
      * Set sort direction to descending.
      *
-     * @param bool $bool
      * @return void
      */
-    public function setSortDirectionDesc(Bool $bool)
+    public function setSortDirectionDesc(bool $bool)
     {
         if ($bool) {
             $this->sortDirection = 'desc';
@@ -44,10 +35,9 @@ trait Sort
     /**
      * Set the column to sort by.
      *
-     * @param string $column
      * @return void
      */
-    public function setSortColumn(String $column)
+    public function setSortColumn(string $column)
     {
         $this->sortColumn = $column;
     }
@@ -55,7 +45,7 @@ trait Sort
     /**
      * Toggle sorting for a specific column.
      *
-     * @param string $column
+     * @param  string  $column
      * @return void
      */
     public function sortBy($column)
@@ -63,7 +53,7 @@ trait Sort
         $this->emptySelection();
         $colObject = $this->columns->where('key', $column)->first();
 
-        if (!$colObject || !$colObject->isSortable) {
+        if (! $colObject || ! $colObject->isSortable) {
             return;
         }
 
@@ -82,7 +72,7 @@ trait Sort
     /**
      * Sort the data collection (Array mode).
      *
-     * @param \Illuminate\Support\Collection $data
+     * @param  \Illuminate\Support\Collection  $data
      * @return \Illuminate\Support\Collection
      */
     public function sortData($data)
@@ -93,11 +83,9 @@ trait Sort
             $freshCols = $this->getFreshColumns();
             $sort_column = $freshCols->where('key', $this->sortColumn)->first();
 
-
-
             if ($sort_column && $sort_column->has_modified_data) {
-                $sort_column = $sort_column->key . "_original";
-            } else if ($sort_column) {
+                $sort_column = $sort_column->key.'_original';
+            } elseif ($sort_column) {
                 $sort_column = $sort_column->key;
             } else {
                 // If the sort column is not found in fresh columns,
@@ -109,20 +97,15 @@ trait Sort
             }
 
             if ($this->sortDirection === 'desc') {
-
-                /*                 $data = $data->sortByDesc(function ($item) use ($sort_column) {
-                    return $item[strtolower($sort_column)];
-                },SORT_NATURAL|SORT_FLAG_CASE); */
                 $data = $data->sortByDesc(function ($item) use ($sort_column) {
                     $value = $item[strtolower($sort_column)];
+
                     return is_array($value) ? implode(' ', $value) : $value;
                 }, SORT_NATURAL | SORT_FLAG_CASE);
             } else {
-                /*                 $data = $data->sortBy(function ($item) use ($sort_column) {
-                    return $item[strtolower($sort_column)];
-                },SORT_NATURAL|SORT_FLAG_CASE); */
                 $data = $data->sortBy(function ($item) use ($sort_column) {
                     $value = $item[strtolower($sort_column)];
+
                     return is_array($value) ? implode(' ', $value) : $value;
                 }, SORT_NATURAL | SORT_FLAG_CASE);
             }
@@ -136,7 +119,7 @@ trait Sort
      *
      * Handles relationship sorting and custom callbacks.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function applySortToQuery($query)
@@ -178,6 +161,7 @@ trait Sort
                                     ->whereColumn("{$relatedTable}.{$foreignKey}", "{$parentTable}.{$localKey}");
 
                                 $query->orderBy($subQuery, $this->sortDirection);
+
                                 return $query;
                             }
                             // Handle BelongsTo relationship
@@ -193,6 +177,7 @@ trait Sort
                                     ->whereColumn("{$relatedTable}.{$ownerKey}", "{$parentTable}.{$foreignKey}");
 
                                 $query->orderBy($subQuery, $this->sortDirection);
+
                                 return $query;
                             }
                         }
@@ -202,6 +187,7 @@ trait Sort
                 }
             }
         }
+
         return $query;
     }
 }

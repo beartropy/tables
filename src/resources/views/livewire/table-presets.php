@@ -1405,4 +1405,4 @@ return [
             'text' => 'text-rose-500 dark:text-rose-200',
             'border' => 'border-rose-300',
         ],
-    ],];
+    ], ];

@@ -6,27 +6,17 @@ use Exception;
 
 trait RowManipulators
 {
+    public array $yatable_expanded_rows = [];
 
-    /**
-     * @var array
-     */
-    public $yatable_expanded_rows = [];
+    public bool $yatable_expanded_rows_is_component = false;
 
-    /**
-     * @var bool
-     */
-    public $yatable_expanded_rows_is_component = false;
-
-    /**
-     * @var array
-     */
-    public $yatable_expanded_rows_content = [];
+    public array $yatable_expanded_rows_content = [];
 
     /**
      * Remove a row from the table data (and cache).
      *
-     * @param mixed $id
-     * @param bool $resetSelected Whether to clear selection after removal.
+     * @param  mixed  $id
+     * @param  bool  $resetSelected  Whether to clear selection after removal.
      * @return void
      */
     public function removeRowFromTable($id, $resetSelected = true)
@@ -44,13 +34,13 @@ trait RowManipulators
     /**
      * Add a new row to the table data (and cache).
      *
-     * @param array $row
+     * @param  array  $row
      * @return void
      */
     public function addRowToTable($row)
     {
         $data = $this->getAllData();
-        if (!isset($row['id'])) {
+        if (! isset($row['id'])) {
             $row['id'] = $row[$this->column_id];
         }
         $data->push($row);
@@ -60,10 +50,11 @@ trait RowManipulators
     /**
      * Toggle the expansion state of a row.
      *
-     * @param mixed $rowId
-     * @param mixed $content Content string or array if is_component is true.
-     * @param bool $is_component Whether the content points to a Livewire component.
+     * @param  mixed  $rowId
+     * @param  mixed  $content  Content string or array if is_component is true.
+     * @param  bool  $is_component  Whether the content points to a Livewire component.
      * @return void
+     *
      * @throws Exception
      */
     public function toggleExpandedRow($rowId, $content, $is_component = false)
@@ -77,8 +68,8 @@ trait RowManipulators
             // Otherwise, add it to the expanded rows
             $this->yatable_expanded_rows[] = $rowId;
             if ($is_component) {
-                if (!is_array($content) || !isset($content['component']) || !isset($content['parameters'])) {
-                    throw new Exception("When toggleExpandedRow \$is_component is true \$content must be an array with keys component and parameters", 1);
+                if (! is_array($content) || ! isset($content['component']) || ! isset($content['parameters'])) {
+                    throw new Exception('When toggleExpandedRow $is_component is true $content must be an array with keys component and parameters', 1);
                 }
             }
             $this->yatable_expanded_rows_content[$rowId] = $content;
@@ -88,8 +79,8 @@ trait RowManipulators
     /**
      * Update a row's data in the table (and cache).
      *
-     * @param mixed $id
-     * @param array $newData Key-value pairs to update.
+     * @param  mixed  $id
+     * @param  array  $newData  Key-value pairs to update.
      * @return void
      */
     public function updateRowOnTable($id, $newData)
@@ -99,6 +90,7 @@ trait RowManipulators
             if ($item[$this->column_id] == $id) {
                 $item = array_merge($item, $newData);
             }
+
             return $item;
         });
         $this->updateCacheData($data);
@@ -107,7 +99,7 @@ trait RowManipulators
     /**
      * Expand the mobile details view for a row.
      *
-     * @param mixed $rowId
+     * @param  mixed  $rowId
      * @return void
      */
     public function expandMobileRow($rowId)
@@ -115,13 +107,15 @@ trait RowManipulators
         // Find the row data
         $row = $this->getAllData()->firstWhere($this->column_id, $rowId);
 
-        if (!$row) return;
+        if (! $row) {
+            return;
+        }
 
         // Render the details view
         $content = view('yat::livewire.parts.mobile-details', [
             'row' => $row,
             'columns' => $this->mobileCollapsedColumns,
-            'row_id_name' => $this->column_id
+            'row_id_name' => $this->column_id,
         ])->render();
 
         $this->toggleExpandedRow($rowId, $content);
@@ -132,8 +126,8 @@ trait RowManipulators
      *
      * Dispatches trigger method if defined on the column.
      *
-     * @param mixed $id
-     * @param string $column Column key.
+     * @param  mixed  $id
+     * @param  string  $column  Column key.
      * @return void
      */
     public function toggleBoolean($id, $column)
@@ -147,8 +141,9 @@ trait RowManipulators
         $data = $this->getAllData();
         $data = $data->map(function ($item) use ($id, $column) {
             if ($item[$this->column_id] == $id) {
-                $item[$column] = !$item[$column];
+                $item[$column] = ! $item[$column];
             }
+
             return $item;
         });
         $this->updateCacheData($data);

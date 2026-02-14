@@ -2,8 +2,6 @@
 
 namespace Beartropy\Tables\Classes\Filters;
 
-
-use Beartropy\Tables\Classes\Filters\Filter;
 use Beartropy\Tables\Traits\Filters;
 
 class FilterString extends Filter
@@ -17,9 +15,6 @@ class FilterString extends Filter
 
     /**
      * Create a new FilterString instance.
-     *
-     * @param string $label
-     * @param string|null $index
      */
     public function __construct(string $label, ?string $index = null)
     {
@@ -28,10 +23,6 @@ class FilterString extends Filter
 
     /**
      * Static factory method.
-     *
-     * @param string $label
-     * @param string|null $index
-     * @return \Beartropy\Tables\Classes\Filters\Filter
      */
     public static function make(string $label, ?string $index = null): Filter
     {

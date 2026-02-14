@@ -2,8 +2,6 @@
 
 namespace Beartropy\Tables\Classes\Columns;
 
-
-use Beartropy\Tables\Classes\Columns\Column;
 use Beartropy\Tables\Traits\Columns;
 
 class LinkColumn extends Column
@@ -37,9 +35,6 @@ class LinkColumn extends Column
 
     /**
      * Create a new LinkColumn instance.
-     *
-     * @param string $label
-     * @param string|null $key
      */
     public function __construct(string $label, ?string $key = null)
     {
@@ -48,10 +43,6 @@ class LinkColumn extends Column
 
     /**
      * Static factory method.
-     *
-     * @param string $label
-     * @param string|null $key
-     * @return \Beartropy\Tables\Classes\Columns\Column
      */
     public static function make(string $label, ?string $key = null): Column
     {
