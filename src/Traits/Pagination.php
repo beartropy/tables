@@ -59,6 +59,7 @@ trait Pagination
             $this->perPage = $value;
             $this->perPageDisplay = $value;
         }
+        $this->resetPage();
         $this->updatedSelectAll(false);
         $this->selectAll = false;
         $this->allSelected = false;
