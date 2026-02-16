@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.9.2] - 2026-02-16
+
+### Fixed
+- **Data**: Normalize stdClass objects to arrays in `processCollection()` and `addRowToTable()`, preventing "Cannot use object of type stdClass as array" errors when `data()` returns stdClass objects (e.g. from `json_decode()` or API responses).
+- **Theming**: Fix `setTheme()` not propagating to header components.
+
 ## [v2.9.1] - 2026-02-16
 
 ### Changed
