@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.8.2] - 2026-02-16
+
+### Changed
+- **Search**: Use native icon-start prop for search input magnifying glass.
+- **Pagination**: Add cursor-pointer to pagination buttons.
+- **Pagination**: Reset page when changing per-page option.
+
+### Fixed
+- **FilterSelect**: Fix sending option labels instead of IDs.
+- **FilterSelect**: Fix integer-keyed options not filtering correctly.
+- **ToggleColumn**: Fix undefined property after Livewire serialization.
+
 ## [v2.8.1] - 2026-02-16
 
 ### Fixed
