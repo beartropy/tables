@@ -53,8 +53,10 @@ class YATBaseTable extends Component
 
     /**
      * The model or a query builder instance.
+     *
+     * @var mixed
      */
-    public mixed $model = null;
+    public $model = null;
 
     /**
      * Relationships to eager load with the model.
