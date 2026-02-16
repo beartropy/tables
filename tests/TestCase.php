@@ -27,6 +27,8 @@ class TestCase extends Orchestra
     {
         return [
             LivewireServiceProvider::class,
+            \BladeUI\Icons\BladeIconsServiceProvider::class,
+            \BladeUI\Heroicons\BladeHeroiconsServiceProvider::class,
             \Beartropy\Ui\BeartropyUiServiceProvider::class,
             YATProvider::class,
         ];
