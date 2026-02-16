@@ -1,7 +1,7 @@
 <?php
 
 use Beartropy\Tables\Classes\Columns\Column;
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Livewire;
 
@@ -12,7 +12,7 @@ class UserForEditable extends Model
     protected $guarded = [];
 }
 
-class EditableUserTable extends YATBaseTable
+class EditableUserTable extends BeartropyTable
 {
     public function settings()
     {
@@ -28,7 +28,7 @@ class EditableUserTable extends YATBaseTable
     }
 }
 
-class EditableWithUpdateFieldTable extends YATBaseTable
+class EditableWithUpdateFieldTable extends BeartropyTable
 {
     public function settings()
     {
@@ -44,7 +44,7 @@ class EditableWithUpdateFieldTable extends YATBaseTable
     }
 }
 
-class EditableWithCallbackTable extends YATBaseTable
+class EditableWithCallbackTable extends BeartropyTable
 {
     public bool $callbackInvoked = false;
 
@@ -70,7 +70,7 @@ class EditableWithCallbackTable extends YATBaseTable
     }
 }
 
-class DeniedEditableTable extends YATBaseTable
+class DeniedEditableTable extends BeartropyTable
 {
     public function settings()
     {
@@ -91,7 +91,7 @@ class DeniedEditableTable extends YATBaseTable
     }
 }
 
-class EditableArrayTable extends YATBaseTable
+class EditableArrayTable extends BeartropyTable
 {
     public function columns()
     {

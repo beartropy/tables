@@ -11,7 +11,7 @@ Ready-to-use filter examples for Beartropy Tables.
 namespace App\Livewire;
 
 use App\Models\User;
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Beartropy\Tables\Classes\Columns\Column;
 use Beartropy\Tables\Classes\Columns\BoolColumn;
 use Beartropy\Tables\Classes\Columns\DateColumn;
@@ -21,7 +21,7 @@ use Beartropy\Tables\Classes\Filters\FilterBool;
 use Beartropy\Tables\Classes\Filters\FilterDateRange;
 use Beartropy\Tables\Classes\Filters\FilterSelectMagic;
 
-class UsersTable extends YATBaseTable
+class UsersTable extends BeartropyTable
 {
     public $model = User::class;
 

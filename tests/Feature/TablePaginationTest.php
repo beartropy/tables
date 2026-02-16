@@ -1,7 +1,7 @@
 <?php
 
 use Beartropy\Tables\Classes\Columns\Column;
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Livewire;
 
@@ -12,7 +12,7 @@ class UserForPagination extends Model
     protected $guarded = [];
 }
 
-class UserTableForPagination extends YATBaseTable
+class UserTableForPagination extends BeartropyTable
 {
     public function settings()
     {
@@ -28,7 +28,7 @@ class UserTableForPagination extends YATBaseTable
     }
 }
 
-class CustomPerPageTable extends YATBaseTable
+class CustomPerPageTable extends BeartropyTable
 {
     public function settings()
     {
@@ -45,7 +45,7 @@ class CustomPerPageTable extends YATBaseTable
     }
 }
 
-class NoPaginationTable extends YATBaseTable
+class NoPaginationTable extends BeartropyTable
 {
     public function settings()
     {

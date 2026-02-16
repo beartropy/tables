@@ -44,7 +44,7 @@ class MakeComponent extends Command implements PromptsForMissingInput
 
         $this->createTable();
 
-        $this->info('YATable created: '.$this->parser->className());
+        $this->info('BeartropyTable created: '.$this->parser->className());
     }
 
     /**

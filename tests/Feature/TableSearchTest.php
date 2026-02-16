@@ -1,7 +1,7 @@
 <?php
 
 use Beartropy\Tables\Classes\Columns\Column;
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Livewire;
 
@@ -12,7 +12,7 @@ class UserForSearch extends Model
     protected $guarded = [];
 }
 
-class UserTableForSearch extends YATBaseTable
+class UserTableForSearch extends BeartropyTable
 {
     public function settings()
     {
@@ -28,7 +28,7 @@ class UserTableForSearch extends YATBaseTable
     }
 }
 
-class ArrayTableForSearch extends YATBaseTable
+class ArrayTableForSearch extends BeartropyTable
 {
     public function columns()
     {
@@ -50,7 +50,7 @@ class ArrayTableForSearch extends YATBaseTable
     public function settings() {}
 }
 
-class PartialSearchTable extends YATBaseTable
+class PartialSearchTable extends BeartropyTable
 {
     public function settings()
     {

@@ -11,11 +11,11 @@ Ready-to-use patterns for bulk actions, inline editing, export, and more.
 namespace App\Livewire;
 
 use App\Models\User;
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Beartropy\Tables\Classes\Columns\Column;
 use Beartropy\Tables\Classes\Columns\BoolColumn;
 
-class BulkUsersTable extends YATBaseTable
+class BulkUsersTable extends BeartropyTable
 {
     public $model = User::class;
 
@@ -95,11 +95,11 @@ class BulkUsersTable extends YATBaseTable
 namespace App\Livewire;
 
 use App\Models\Product;
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Beartropy\Tables\Classes\Columns\Column;
 use Beartropy\Tables\Classes\Columns\ToggleColumn;
 
-class EditableProductsTable extends YATBaseTable
+class EditableProductsTable extends BeartropyTable
 {
     public $model = Product::class;
 
@@ -178,12 +178,12 @@ class EditableProductsTable extends YATBaseTable
 namespace App\Livewire;
 
 use App\Models\Order;
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Beartropy\Tables\Classes\Columns\Column;
 use Beartropy\Tables\Classes\Columns\DateColumn;
 use Beartropy\Tables\Classes\Columns\LinkColumn;
 
-class OrdersTable extends YATBaseTable
+class OrdersTable extends BeartropyTable
 {
     public $model = Order::class;
 
@@ -244,11 +244,11 @@ namespace App\Livewire;
 
 use App\Models\User;
 use App\Models\UserSetting;
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Beartropy\Tables\Classes\Columns\Column;
 use Beartropy\Tables\Classes\Filters\FilterSelect;
 
-class UserSettingsTable extends YATBaseTable
+class UserSettingsTable extends BeartropyTable
 {
     public $model = User::class;
 
@@ -312,10 +312,10 @@ class UserSettingsTable extends YATBaseTable
 namespace App\Livewire;
 
 use App\Models\Order;
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Beartropy\Tables\Classes\Columns\Column;
 
-class ExpandableOrdersTable extends YATBaseTable
+class ExpandableOrdersTable extends BeartropyTable
 {
     public $model = Order::class;
 
@@ -364,10 +364,10 @@ class ExpandableOrdersTable extends YATBaseTable
 namespace App\Livewire;
 
 use App\Models\User;
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Beartropy\Tables\Classes\Columns\Column;
 
-class ThemedUsersTable extends YATBaseTable
+class ThemedUsersTable extends BeartropyTable
 {
     public $model = User::class;
 
@@ -409,7 +409,7 @@ class ThemedUsersTable extends YATBaseTable
 namespace App\Livewire;
 
 use App\Models\User;
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Beartropy\Tables\Classes\Columns\Column;
 use Beartropy\Tables\Classes\Columns\BoolColumn;
 use Beartropy\Tables\Classes\Columns\DateColumn;
@@ -421,7 +421,7 @@ use Beartropy\Tables\Classes\Filters\FilterBool;
 use Beartropy\Tables\Classes\Filters\FilterDateRange;
 use Beartropy\Tables\Classes\Filters\FilterSelectMagic;
 
-class FullUsersTable extends YATBaseTable
+class FullUsersTable extends BeartropyTable
 {
     public $model = User::class;
     public array $with = ['profile'];

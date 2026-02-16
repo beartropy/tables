@@ -4,7 +4,7 @@ namespace [namespace];
 
 use Livewire\Attributes\On;
 use Livewire\Attributes\Layout;
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Illuminate\Support\Facades\Auth;
 use Beartropy\Tables\Exports\GenericExport;
 use Beartropy\Tables\Classes\Columns\Column;
@@ -15,7 +15,7 @@ use Beartropy\Tables\Classes\Filters\FilterString;
 use Beartropy\Tables\Classes\Filters\FilterDateRange;
 use Beartropy\Tables\Classes\Filters\FilterSelectMagic;
 
-class [class] extends YATBaseTable
+class [class] extends BeartropyTable
 {
 
     public $tableName = '[class]';

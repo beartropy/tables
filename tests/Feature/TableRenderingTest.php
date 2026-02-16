@@ -1,7 +1,7 @@
 <?php
 
 use Beartropy\Tables\Classes\Columns\Column;
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Livewire;
 
@@ -10,7 +10,7 @@ class User extends Model
     protected $guarded = [];
 }
 
-class UserTable extends YATBaseTable
+class UserTable extends BeartropyTable
 {
     public function columns()
     {
@@ -26,7 +26,7 @@ class UserTable extends YATBaseTable
     }
 }
 
-class ArrayTable extends YATBaseTable
+class ArrayTable extends BeartropyTable
 {
     public function columns()
     {
@@ -47,7 +47,7 @@ class ArrayTable extends YATBaseTable
     public function settings() {}
 }
 
-class CustomColumnIdTable extends YATBaseTable
+class CustomColumnIdTable extends BeartropyTable
 {
     public function columns()
     {
@@ -104,7 +104,7 @@ it('renders with custom column_id', function () {
 });
 
 it('showOnlyTable hides search and pagination', function () {
-    $tableClass = new class extends YATBaseTable
+    $tableClass = new class extends BeartropyTable
     {
         public function columns()
         {

@@ -1,7 +1,7 @@
 <?php
 
 use Beartropy\Tables\Classes\Columns\Column;
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Livewire;
 
@@ -12,7 +12,7 @@ class UserForSort extends Model
     protected $guarded = [];
 }
 
-class UserTableForSort extends YATBaseTable
+class UserTableForSort extends BeartropyTable
 {
     public function settings()
     {
@@ -28,7 +28,7 @@ class UserTableForSort extends YATBaseTable
     }
 }
 
-class ArrayTableForSort extends YATBaseTable
+class ArrayTableForSort extends BeartropyTable
 {
     public function columns()
     {
@@ -87,7 +87,7 @@ it('sort toggles direction on same column', function () {
 
 it('sort by non-sortable column is ignored', function () {
     // Create a table where email is explicitly non-sortable
-    $tableClass = new class extends YATBaseTable
+    $tableClass = new class extends BeartropyTable
     {
         public function settings()
         {

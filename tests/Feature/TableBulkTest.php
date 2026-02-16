@@ -1,7 +1,7 @@
 <?php
 
 use Beartropy\Tables\Classes\Columns\Column;
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Livewire;
 
@@ -12,7 +12,7 @@ class UserForBulk extends Model
     protected $guarded = [];
 }
 
-class BulkUserTable extends YATBaseTable
+class BulkUserTable extends BeartropyTable
 {
     public function settings()
     {
@@ -29,7 +29,7 @@ class BulkUserTable extends YATBaseTable
     }
 }
 
-class NoBulkUserTable extends YATBaseTable
+class NoBulkUserTable extends BeartropyTable
 {
     public function settings()
     {

@@ -2,10 +2,10 @@
 
 use Beartropy\Tables\Classes\Columns\Column;
 use Beartropy\Tables\Classes\Columns\ToggleColumn;
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Livewire\Livewire;
 
-class ArrayTableForRowOps extends YATBaseTable
+class ArrayTableForRowOps extends BeartropyTable
 {
     public function columns()
     {
@@ -31,7 +31,7 @@ class ArrayTableForRowOps extends YATBaseTable
     }
 }
 
-class ArrayTableWithTrigger extends YATBaseTable
+class ArrayTableWithTrigger extends BeartropyTable
 {
     public bool $triggerCalled = false;
 

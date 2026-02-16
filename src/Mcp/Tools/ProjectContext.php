@@ -35,7 +35,8 @@ class ProjectContext extends Tool
         // Component tag prefix
         $lines[] = '## Livewire Component';
         $lines[] = '';
-        $lines[] = 'Main component: `<livewire:y-a-t-base-table />` or `@livewire(\'YATBaseTable\')`.';
+        $lines[] = 'Main component: `<livewire:beartropy-table />` or `@livewire(\'BeartropyTable\')`.';
+        $lines[] = 'Legacy alias: `YATBaseTable` still works for backward compatibility.';
         $lines[] = 'View prefix: `yat::` — translations: `yat::yat.*`';
         $lines[] = '';
 

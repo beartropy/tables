@@ -6,13 +6,13 @@ This project uses **Beartropy Tables**, a Livewire data table component for the 
 ## Table Architecture
 
 ### Base Class
-All tables extend `Beartropy\Tables\YATBaseTable` (a Livewire component):
+All tables extend `Beartropy\Tables\BeartropyTable` (a Livewire component):
 
 ```php
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Beartropy\Tables\Classes\Columns\Column;
 
-class MyTable extends YATBaseTable
+class MyTable extends BeartropyTable
 {
     public $model = \App\Models\MyModel::class;
 
@@ -208,7 +208,7 @@ public function authorizeFieldUpdate(Model $record, string $field, mixed $value)
 
 ## Rules for Code Generation
 
-1. **Always extend `YATBaseTable`** for table components
+1. **Always extend `BeartropyTable`** for table components
 2. **Always implement `columns()`** — it is required
 3. **Set `$model`** for Eloquent tables, or implement `data()` for array tables
 4. **Use `$with`** to eager load relationships
@@ -217,7 +217,7 @@ public function authorizeFieldUpdate(Model $record, string $field, mixed $value)
 7. **Use `sortable()` and `searchable()`** on key columns
 8. **Use `FilterSelectMagic`** when options come from distinct values
 9. **Override `authorizeFieldUpdate()`** for inline editing security
-10. **Never build table components from scratch** — extend YATBaseTable
+10. **Never build table components from scratch** — extend BeartropyTable
 
 ## Don't Suggest
 
@@ -229,7 +229,7 @@ public function authorizeFieldUpdate(Model $record, string $field, mixed $value)
 
 ## Do Suggest
 
-- Extending `YATBaseTable` for all data tables
+- Extending `BeartropyTable` for all data tables
 - Appropriate column types (BoolColumn, DateColumn, etc.)
 - Filter types matching the data (FilterString, FilterSelect, etc.)
 - Dot notation for relationship data
@@ -242,4 +242,4 @@ Need help? Reference: `vendor/beartropy/tables/docs/ai-assistants/BEARTROPY_GUID
 
 ---
 
-**When generating table code, ALWAYS extend YATBaseTable and use the provided column/filter classes.**
+**When generating table code, ALWAYS extend BeartropyTable and use the provided column/filter classes.**

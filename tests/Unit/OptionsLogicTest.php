@@ -1,9 +1,9 @@
 <?php
 
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 
 it('shows options by default', function () {
-    $component = new class extends YATBaseTable
+    $component = new class extends BeartropyTable
     {
         public function options()
         {
@@ -15,7 +15,7 @@ it('shows options by default', function () {
 });
 
 it('can enable show options only on row select', function () {
-    $component = new class extends YATBaseTable
+    $component = new class extends BeartropyTable
     {
         public function options()
         {
@@ -28,7 +28,7 @@ it('can enable show options only on row select', function () {
 });
 
 it('normalizes string options to array with label and icon', function () {
-    $component = new class extends YATBaseTable
+    $component = new class extends BeartropyTable
     {
         public function options()
         {
@@ -43,7 +43,7 @@ it('normalizes string options to array with label and icon', function () {
 });
 
 it('merges array options with defaults', function () {
-    $component = new class extends YATBaseTable
+    $component = new class extends BeartropyTable
     {
         public function options()
         {
@@ -61,7 +61,7 @@ it('merges array options with defaults', function () {
 });
 
 it('silently handles exception in options method', function () {
-    $component = new class extends YATBaseTable
+    $component = new class extends BeartropyTable
     {
         public function options()
         {

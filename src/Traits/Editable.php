@@ -77,12 +77,12 @@ trait Editable
 
                         return $saved;
                     } else {
-                        \Illuminate\Support\Facades\Log::warning("YATBaseTable Record not found: $id");
+                        \Illuminate\Support\Facades\Log::warning("BeartropyTable Record not found: $id");
 
                         return false;
                     }
                 } catch (\Exception $e) {
-                    \Illuminate\Support\Facades\Log::error('YATBaseTable Editable Error: '.$e->getMessage());
+                    \Illuminate\Support\Facades\Log::error('BeartropyTable Editable Error: '.$e->getMessage());
 
                     return false;
                 }

@@ -17,7 +17,7 @@ class ListComponents extends Tool
     /** @var array<string, list<string>> */
     public const CATEGORIES = [
         'tables' => [
-            'yat-base-table',
+            'bear-table',
         ],
         'columns' => [
             'bool-column',

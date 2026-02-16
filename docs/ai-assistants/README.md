@@ -30,7 +30,7 @@ beartropy/tables/
 │
 └── docs/
     ├── llms/                      # LLM reference docs per component
-    │   ├── yat-base-table.md
+    │   ├── bear-table.md
     │   ├── column.md
     │   ├── filter.md
     │   └── ...
@@ -140,7 +140,7 @@ vendor/beartropy/tables/docs/ai-assistants/examples/
 ## Tips for Best Results
 
 ### 1. Be Specific About Components
-- "Create a table" -> "Create a Beartropy Tables component extending YATBaseTable with columns and filters"
+- "Create a table" -> "Create a Beartropy Tables component extending `BeartropyTable` with columns and filters"
 
 ### 2. Mention Data Mode
 - "Model-based table with User model" (Eloquent-powered)

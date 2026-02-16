@@ -4,7 +4,7 @@ use Beartropy\Tables\Classes\Columns\Column;
 use Beartropy\Tables\Classes\Filters\FilterString;
 use Beartropy\Tables\Traits\Data;
 use Beartropy\Tables\Traits\Filters;
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Livewire;
 
@@ -15,7 +15,7 @@ class UserForFilter extends Model
     protected $guarded = [];
 }
 
-class FilteredModelTable extends YATBaseTable
+class FilteredModelTable extends BeartropyTable
 {
     public function settings()
     {
@@ -38,7 +38,7 @@ class FilteredModelTable extends YATBaseTable
     }
 }
 
-class ArrayStringFilterTable extends YATBaseTable
+class ArrayStringFilterTable extends BeartropyTable
 {
     public function columns()
     {

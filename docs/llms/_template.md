@@ -24,7 +24,7 @@ Column::make('Name', 'name')->searchable()
 
 ## Architecture Notes
 - (Key implementation details for AI agents)
-- (How this component interacts with YATBaseTable)
+- (How this component interacts with BeartropyTable)
 
 ## Common Patterns
 - (Typical usage in table definitions)

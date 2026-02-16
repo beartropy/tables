@@ -18,7 +18,7 @@ class ComponentDocs extends Tool
     {
         return [
             'component' => $schema->string()
-                ->description('Component name in kebab-case (e.g., "yat-base-table"). Use bt-tables-list-components to see all available names.')
+                ->description('Component name in kebab-case (e.g., "bear-table", "column", "filter-select"). Use bt-tables-list-components to see all available names.')
                 ->required(),
         ];
     }

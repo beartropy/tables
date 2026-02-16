@@ -11,11 +11,11 @@ Ready-to-use table examples using Beartropy Tables components.
 namespace App\Livewire;
 
 use App\Models\User;
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Beartropy\Tables\Classes\Columns\Column;
 use Beartropy\Tables\Classes\Columns\DateColumn;
 
-class UsersTable extends YATBaseTable
+class UsersTable extends BeartropyTable
 {
     public $model = User::class;
 
@@ -59,10 +59,10 @@ class UsersTable extends YATBaseTable
 
 namespace App\Livewire;
 
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Beartropy\Tables\Classes\Columns\Column;
 
-class ProductsTable extends YATBaseTable
+class ProductsTable extends BeartropyTable
 {
     public bool $with_pagination = false;
 
@@ -118,12 +118,12 @@ class ProductsTable extends YATBaseTable
 namespace App\Livewire;
 
 use App\Models\Post;
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Beartropy\Tables\Classes\Columns\Column;
 use Beartropy\Tables\Classes\Columns\BoolColumn;
 use Beartropy\Tables\Classes\Columns\DateColumn;
 
-class PostsTable extends YATBaseTable
+class PostsTable extends BeartropyTable
 {
     public $model = Post::class;
 
@@ -169,11 +169,11 @@ class PostsTable extends YATBaseTable
 namespace App\Livewire;
 
 use App\Models\Contact;
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Beartropy\Tables\Classes\Columns\Column;
 use Beartropy\Tables\Classes\Columns\LinkColumn;
 
-class ContactsTable extends YATBaseTable
+class ContactsTable extends BeartropyTable
 {
     public $model = Contact::class;
 
@@ -216,10 +216,10 @@ class ContactsTable extends YATBaseTable
 namespace App\Livewire;
 
 use App\Models\Product;
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Beartropy\Tables\Classes\Columns\Column;
 
-class UuidProductsTable extends YATBaseTable
+class UuidProductsTable extends BeartropyTable
 {
     public $model = Product::class;
 

@@ -13,10 +13,10 @@
 
 ## Architecture
 
-All tables extend `YATBaseTable`, a Livewire component composed of 14 traits:
+All tables extend `BeartropyTable`, a Livewire component composed of 14 traits:
 
 ```
-YATBaseTable extends Livewire\Component
+BeartropyTable extends Livewire\Component
 ├── Bulk          — Row selection & bulk operations
 ├── Cache         — Data caching
 ├── Columns       — Column management
@@ -40,10 +40,10 @@ YATBaseTable extends Livewire\Component
 ```php
 namespace App\Livewire;
 
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Beartropy\Tables\Classes\Columns\Column;
 
-class UsersTable extends YATBaseTable
+class UsersTable extends BeartropyTable
 {
     public $model = \App\Models\User::class;
 
@@ -55,6 +55,13 @@ class UsersTable extends YATBaseTable
         ];
     }
 }
+```
+
+Or scaffold with artisan:
+
+```bash
+php artisan make:btable UsersTable
+php artisan make:btable UsersTable --model=App\\Models\\User
 ```
 
 ### Step 2: Use in Blade
@@ -78,6 +85,80 @@ class UsersTable extends YATBaseTable
 | `$useCards` | bool | false | Use card layout |
 | `$showCardsOnMobile` | bool | false | Cards on mobile |
 | `$sticky_header` | bool | false | Sticky table header |
+| `$theme` | string | 'gray' | Table color theme |
+| `$stripRows` | bool | true | Alternating row striping |
+
+## Settings Methods
+
+Call these from `settings()` to configure behavior programmatically:
+
+```php
+public function settings(): void
+{
+    // Theming
+    $this->setTheme('beartropy');
+    $this->setComponentSize('sm');       // Resize all header UI components
+    $this->setButtonThemeOverride('gray');
+    $this->setInputThemeOverride('gray');
+    $this->setBulkThemeOverride('gray');
+    $this->setButtonVariant('outline');
+    $this->stripRows(false);
+
+    // Title & Header
+    $this->setTitle('User Management');
+    $this->overrideTitleClasses('text-2xl font-bold');
+    $this->setCustomHeader('<div>Custom HTML</div>');
+
+    // Layout & CSS
+    $this->setComponentClasses('rounded-lg shadow');
+    $this->addTableClasses('min-w-full');
+    $this->setStickyHeader();
+    $this->setLayout('layouts.admin');
+
+    // Header slots (inject custom Blade views)
+    $this->setMostLeftView('partials.table-logo');
+    $this->setLessLeftView('partials.table-filters');
+    $this->setLessRightView('partials.table-stats');
+    $this->setMostRightView('partials.table-actions');
+    $this->setModalsView('partials.table-modals');
+
+    // Buttons
+    $this->addButtons([
+        ['label' => 'Export', 'action' => 'exportData'],
+    ]);
+    $this->showOptionsOnlyOnRowSelect(true);
+
+    // Search
+    $this->useGlobalSearch(true);
+    $this->setSearchLabel('Search users...');
+
+    // Pagination
+    $this->usePagination(true);
+    $this->setPerPageDefault(25);
+    $this->setPerPageOptions(['10', '25', '50', '100', 'Total']);
+
+    // Columns
+    $this->setColumnID('uuid');
+    $this->showColumnToggle(true);
+    $this->showCounter(false);
+
+    // Sort
+    $this->setSortColumn('name');
+    $this->setSortDirectionDesc(true);
+
+    // Spinner
+    $this->useTableSpinner(true);
+    $this->setTableSpinnerView('partials.custom-spinner');
+    $this->addTargetsToSpinner(['customAction']);
+
+    // State persistence (requires migration)
+    $this->useStateHandler(true);
+    $this->setHandlerPrefix('admin');
+
+    // Cache
+    $this->setCachePrefix('admin-users');
+}
+```
 
 ## Column Types
 
@@ -142,11 +223,16 @@ Column::make('Title', 'title')
 | `customData(Closure $cb)` | Transform displayed data |
 | `view(string $view)` | Custom Blade view |
 | `styling(string $classes)` | TD CSS classes |
+| `thStyling(string $classes)` | TH CSS classes |
+| `thWrapperStyling(string $classes)` | TH wrapper CSS classes |
 | `hideWhen(bool $cond)` | Conditional visibility |
 | `hideFromSelector(bool)` | Hide from column toggle |
+| `isVisible(bool)` | Set initial visibility |
+| `sortColumnBy(string $column)` | Sort by a different column key |
 | `toHtml()` | Render as raw HTML |
 | `hideOnMobile()` / `showOnMobile()` / `collapseOnMobile()` | Mobile behavior |
 | `cardTitle()` / `showOnCard()` | Card view config |
+| `triggerCardInfoModal(bool)` | Disable card title tap opening info modal |
 
 ### BoolColumn
 
@@ -167,6 +253,8 @@ use Beartropy\Tables\Classes\Columns\DateColumn;
 
 DateColumn::make('Created', 'created_at')
     ->outputFormat('M d, Y')
+    ->inputFormat('Y-m-d H:i:s')
+    ->emptyValue('N/A')
     ->sortable()
 ```
 
@@ -179,6 +267,8 @@ LinkColumn::make('Email', 'email')
     ->href(fn($row) => "mailto:{$row->email}")
     ->text(fn($row) => $row->email)
     ->target('_blank')
+    ->classes('text-blue-600 hover:underline')
+    ->popup(['width' => 750, 'height' => 800])
 ```
 
 ### ToggleColumn
@@ -188,6 +278,8 @@ use Beartropy\Tables\Classes\Columns\ToggleColumn;
 
 ToggleColumn::make('Active', 'is_active')
     ->disableToggleWhen(fn($row) => !auth()->user()->can('update', $row))
+    ->hideToggleWhen(fn($row) => $row->is_system_user)
+    ->trigger('handleToggle')
     ->centered()
 ```
 
@@ -272,6 +364,51 @@ use Beartropy\Tables\Classes\Filters\FilterSelectMagic;
 FilterSelectMagic::make('Role', 'role')
 ```
 
+## Data Access Methods
+
+Use these in your table component for custom actions:
+
+```php
+// Get data sets
+$all = $this->getAllData();                  // All data (before filters)
+$filtered = $this->getAfterFiltersData();   // After search/filters/sort
+$selected = $this->getSelectedData();       // Selected rows only
+$page = $this->getCurrentPageData();        // Current page only
+$row = $this->getRowByID($id);             // Single row by ID
+
+// Original data (strips customData transformations)
+$original = $this->getAllOriginalData();
+$filteredOriginal = $this->getAfterFiltersOriginalData();
+$selectedOriginal = $this->getSelectedOriginalData();
+
+// Export to clipboard
+$this->exportToClipboard($filtered);              // TSV
+$this->exportToClipboard($selected, tabs: false); // CSV
+
+// Row manipulation
+$this->addRowToTable(['id' => 99, 'name' => 'New']);
+$this->updateRowOnTable($id, ['status' => 'active']);
+$this->removeRowFromTable($id);
+
+// Bulk selection
+$ids = $this->getSelectedRows();
+$this->emptySelection();
+$this->selectCurrentPage(true);
+
+// Expandable rows
+$this->toggleExpandedRow($rowId, '<div>Details</div>');
+$this->toggleExpandedRow($rowId, [
+    'component' => 'detail-card',
+    'parameters' => ['id' => $rowId],
+], is_component: true);
+
+// Filters
+$this->clearAllFilters();
+
+// Cache
+$this->clearData();
+```
+
 ## Complete Examples
 
 ### Model-Based Table with All Features
@@ -280,7 +417,7 @@ FilterSelectMagic::make('Role', 'role')
 namespace App\Livewire;
 
 use App\Models\User;
-use Beartropy\Tables\YATBaseTable;
+use Beartropy\Tables\BeartropyTable;
 use Beartropy\Tables\Classes\Columns\Column;
 use Beartropy\Tables\Classes\Columns\BoolColumn;
 use Beartropy\Tables\Classes\Columns\DateColumn;
@@ -292,7 +429,7 @@ use Beartropy\Tables\Classes\Filters\FilterBool;
 use Beartropy\Tables\Classes\Filters\FilterDateRange;
 use Beartropy\Tables\Classes\Filters\FilterSelectMagic;
 
-class UsersTable extends YATBaseTable
+class UsersTable extends BeartropyTable
 {
     public $model = User::class;
 
@@ -301,6 +438,15 @@ class UsersTable extends YATBaseTable
     public bool $with_pagination = true;
     public bool $has_bulk = true;
     public bool $showCardsOnMobile = true;
+
+    public function settings(): void
+    {
+        $this->setTheme('beartropy');
+        $this->setComponentSize('sm');
+        $this->setTitle('Users');
+        $this->setPerPageDefault(25);
+        $this->useStateHandler(true);
+    }
 
     public function columns(): array
     {
@@ -361,7 +507,7 @@ class UsersTable extends YATBaseTable
 ### Array-Based Table
 
 ```php
-class ProductsTable extends YATBaseTable
+class ProductsTable extends BeartropyTable
 {
     public bool $with_pagination = false;
 
@@ -474,7 +620,7 @@ public function authorizeFieldUpdate(\Illuminate\Database\Eloquent\Model $record
 
 ## Best Practices
 
-1. **Always extend `YATBaseTable`** — never build table components from scratch
+1. **Always extend `BeartropyTable`** — never build table components from scratch
 2. **Use `$with` for eager loading** — prevent N+1 queries
 3. **Use dot notation** for simple relationships (belongsTo/hasOne)
 4. **Use `customData()` + custom callbacks** for hasMany/complex relationships
@@ -484,10 +630,12 @@ public function authorizeFieldUpdate(\Illuminate\Database\Eloquent\Model $record
 8. **Set `$has_bulk = true`** to enable bulk operations
 9. **Use `$showCardsOnMobile = true`** for mobile-friendly tables
 10. **Use `FilterSelectMagic`** when options come from distinct column values
+11. **Use `settings()`** for programmatic configuration instead of setting props directly
+12. **Use `setComponentSize('sm')`** for compact table headers
 
 ## Requirements
 
-- PHP >= 8.1
+- PHP >= 8.2
 - Laravel >= 11.x
 - Livewire 3.x
 - Tailwind CSS
@@ -497,12 +645,8 @@ public function authorizeFieldUpdate(\Illuminate\Database\Eloquent\Model $record
 
 ```bash
 composer require beartropy/tables
-```
-
-Publish configuration:
-
-```bash
-php artisan vendor:publish --tag=tables-config
+php artisan vendor:publish --tag=migrations
+php artisan migrate
 ```
 
 ---

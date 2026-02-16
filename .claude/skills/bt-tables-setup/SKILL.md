@@ -56,13 +56,13 @@ php artisan vendor:publish --tag=lang
 Use the artisan command to scaffold a new table:
 
 ```bash
-php artisan make:yat-component MyTable
+php artisan make:btable MyTable
 ```
 
 Or with a model:
 
 ```bash
-php artisan make:yat-component MyTable --model=App\\Models\\User
+php artisan make:btable MyTable --model=App\\Models\\User
 ```
 
 ---
@@ -72,7 +72,7 @@ php artisan make:yat-component MyTable --model=App\\Models\\User
 ### Array-based Table
 
 ```php
-class MyTable extends YATBaseTable
+class MyTable extends BeartropyTable
 {
     public function data(): array
     {
@@ -95,9 +95,14 @@ class MyTable extends YATBaseTable
 ### Model-based Table
 
 ```php
-class UserTable extends YATBaseTable
+use App\Models\User;
+use Beartropy\Tables\BeartropyTable;
+use Beartropy\Tables\Classes\Columns\Column;
+use Beartropy\Tables\Classes\Columns\ToggleColumn;
+
+class UserTable extends BeartropyTable
 {
-    public ?string $model = User::class;
+    public $model = User::class;
 
     public function columns(): array
     {
@@ -122,7 +127,7 @@ class UserTable extends YATBaseTable
 
 The package uses view namespace `yat::` and translation namespace `yat::yat.*`.
 
-Key features are configured per-component via properties and method overrides on your table class:
+Key features are configured per-component via properties, method overrides, and the `settings()` method on your table class:
 - `$model` — Eloquent model class for DB-backed tables
 - `$with` — eager loading relationships
 - `$with_pagination` — enable/disable pagination
@@ -131,6 +136,21 @@ Key features are configured per-component via properties and method overrides on
 - `columns()` — define table columns
 - `filters()` — define table filters
 - `options()` — define bulk action options
+- `settings()` — programmatic configuration (theming, pagination defaults, search label, component size, state handler, etc.)
+
+### Settings Example
+
+```php
+public function settings(): void
+{
+    $this->setTheme('beartropy');
+    $this->setComponentSize('sm');
+    $this->setTitle('Users');
+    $this->setPerPageDefault(25);
+    $this->setSearchLabel('Search users...');
+    $this->useStateHandler(true);
+}
+```
 
 ---
 
@@ -147,7 +167,7 @@ php artisan beartropy:skills
 ## Common Issues & Solutions
 
 ### Table not rendering
-Ensure the Livewire component is registered. The package auto-registers `YATBaseTable`, but custom components need to follow Livewire 3 auto-discovery conventions (namespace `App\Livewire`).
+Ensure the Livewire component is registered. The package auto-registers `BeartropyTable` (and the legacy alias `YATBaseTable`), but custom components need to follow Livewire 3 auto-discovery conventions (namespace `App\Livewire`).
 
 ### Filters not working
 Verify your `filters()` method returns valid Filter objects and that column keys match your data structure.

@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.9.1] - 2026-02-16
+
+### Changed
+- **BeartropyTable**: Renamed base class from `YATBaseTable` to `BeartropyTable`. The old name continues to work via `class_alias` — no changes needed in existing user code.
+- **BeartropyTableServiceProvider**: Renamed service provider from `YATProvider` to `BeartropyTableServiceProvider`. The old name extends the new one for backward compatibility.
+- **Stubs**: `make:btable` now generates `extends BeartropyTable` instead of `extends YATBaseTable`.
+- **Docs**: Comprehensive documentation overhaul — all settings methods, data access methods, view slots, theming, state persistence, spinner, cache, row manipulation, sort, bulk, and export now fully documented across LLM reference, user reference, and AI guide.
+- **Docs**: Documentation updated to reference `BeartropyTable` throughout. Doc files renamed from `yat-base-table` to `bear-table`.
+- **Skills**: `bt-tables-setup` updated with correct artisan command (`make:btable`) and `BeartropyTable` references.
+- **Skills**: `bt-tables-docs-maintenance` updated with correct service provider path.
+- **MCP**: `ComponentDocs` schema example updated from `yat-base-table` to `bear-table`.
+
 ## [v2.9.0] - 2026-02-16
 
 ### Added

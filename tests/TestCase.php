@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use Beartropy\Tables\YATProvider;
+use Beartropy\Tables\BeartropyTableServiceProvider;
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
@@ -30,7 +30,7 @@ class TestCase extends Orchestra
             \BladeUI\Icons\BladeIconsServiceProvider::class,
             \BladeUI\Heroicons\BladeHeroiconsServiceProvider::class,
             \Beartropy\Ui\BeartropyUiServiceProvider::class,
-            YATProvider::class,
+            BeartropyTableServiceProvider::class,
         ];
     }
 
