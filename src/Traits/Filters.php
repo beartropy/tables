@@ -107,13 +107,19 @@ trait Filters
 
             $data = (array) get_object_vars($item);
 
-            // Ensure select option keys are strings so the UI select
-            // component recognises them as value => label pairs.
+            // Convert select options to [{value, label}] format so the UI
+            // select component preserves numeric IDs as option values.
+            // PHP auto-casts numeric string keys to integers, which breaks
+            // the associative-array detection in normalizeOptions().
             if (isset($data['options']) && is_array($data['options'])) {
-                $data['options'] = array_combine(
-                    array_map('strval', array_keys($data['options'])),
-                    array_values($data['options']),
-                );
+                $converted = [];
+                foreach ($data['options'] as $optKey => $optVal) {
+                    $converted[] = [
+                        'value' => (string) $optKey,
+                        'label' => (string) $optVal,
+                    ];
+                }
+                $data['options'] = $converted;
             }
 
             return [$key => $data];

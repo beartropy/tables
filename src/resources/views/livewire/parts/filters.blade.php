@@ -50,6 +50,8 @@
                         color="{{ $inputThemeOverride ?? $theme }}"
                         wire:model.live="filters.{{ $key }}.input"
                         :options="$filter['options']"
+                        option-value="value"
+                        option-label="label"
                         placeholder="{{ucfirst(__('yat::yat.all'))}}"
                         clearable
                     />
