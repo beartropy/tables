@@ -42,11 +42,11 @@ trait View
 
     public string $theme = 'gray';
 
-    public ?string $bulkThemeOverride = 'gray';
+    public ?string $bulkThemeOverride = null;
 
-    public ?string $buttonThemeOverride = 'beartropy';
+    public ?string $buttonThemeOverride = null;
 
-    public ?string $inputThemeOverride = 'beartropy';
+    public ?string $inputThemeOverride = null;
 
     public ?string $componentSizeOverride = null;
 
