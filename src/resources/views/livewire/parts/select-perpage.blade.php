@@ -1,9 +1,10 @@
 <!-- Select Per Page Button -->
 <div x-data="{ isSelectPerPageOpen: false }" class="relative min-w-18" @keydown.esc.window="isSelectPerPageOpen = false">
-    <x-beartropy-ui::button 
+    <x-beartropy-ui::button
         @click="isSelectPerPageOpen = ! isSelectPerPageOpen"
         outline
         color="{{ $buttonThemeOverride ?? $theme }}"
+        :size="$componentSizeOverride"
         class="w-full"
     >
         <div class="flex justify-between items-center w-full">

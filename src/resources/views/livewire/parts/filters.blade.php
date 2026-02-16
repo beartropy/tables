@@ -33,6 +33,7 @@
                         label="{{ucfirst($filter['label'])}}"
                         clearable
                         color="{{ $inputThemeOverride ?? $theme }}"
+                        :size="$componentSizeOverride"
                         placeholder="{{ucfirst($filter['label'])}}..."
                     />
 
@@ -41,6 +42,7 @@
                         wire:model.live="filters.{{ $key }}.input"
                         label="{{ $filter['label'] }}"
                         color="{{ $inputThemeOverride ?? $theme }}"
+                        :size="$componentSizeOverride"
                         range
                     />
 
@@ -48,6 +50,7 @@
                     <x-beartropy-ui::select
                         label="{{ $filter['label'] }}"
                         color="{{ $inputThemeOverride ?? $theme }}"
+                        :size="$componentSizeOverride"
                         wire:model.live="filters.{{ $key }}.input"
                         :options="$filter['options']"
                         option-value="value"
@@ -67,6 +70,7 @@
                     <x-beartropy-ui::select
                         label="{{ $filter['label'] }}"
                         color="{{ $inputThemeOverride ?? $theme }}"
+                        :size="$componentSizeOverride"
                         wire:model.live="filters.{{ $key }}.input"
                         :options="$boolOptions"
                         placeholder="{{ucfirst(__('yat::yat.all'))}}"

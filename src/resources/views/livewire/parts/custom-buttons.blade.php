@@ -10,6 +10,7 @@
         :color="$color"
         :wire:click="$button['action'] ?? null"
         variant="{{ $yat_button_variant }}"
+        :size="$componentSizeOverride"
         class="w-full"
     >
         {!! $button['label'] !!}

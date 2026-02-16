@@ -1,9 +1,10 @@
 <!-- Columns Button -->
 <div x-data="{ isOpenColumnToggle: $wire.entangle('column_toggle_dd_status') }" class="relative " @keydown.esc.window="isOpenColumnToggle = false">
-    <x-beartropy-ui::button 
+    <x-beartropy-ui::button
         @click="isOpenColumnToggle = ! isOpenColumnToggle"
         variant="{{ $yat_button_variant }}"
         color="{{ $buttonThemeOverride ?? $theme }}"
+        :size="$componentSizeOverride"
         class="w-full"
     >
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-columns mr-2">
@@ -53,7 +54,7 @@
             @if(!$yat_is_mobile && $handle_state)
                 <li class="w-full border-b rounded-t-lg rounded-md {{ $themeConfig['dropdowns']['border'] }}">
                     <div class="p-3">
-                        <x-beartropy-ui::button xs outline emerald class="w-full" label="{{ucfirst(__('yat::yat.save_column_election'))}}" wire:click="saveTableState"/>
+                        <x-beartropy-ui::button :size="$componentSizeOverride ?? 'xs'" outline emerald class="w-full" label="{{ucfirst(__('yat::yat.save_column_election'))}}" wire:click="saveTableState"/>
                     </div>
                 </li>
             @endif
@@ -68,13 +69,13 @@
                 @if(!$column->hideFromSelector)
                     <li class="w-full rounded-mc {{ $themeConfig['dropdowns']['hover_bg'] }}">
                         <div class="flex items-center ps-3">
-                            <x-beartropy-ui::checkbox 
-                                wire:model.live="columns.{{ $key }}.isVisible" 
-                                id="{{ $column->key }}" 
+                            <x-beartropy-ui::checkbox
+                                wire:model.live="columns.{{ $key }}.isVisible"
+                                id="{{ $column->key }}"
                                 label="{{ $column->label }}"
                                 class="w-full py-3 md:py-1.5"
                                 color="{{ $inputThemeOverride ?? $theme }}"
-                                sm
+                                :size="$componentSizeOverride ?? 'sm'"
                             />
                         </div>
                     </li>

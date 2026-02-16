@@ -5,6 +5,7 @@
         clearable
         class="w-full"
         color="{{ $inputThemeOverride ?? $theme }}"
+        :size="$componentSizeOverride"
         icon-start="magnifying-glass"
     />
 </div>

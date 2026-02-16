@@ -9,13 +9,14 @@
         @endif
 
         @if (!$yat_is_mobile)
-            <div class="flex flex-col sm:flex-row sm:justify-between items-center mb-4 space-y-2 sm:space-y-0">
+            <div class="flex flex-col sm:flex-row sm:justify-between items-center mb-2 space-y-2 sm:space-y-0">
                 <!-- Search Input && Filters -->
                 <div class="flex w-full space-x-2">
                     @includeWhen($yat_most_left_view, $yat_most_left_view)
                     @if ($has_filters)
                         <x-beartropy-ui::button @click="showFilters = ! showFilters" variant="{{ $yat_button_variant }}"
-                            color="{{ $buttonThemeOverride ?? $theme }}">
+                            color="{{ $buttonThemeOverride ?? $theme }}"
+                            :size="$componentSizeOverride">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" class="feather feather-filter mr-2">
@@ -78,7 +79,7 @@
 
         <!-- Data Table -->
         <div
-            class="relative {{ $override_table_classes ? $table_classes : $table_classes . 'w-full overflow-x-auto rounded-lg' }}">
+            class="relative {{ $override_table_classes ? $table_classes : $table_classes . 'w-full rounded-lg' . ($sticky_header ? '' : ' overflow-x-auto') }}">
             @if ($loading_table_spinner)
                 <div class="absolute inset-0 z-10 flex items-center justify-center bg-white/50 dark:bg-gray-900/50 backdrop-blur-[1px] hidden"
                     wire:loading.delay.class.remove="hidden" wire:target="{{ $trigger_spinner }}">
@@ -99,7 +100,7 @@
                             @endif
                             @if ($has_bulk)
                                 <th class="w-1 text-left px-5 {{ $themeConfig['table']['th'] }}">
-                                    <x-beartropy-ui::checkbox sm wire:model.live="selectAll"
+                                    <x-beartropy-ui::checkbox :size="$componentSizeOverride ?? 'sm'" wire:model.live="selectAll"
                                         color="{{ $bulkThemeOverride ?? $theme }}" />
                                 </th>
                             @endif
@@ -173,7 +174,7 @@
                                 @endif
                                 @if ($has_bulk)
                                     <td class="w-1 px-5">
-                                        <x-beartropy-ui::checkbox sm value="{{ $row[$column_id] }}"
+                                        <x-beartropy-ui::checkbox :size="$componentSizeOverride ?? 'sm'" value="{{ $row[$column_id] }}"
                                             id="{{ $row[$column_id] }}" wire:model.live="yat_selected_checkbox"
                                             color="{{ $bulkThemeOverride ?? $theme }}" />
                                     </td>
@@ -189,7 +190,7 @@
                                                 class="px-5 py-1 text-center {{ $column->classes }} flex items-center justify-center">
 
                                                 @if (!isset($row[$column->key . '_hidden']) || !$row[$column->key . '_hidden'])
-                                                    <x-beartropy-ui::toggle sm :disabled="isset($row[$column->key . '_disabled']) &&
+                                                    <x-beartropy-ui::toggle :size="$componentSizeOverride ?? 'sm'" :disabled="isset($row[$column->key . '_disabled']) &&
                                                         $row[$column->key . '_disabled']" :checked="$row[$column->key]"
                                                         wire:change="toggleBoolean('{{ $row[$column_id] }}', '{{ $column->key }}')" />
                                                 @endif

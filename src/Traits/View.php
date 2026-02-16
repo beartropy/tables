@@ -48,6 +48,8 @@ trait View
 
     public ?string $inputThemeOverride = 'beartropy';
 
+    public ?string $componentSizeOverride = null;
+
     public array $themeConfig = [];
 
     /**
@@ -101,6 +103,16 @@ trait View
     public function setInputThemeOverride(?string $theme)
     {
         $this->inputThemeOverride = $theme;
+    }
+
+    /**
+     * Override the size of all beartropy-ui components in the table header.
+     *
+     * @return void
+     */
+    public function setComponentSize(?string $size)
+    {
+        $this->componentSizeOverride = $size;
     }
 
     /**
