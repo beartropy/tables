@@ -133,7 +133,8 @@ trait RowManipulators
     public function toggleBoolean($id, $column)
     {
 
-        $trigger = $this->columns->where('key', $column)->first()->trigger;
+        $col = $this->columns->where('key', $column)->first();
+        $trigger = is_object($col) && property_exists($col, 'trigger') ? $col->trigger : false;
         if ($trigger) {
             $this->$trigger($id, $column);
         }
