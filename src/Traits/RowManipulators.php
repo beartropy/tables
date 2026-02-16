@@ -39,6 +39,10 @@ trait RowManipulators
      */
     public function addRowToTable($row)
     {
+        if ($row instanceof \stdClass) {
+            $row = json_decode(json_encode($row), true);
+        }
+
         $data = $this->getAllData();
         if (! isset($row['id'])) {
             $row['id'] = $row[$this->column_id];
