@@ -105,7 +105,18 @@ trait Filters
                 $item->queryCallback = null;
             }
 
-            return [$key => (array) get_object_vars($item)];
+            $data = (array) get_object_vars($item);
+
+            // Ensure select option keys are strings so the UI select
+            // component recognises them as value => label pairs.
+            if (isset($data['options']) && is_array($data['options'])) {
+                $data['options'] = array_combine(
+                    array_map('strval', array_keys($data['options'])),
+                    array_values($data['options']),
+                );
+            }
+
+            return [$key => $data];
         });
 
         if (! $this->filters->isEmpty()) {
