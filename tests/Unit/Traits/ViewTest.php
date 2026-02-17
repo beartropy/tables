@@ -26,7 +26,7 @@ it('has default property values', function () {
     expect($this->viewClass->sticky_header)->toBeFalse();
     expect($this->viewClass->yat_custom_buttons)->toBe([]);
     expect($this->viewClass->yat_card_modal_buttons)->toBe([]);
-    expect($this->viewClass->yat_button_variant)->toBe('outline');
+    expect($this->viewClass->yat_button_variant)->toBe('soft');
 });
 
 it('setTheme loads config from presets', function () {

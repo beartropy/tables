@@ -2,7 +2,7 @@
 <div x-data="{ isSelectPerPageOpen: false }" class="relative min-w-18" @keydown.esc.window="isSelectPerPageOpen = false">
     <x-beartropy-ui::button
         @click="isSelectPerPageOpen = ! isSelectPerPageOpen"
-        outline
+        variant="{{ $yat_button_variant }}"
         color="{{ $buttonThemeOverride ?? $theme }}"
         :size="$componentSizeOverride"
         class="w-full"

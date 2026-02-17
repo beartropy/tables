@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.9.4] - 2026-02-16
+
+### Changed
+- **Buttons**: Default button variant changed from `outline` to `soft` (light tinted background with colored text) for a consistent, subtle look across all header buttons.
+- **PerPage**: Per-page selector now uses the shared `$yat_button_variant` instead of a hardcoded `outline` attribute, ensuring all buttons match.
+
+### Added
+- **Tests**: Added 16 tests covering stdClass data support (unit + feature).
+
 ## [v2.9.3] - 2026-02-16
 
 ### Fixed
