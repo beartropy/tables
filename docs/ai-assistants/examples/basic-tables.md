@@ -109,6 +109,52 @@ class ProductsTable extends BeartropyTable
 
 ---
 
+## Array-Based Table with stdClass Data
+
+stdClass objects (e.g. from `json_decode()` or API responses) are automatically normalized to associative arrays. Nested objects are converted recursively, so `customData` callbacks and all other row accessors receive plain arrays.
+
+### Livewire Component
+```php
+<?php
+
+namespace App\Livewire;
+
+use Beartropy\Tables\BeartropyTable;
+use Beartropy\Tables\Classes\Columns\Column;
+use Illuminate\Support\Facades\Http;
+
+class ApiProductsTable extends BeartropyTable
+{
+    public bool $with_pagination = false;
+
+    public function columns(): array
+    {
+        return [
+            Column::make('Product', 'name')
+                ->sortable()
+                ->searchable(),
+
+            Column::make('Price', 'price')
+                ->sortable()
+                ->pushRight()
+                ->customData(fn ($row) => '$' . number_format($row['price'], 2)),
+        ];
+    }
+
+    public function data(): array
+    {
+        // json_decode() returns stdClass objects by default — works directly
+        return json_decode('[
+            {"id": 1, "name": "Widget", "price": 9.99},
+            {"id": 2, "name": "Gadget", "price": 19.99},
+            {"id": 3, "name": "Doohickey", "price": 4.99}
+        ]');
+    }
+}
+```
+
+---
+
 ## Table with Relationships (Eager Loading)
 
 ### Livewire Component

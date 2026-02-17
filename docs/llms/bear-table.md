@@ -185,7 +185,7 @@ Call these from your table's `settings()` method (or `mount()`) to configure beh
 |--------|--------|-------------|
 | `columns()` | `array` | **Required.** Return an array of Column objects defining the table structure. |
 | `filters()` | `array` | Return an array of Filter objects. Optional. |
-| `data()` | `array` | Return array data for array-based tables (when `$model` is null). |
+| `data()` | `array` | Return array data for array-based tables (when `$model` is null). Supports arrays of associative arrays or stdClass objects. |
 | `options()` | `array` | Return bulk action options (string labels or `['label' => '...', 'icon' => '...']`). |
 | `settings()` | `void` | Called during `mount()`. Use to call settings methods like `setTheme()`, `setPerPageDefault()`, etc. |
 
@@ -260,6 +260,31 @@ class ProductsTable extends BeartropyTable
             ['id' => 1, 'name' => 'Widget', 'price' => 9.99],
             ['id' => 2, 'name' => 'Gadget', 'price' => 19.99],
         ];
+    }
+}
+```
+
+### Array-Based Table with stdClass Data
+
+stdClass objects (e.g. from `json_decode()` or API responses) are automatically normalized to associative arrays. Nested objects are converted recursively.
+
+```php
+class ApiProductsTable extends BeartropyTable
+{
+    public bool $with_pagination = false;
+
+    public function columns(): array
+    {
+        return [
+            Column::make('Product', 'name'),
+            Column::make('Price', 'price'),
+        ];
+    }
+
+    public function data(): array
+    {
+        // stdClass objects from json_decode() work directly
+        return json_decode('[{"id":1,"name":"Widget","price":9.99},{"id":2,"name":"Gadget","price":19.99}]');
     }
 }
 ```
@@ -496,7 +521,7 @@ class UsersTable extends BeartropyTable
 ## Architecture Notes
 
 - **14 Traits Composition**: The component is composed of 14 traits that handle distinct concerns (bulk operations, caching, column management, data fetching, inline editing, filtering, options, pagination, row manipulation, search, sort, loading states, state persistence, and view rendering).
-- **Two Data Modes**: Set `$model` for Eloquent-based tables, or leave null and implement `data()` for array-based tables.
+- **Two Data Modes**: Set `$model` for Eloquent-based tables, or leave null and implement `data()` for array-based tables. Array-mode accepts both associative arrays and stdClass objects (nested stdClass is recursively converted).
 - **Abstract-Like Pattern**: `columns()` must be implemented; `filters()`, `data()`, `options()`, and `settings()` are optional.
 - **Livewire Lifecycle**: Uses `mount()` for initialization, `render()` for view rendering, and various trait-provided lifecycle hooks.
 - **State Management**: The StateHandler trait persists filter/search/sort state across page loads via the `yat_user_table_config` database table.

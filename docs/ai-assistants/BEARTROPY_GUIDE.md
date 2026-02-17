@@ -531,6 +531,16 @@ class ProductsTable extends BeartropyTable
 }
 ```
 
+`data()` also accepts stdClass objects (e.g. from `json_decode()` or API responses) — they are automatically normalized to associative arrays, including nested objects:
+
+```php
+public function data(): array
+{
+    $response = Http::get('https://api.example.com/products');
+    return json_decode($response->body()); // returns array of stdClass — works directly
+}
+```
+
 ### Blade Usage
 
 ```blade

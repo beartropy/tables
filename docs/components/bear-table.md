@@ -55,7 +55,7 @@ class UsersTable extends BeartropyTable
 |--------|--------|-------------|
 | `columns()` | `array` | **Required.** Define the table's column structure. |
 | `filters()` | `array` | Define table filters. Optional. |
-| `data()` | `array` | Provide array data (when `$model` is null). |
+| `data()` | `array` | Provide array data (when `$model` is null). Supports arrays of associative arrays or stdClass objects. |
 | `options()` | `array` | Define bulk action options. |
 | `settings()` | `void` | Configure the table via settings methods. Called during `mount()`. |
 | `authorizeFieldUpdate(Model, string, mixed)` | `bool` | Authorization check for inline edits. Returns `true` by default. |
@@ -248,6 +248,29 @@ class ProductsTable extends BeartropyTable
             ['id' => 1, 'name' => 'Widget', 'price' => 9.99],
             ['id' => 2, 'name' => 'Gadget', 'price' => 19.99],
         ];
+    }
+}
+```
+
+### Array-Based Table with stdClass Data
+
+stdClass objects (e.g. from `json_decode()` or API responses) are automatically normalized to associative arrays. Nested objects are converted recursively.
+
+```php
+class ApiProductsTable extends BeartropyTable
+{
+    public function columns(): array
+    {
+        return [
+            Column::make('Product', 'name'),
+            Column::make('Price', 'price'),
+        ];
+    }
+
+    public function data(): array
+    {
+        // stdClass objects from json_decode() work directly
+        return json_decode('[{"id":1,"name":"Widget","price":9.99},{"id":2,"name":"Gadget","price":19.99}]');
     }
 }
 ```

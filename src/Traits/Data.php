@@ -258,9 +258,13 @@ trait Data
         $metadata = $this->getColumnMetadata();
 
         $processed = $collection->map(function ($row) use ($metadata) {
-            // Normalize stdClass objects to arrays for consistent access
+            // Normalize stdClass to ArrayObject so callbacks support both
+            // $row->key (object syntax) and $row['key'] (array syntax)
             if ($row instanceof \stdClass) {
-                $row = json_decode(json_encode($row), true);
+                $row = new \ArrayObject(
+                    json_decode(json_encode($row), true),
+                    \ArrayObject::ARRAY_AS_PROPS
+                );
             }
 
             return $this->transformRow(
