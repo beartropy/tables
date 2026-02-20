@@ -71,6 +71,38 @@ class BeartropyTable extends Component
     private mixed $userData = null;
 
     /**
+     * Base query for model-based tables.
+     *
+     * Override this method to scope the base query (e.g., by tenant, permissions, etc.).
+     * The $with eager loading is applied automatically via newQuery() — no need to add it here.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function query(): \Illuminate\Database\Eloquent\Builder
+    {
+        return $this->model::query();
+    }
+
+    /**
+     * Build a new query with eager loading applied.
+     *
+     * Internal method — wraps query() and applies $this->with.
+     * All internal data-fetching code should call this instead of query() directly.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function newQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = $this->query();
+
+        if (! empty($this->with)) {
+            $query->with($this->with);
+        }
+
+        return $query;
+    }
+
+    /**
      * Refresh the table component.
      *
      * This method acts as a listener for the 'refresh' event.

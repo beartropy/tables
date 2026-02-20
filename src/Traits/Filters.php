@@ -60,7 +60,7 @@ trait Filters
 
                 // For model-based tables, use a targeted DISTINCT query instead of loading all data
                 if ($this->model && class_exists($this->model) && ! str_contains($dbColumn, '.')) {
-                    $options = $this->model::query()->select($dbColumn)->distinct()->pluck($dbColumn);
+                    $options = $this->query()->select($dbColumn)->distinct()->pluck($dbColumn);
                 } else {
                     $options = $this->getAllData()->pluck($pluckKey)->unique()->values();
                 }

@@ -38,7 +38,7 @@ trait View
 
     public array $yat_custom_buttons = [];
 
-    public string $yat_button_variant = 'soft';
+    public string $yat_button_variant = 'glass';
 
     public string $theme = 'gray';
 

@@ -114,11 +114,7 @@ trait Pagination
     public function paginateData()
     {
         if ($this->model) {
-            $query = $this->model::query();
-
-            if (! empty($this->with)) {
-                $query->with($this->with);
-            }
+            $query = $this->newQuery();
 
             // Apply Search
             if (method_exists($this, 'applySearchToQuery')) {

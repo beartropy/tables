@@ -67,11 +67,7 @@ trait Data
     public function getAllData()
     {
         if ($this->model) {
-            $query = $this->model::query();
-            if (! empty($this->with)) {
-                $query->with($this->with);
-            }
-            $data = $query->get();
+            $data = $this->newQuery()->get();
 
             return $this->processCollection($data);
         }
@@ -97,7 +93,7 @@ trait Data
     public function getAfterFiltersData()
     {
         if ($this->model) {
-            $query = $this->model::query();
+            $query = $this->newQuery();
 
             // Apply Search
             if (method_exists($this, 'applySearchToQuery')) {
@@ -110,10 +106,6 @@ trait Data
             // Apply Sort
             if (method_exists($this, 'applySortToQuery')) {
                 $this->applySortToQuery($query);
-            }
-
-            if (! empty($this->with)) {
-                $query->with($this->with);
             }
 
             $data = $query->get();
@@ -155,15 +147,7 @@ trait Data
             if (empty($selectedIds)) {
                 return collect([]);
             }
-            $query = $this->model::whereIn($this->custom_column_id ?? 'id', $selectedIds);
-
-            // Apply Sort if desired? Usually selected data is just the data.
-            // But let's return it as is or maybe sorted by default order.
-            // Let's keep distinct logic minimal.
-
-            if (! empty($this->with)) {
-                $query->with($this->with);
-            }
+            $query = $this->newQuery()->whereIn($this->custom_column_id ?? 'id', $selectedIds);
 
             $data = $query->get();
 
@@ -182,11 +166,7 @@ trait Data
     public function getRowByID($id)
     {
         if ($this->model) {
-            $query = $this->model::where($this->custom_column_id ?? 'id', $id);
-            if (! empty($this->with)) {
-                $query->with($this->with);
-            }
-            $row = $query->first();
+            $row = $this->newQuery()->where($this->custom_column_id ?? 'id', $id)->first();
 
             if (! $row) {
                 return null;
