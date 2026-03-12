@@ -130,6 +130,26 @@
                                 </th>
                             @endif
                         </tr>
+                    @if ($hasSecondaryHeaders)
+                        <tr class="border-t {{ $themeConfig['table']['tr_thead'] }}">
+                            @if ($has_counter)
+                                <th class="{{ $themeConfig['table']['th'] }}"></th>
+                            @endif
+                            @if ($has_bulk)
+                                <th class="{{ $themeConfig['table']['th'] }}"></th>
+                            @endif
+                            @foreach ($columns as $column)
+                                @if (!$column->isHidden && $column->isVisible)
+                                    <th class="px-5 py-2 text-sm font-normal whitespace-nowrap {{ $themeConfig['table']['th'] }} {{ $column->th_classes }}">
+                                        {!! $secondaryHeaders[$column->key] ?? '' !!}
+                                    </th>
+                                @endif
+                            @endforeach
+                            @if ($yat_is_mobile && $hasMobileCollapsedColumns)
+                                <th class="{{ $themeConfig['table']['th'] }}"></th>
+                            @endif
+                        </tr>
+                    @endif
                     </thead>
 
                     <tbody class="min-w-full">

@@ -172,8 +172,24 @@ class BeartropyTable extends Component
             $paginatedData = $this->sortData($paginatedData);
         }
 
+        // Compute secondary header values from column callbacks
+        $secondaryHeaders = [];
+        $hasSecondaryHeaders = false;
+        $freshColumns = $this->getFreshColumns();
+        foreach ($freshColumns as $column) {
+            if ($column->secondaryHeaderCallback !== null) {
+                $hasSecondaryHeaders = true;
+                $rowsForCallback = $this->with_pagination
+                    ? collect($paginatedData->items())
+                    : collect($paginatedData);
+                $secondaryHeaders[$column->key] = call_user_func($column->secondaryHeaderCallback, $rowsForCallback);
+            }
+        }
+
         $view = view('yat::livewire.yat-table', [
             'rows' => $paginatedData,
+            'secondaryHeaders' => $secondaryHeaders,
+            'hasSecondaryHeaders' => $hasSecondaryHeaders,
         ]);
 
         if ($this->layout) {

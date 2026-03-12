@@ -87,6 +87,9 @@ class Column
     /** @var callable|null */
     public $searchableCallback = null;
 
+    /** @var \Closure|null */
+    public $secondaryHeaderCallback = null;
+
     /** @var bool */
     public $isSortable = true;
 
@@ -225,6 +228,21 @@ class Column
     public function setUpdateField($field): self
     {
         $this->updateField = $field;
+
+        return $this;
+    }
+
+    /**
+     * Set a callback for the secondary header row.
+     *
+     * The callback receives the current rows collection and should return
+     * the content to display in this column's secondary header cell.
+     *
+     * @param  \Closure  $callback
+     */
+    public function secondaryHeader(\Closure $callback): self
+    {
+        $this->secondaryHeaderCallback = $callback;
 
         return $this;
     }
