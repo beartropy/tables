@@ -35,6 +35,7 @@
 | `hideWhen(bool $condition)` | self | Hide column when condition is true |
 | `hideFromSelector(bool $hide = true)` | self | Hide from column visibility selector |
 | `isVisible(bool $visible = true)` | self | Set column visibility |
+| `secondaryHeader(callable $callback)` | self | Add a secondary header row with computed content (receives `$rows` Collection) |
 | `sortColumnBy(string $column)` | self | Specify different column name for sorting |
 | `toHtml()` | self | Mark column output as raw HTML (no escaping) |
 | `isBool()` | self | Mark column as boolean type |
@@ -98,6 +99,15 @@ Column::make('Description', 'description')
 Column::make('Title', 'title')
     ->collapseOnMobile()
     ->cardTitle()
+```
+
+### Secondary Header (Aggregation Row)
+```php
+Column::make('Price', 'price')
+    ->sortable()
+    ->secondaryHeader(function ($rows) {
+        return 'Subtotal: $' . number_format($rows->sum('price'), 2);
+    })
 ```
 
 ### Styling
@@ -179,6 +189,7 @@ Column::make('Priority', 'priority')
 - **Dot Notation**: Columns with dot-notation keys like `'profile.bio'` automatically resolve Eloquent relationships using `data_get()`. This works for belongsTo and hasOne. For hasMany or complex relationships, use `customData()` + custom `sortable()`/`searchable()` callbacks.
 - **Callback Signatures**: `sortable(fn($query, $direction))` receives the Eloquent builder and sort direction. `searchable(fn($query, $term))` receives the builder and search term. Both operate within an `orWhere` group.
 - **Editable Callbacks**: The `editable()` third parameter can be a Closure `fn($id, $field, $value, $table)` or a string method name on the table component. String callbacks invoke `$this->{$methodName}(...)`.
+- **Secondary Header**: `secondaryHeader(fn($rows))` receives the current page's rows as a Collection. The callback return value is rendered in a second header row below the main header. Output supports HTML (rendered with `{!! !!}`). The secondary header row only appears when at least one column defines it; columns without a callback render an empty cell.
 
 ## Common Patterns
 
@@ -208,4 +219,14 @@ Column::make('Admin Notes', 'admin_notes')
 ```php
 Column::make('Category', 'category.name')
     ->sortColumnBy('category_id')
+```
+
+### Secondary Header with Multiple Columns
+```php
+// Only columns with secondaryHeader() show content; others render empty cells.
+Column::make('Quantity', 'qty')
+    ->secondaryHeader(fn($rows) => 'Items: ' . $rows->sum('qty')),
+
+Column::make('Price', 'price')
+    ->secondaryHeader(fn($rows) => '<strong>$' . number_format($rows->sum('price'), 2) . '</strong>'),
 ```

@@ -258,3 +258,23 @@ it('trims label whitespace', function () {
 
     expect($column->label)->toBe('Name');
 });
+
+it('can set a secondary header callback', function () {
+    $callback = function ($rows) {
+        return 'Total: '.$rows->sum('price');
+    };
+    $column = Column::make('Price')->secondaryHeader($callback);
+
+    expect($column->secondaryHeaderCallback)->toBe($callback);
+});
+
+it('secondary header is chainable', function () {
+    $column = Column::make('Price')
+        ->sortable()
+        ->secondaryHeader(function ($rows) {
+            return 'Subtotal: '.$rows->sum('price');
+        });
+
+    expect($column->isSortable)->toBeTrue();
+    expect($column->secondaryHeaderCallback)->toBeCallable();
+});

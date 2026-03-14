@@ -505,4 +505,54 @@ class FullUsersTable extends BeartropyTable
 
 ---
 
+## Table with Secondary Headers (Aggregation Row)
+
+### Livewire Component
+```php
+<?php
+
+namespace App\Livewire;
+
+use Beartropy\Tables\BeartropyTable;
+use Beartropy\Tables\Classes\Columns\Column;
+
+class InvoiceItemsTable extends BeartropyTable
+{
+    public bool $with_pagination = false;
+
+    public function columns(): array
+    {
+        return [
+            Column::make('Item', 'name')
+                ->sortable()
+                ->searchable(),
+
+            Column::make('Quantity', 'qty')
+                ->centered()
+                ->secondaryHeader(fn($rows) => 'Total: ' . $rows->sum('qty')),
+
+            Column::make('Unit Price', 'unit_price')
+                ->pushRight()
+                ->secondaryHeader(fn($rows) => 'Avg: $' . number_format($rows->avg('unit_price'), 2)),
+
+            Column::make('Total', 'total')
+                ->pushRight()
+                ->styling('font-bold')
+                ->secondaryHeader(fn($rows) => '<strong>$' . number_format($rows->sum('total'), 2) . '</strong>'),
+        ];
+    }
+
+    public function data(): array
+    {
+        return [
+            ['id' => 1, 'name' => 'Widget A', 'qty' => 10, 'unit_price' => 5.00, 'total' => 50.00],
+            ['id' => 2, 'name' => 'Widget B', 'qty' => 3,  'unit_price' => 12.50, 'total' => 37.50],
+            ['id' => 3, 'name' => 'Service C', 'qty' => 1,  'unit_price' => 100.00, 'total' => 100.00],
+        ];
+    }
+}
+```
+
+---
+
 These patterns cover advanced table functionality. Combine them freely to build exactly the table your application needs!

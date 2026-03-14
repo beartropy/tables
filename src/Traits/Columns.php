@@ -106,6 +106,29 @@ trait Columns
     }
 
     /**
+     * Resolve secondary header values by calling each column's callback with the current rows.
+     *
+     * @param  mixed  $paginatedData
+     * @return array<string, mixed>
+     */
+    public function resolveSecondaryHeaders($paginatedData): array
+    {
+        $freshColumns = $this->getFreshColumns();
+        $rows = method_exists($paginatedData, 'items')
+            ? collect($paginatedData->items())
+            : collect($paginatedData);
+
+        $secondaryHeaders = [];
+        foreach ($freshColumns as $column) {
+            if (property_exists($column, 'secondaryHeaderCallback') && is_callable($column->secondaryHeaderCallback)) {
+                $secondaryHeaders[$column->key] = call_user_func($column->secondaryHeaderCallback, $rows);
+            }
+        }
+
+        return $secondaryHeaders;
+    }
+
+    /**
      * Show or hide the column toggle dropdown.
      *
      * @return void

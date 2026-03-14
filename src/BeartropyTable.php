@@ -172,8 +172,11 @@ class BeartropyTable extends Component
             $paginatedData = $this->sortData($paginatedData);
         }
 
+        $secondaryHeaders = $this->resolveSecondaryHeaders($paginatedData);
+
         $view = view('yat::livewire.yat-table', [
             'rows' => $paginatedData,
+            'secondaryHeaders' => $secondaryHeaders,
         ]);
 
         if ($this->layout) {

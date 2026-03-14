@@ -87,6 +87,9 @@ class Column
     /** @var callable|null */
     public $searchableCallback = null;
 
+    /** @var \Closure|null */
+    public $secondaryHeaderCallback = null;
+
     /** @var bool */
     public $isSortable = true;
 
@@ -176,6 +179,21 @@ class Column
         } else {
             $this->isSortable = $callback;
         }
+
+        return $this;
+    }
+
+    /**
+     * Set a secondary header callback for this column.
+     *
+     * The callback receives the current rows collection and should return
+     * the content to display in the secondary header cell.
+     *
+     * @param  callable  $callback
+     */
+    public function secondaryHeader(callable $callback): self
+    {
+        $this->secondaryHeaderCallback = $callback;
 
         return $this;
     }

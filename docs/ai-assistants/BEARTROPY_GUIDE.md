@@ -196,6 +196,11 @@ Column::make('Price', 'price')
     ->pushRight()
     ->styling('font-bold text-green-600')
 
+// Secondary header (aggregation row below the main header)
+Column::make('Price', 'price')
+    ->sortable()
+    ->secondaryHeader(fn($rows) => 'Subtotal: $' . number_format($rows->sum('price'), 2))
+
 // Visibility
 Column::make('Admin Notes', 'admin_notes')
     ->hideWhen(!auth()->user()->isAdmin())
@@ -230,6 +235,7 @@ Column::make('Title', 'title')
 | `isVisible(bool)` | Set initial visibility |
 | `sortColumnBy(string $column)` | Sort by a different column key |
 | `toHtml()` | Render as raw HTML |
+| `secondaryHeader(callable $callback)` | Add a secondary header row with computed content (receives `$rows` Collection) |
 | `hideOnMobile()` / `showOnMobile()` / `collapseOnMobile()` | Mobile behavior |
 | `cardTitle()` / `showOnCard()` | Card view config |
 | `triggerCardInfoModal(bool)` | Disable card title tap opening info modal |

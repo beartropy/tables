@@ -43,6 +43,7 @@ Column::make('Name', 'name')
 | `hideWhen(bool $condition)` | Hide column conditionally |
 | `hideFromSelector(bool)` | Hide from column toggle |
 | `isVisible(bool)` | Set column visibility |
+| `secondaryHeader(callable $callback)` | Add a secondary header row with computed content |
 | `sortColumnBy(string $column)` | Sort by different column |
 | `toHtml()` | Render as raw HTML |
 | `isBool()` | Mark as boolean type |
@@ -177,6 +178,18 @@ Column::make('Status', 'status')
 ```php
 Column::make('Admin Notes', 'admin_notes')
     ->hideWhen(!auth()->user()->isAdmin())
+```
+
+### Secondary Header (Aggregation Row)
+
+```php
+// The callback receives the current page's rows as a Collection.
+// A second header row appears below the main header with the returned content.
+Column::make('Price', 'price')
+    ->sortable()
+    ->secondaryHeader(function ($rows) {
+        return 'Subtotal: $' . number_format($rows->sum('price'), 2);
+    })
 ```
 
 ### Card View Title
