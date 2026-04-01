@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.9.7] - 2026-04-01
+
+### Fixed
+- **Column**: Declare `isHtml` as a class property (`public $isHtml = false`) so `property_exists()` returns true on PHP 8.2+. Previously, `isHtml` was set dynamically in the `toHtml()` trait method, causing the raw-HTML branch in Blade templates to never trigger.
+
 ## [v2.9.6] - 2026-03-14
 
 ### Added

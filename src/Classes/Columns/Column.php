@@ -96,6 +96,9 @@ class Column
     /** @var bool */
     public $isSearchable = true;
 
+    /** @var bool */
+    public $isHtml = false;
+
     /** @var array<string> */
     protected static $existingKeys = [];
 
