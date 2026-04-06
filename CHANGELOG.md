@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.9.8] - 2026-04-06
+
+### Fixed
+- **Expanded Rows**: Use `key()` helper function instead of `key:` named argument in `@livewire()` directive for inline expanded row components. The named argument syntax isn't handled by Livewire's Blade compiler regex, causing a closure parameter error when expanding task rows.
+
 ## [v2.9.7] - 2026-04-01
 
 ### Fixed

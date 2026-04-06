@@ -396,7 +396,7 @@
                                     <td colspan="{{ $cols = ($has_bulk ? 1 : 0) + ($has_counter ? 1 : 0) + count($columns) + ($yat_is_mobile && $hasMobileCollapsedColumns ? 1 : 0) }}"
                                         class="p-1">
                                         @if ($yatable_expanded_rows_is_component)
-                                            @livewire($yatable_expanded_rows_content[$row[$column_id]]['component'], $yatable_expanded_rows_content[$row[$column_id]]['parameters'], key: 'yatable_expanded_rows_content' . $row[$column_id])
+                                            @livewire($yatable_expanded_rows_content[$row[$column_id]]['component'], $yatable_expanded_rows_content[$row[$column_id]]['parameters'], key('yatable_expanded_rows_content' . $row[$column_id]))
                                         @else
                                             {!! $yatable_expanded_rows_content[$row[$column_id]] !!}
                                         @endif
