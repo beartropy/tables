@@ -2,6 +2,7 @@
 
 namespace Beartropy\Tables\Traits;
 
+use Beartropy\Tables\Collections\TableCollection;
 use Illuminate\Support\Facades\Cache;
 
 trait Data
@@ -71,6 +72,12 @@ trait Data
 
             return $this->processCollection($data);
         }
+
+        // For cached/array tables, processCollection ran on mount (different request),
+        // so column labels must be set here for export to pick them up.
+        TableCollection::setColumnLabels(
+            collect($this->getFreshColumns())->pluck('label', 'key')->all()
+        );
 
         return $this->getCachedData();
     }
@@ -258,7 +265,13 @@ trait Data
 
         // Keys like `name_original` are intentionally preserved for search/filter access on unmodified values.
 
-        return $processed;
+        // Wrap in TableCollection with column labels so GenericExport can use display names as headers.
+        $tableCollection = new TableCollection($processed->all());
+        TableCollection::setColumnLabels(
+            collect($this->getFreshColumns())->pluck('label', 'key')->all()
+        );
+
+        return $tableCollection;
     }
 
     /**
@@ -433,14 +446,18 @@ trait Data
             return;
         }
 
-        // Clean collection: remove _original keys
-        $collection = $collection->map(function ($row) {
-            return collect($row)->reject(function ($value, $key) {
-                return str_ends_with($key, '_original');
-            })->all();
+        // Use column definitions to filter data and build proper headers
+        $columns = $this->getFreshColumns();
+        $columnKeys = collect($columns)->pluck('key')->all();
+        $columnLabels = collect($columns)->pluck('label', 'key')->all();
+
+        $collection = $collection->map(function ($row) use ($columnKeys) {
+            return collect($row)->only($columnKeys)->all();
         });
 
-        $headers = array_keys($collection->first());
+        $headers = array_map(function ($key) use ($columnLabels) {
+            return $columnLabels[$key] ?? $key;
+        }, array_keys($collection->first()));
         $lines = [];
 
         if ($tabs) {

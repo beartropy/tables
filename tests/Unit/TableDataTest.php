@@ -246,7 +246,7 @@ it('exportToClipboard generates TSV', function () {
 
         public function columns()
         {
-            return [Column::make('Name', 'name')];
+            return [Column::make('Name', 'name'), Column::make('Email', 'email')];
         }
 
         public function dispatch($event, ...$args)
@@ -267,7 +267,7 @@ it('exportToClipboard generates TSV', function () {
 
     $table->exportToClipboard($collection, true);
 
-    expect($table->csvString)->toContain("name\temail");
+    expect($table->csvString)->toContain("Name\tEmail");
     expect($table->csvString)->toContain("Alice\talice@test.com");
 });
 
@@ -284,7 +284,7 @@ it('exportToClipboard generates CSV with quoting', function () {
 
         public function columns()
         {
-            return [Column::make('Name', 'name')];
+            return [Column::make('Name', 'name'), Column::make('Email', 'email')];
         }
 
         public function dispatch($event, ...$args) {}
@@ -301,7 +301,7 @@ it('exportToClipboard generates CSV with quoting', function () {
 
     $table->exportToClipboard($collection, false);
 
-    expect($table->csvString)->toContain('"name","email"');
+    expect($table->csvString)->toContain('"Name","Email"');
     expect($table->csvString)->toContain('"Alice","alice@test.com"');
 });
 
@@ -347,7 +347,7 @@ it('exportToClipboard strips _original keys', function () {
 
         public function columns()
         {
-            return [Column::make('Name', 'name')];
+            return [Column::make('Name', 'name'), Column::make('Email', 'email')];
         }
 
         public function dispatch($event, ...$args) {}
@@ -381,7 +381,7 @@ it('exportToClipboard handles array values', function () {
 
         public function columns()
         {
-            return [Column::make('Name', 'name')];
+            return [Column::make('Name', 'name'), Column::make('Tags', 'tags')];
         }
 
         public function dispatch($event, ...$args) {}

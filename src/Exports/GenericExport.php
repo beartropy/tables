@@ -2,6 +2,7 @@
 
 namespace Beartropy\Tables\Exports;
 
+use Beartropy\Tables\Collections\TableCollection;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
@@ -27,6 +28,9 @@ class GenericExport implements FromCollection, WithColumnWidths, WithHeadings, W
     /** @var bool */
     protected $strip_tags;
 
+    /** @var array<string, string>|null Column key → label map for header display. */
+    protected $columnLabels;
+
     /**
      * Create a new GenericExport instance.
      *
@@ -37,12 +41,31 @@ class GenericExport implements FromCollection, WithColumnWidths, WithHeadings, W
     public function __construct($data, $strip_tags = true, $sheetName = null)
     {
         $this->sheetName = $sheetName;
-        // Clean data: remove _original keys to prevent duplicates in export
-        $this->data = $data->map(function ($item) {
-            return collect($item)->reject(function ($value, $key) {
-                return str_ends_with($key, '_original');
-            })->all();
-        });
+
+        // Auto-detect column labels set by processCollection / getAllData
+        $detectedLabels = TableCollection::getColumnLabels();
+        if (! empty($detectedLabels)) {
+            $this->columnLabels = $detectedLabels;
+            $columnKeys = array_keys($this->columnLabels);
+
+            // Filter data to only defined column keys — excludes all internal metadata
+            $this->data = $data->map(function ($item) use ($columnKeys) {
+                return collect($item)->only($columnKeys)->all();
+            });
+        } else {
+            $this->columnLabels = null;
+
+            // Legacy: strip internal metadata suffixes
+            $this->data = $data->map(function ($item) {
+                return collect($item)->reject(function ($value, $key) {
+                    return str_ends_with($key, '_original')
+                        || str_ends_with($key, '_disabled')
+                        || str_ends_with($key, '_hidden')
+                        || str_ends_with($key, '_card_title');
+                })->all();
+            });
+        }
+
         $this->strip_tags = $strip_tags;
     }
 
@@ -78,9 +101,19 @@ class GenericExport implements FromCollection, WithColumnWidths, WithHeadings, W
 
     public function headings(): array
     {
-        $this->headers = $this->original_headers = $this->data->isNotEmpty() ? array_keys((array) $this->data->first()) : [];
-        foreach ($this->headers as $key => $value) {
-            $this->headers[$key] = ucfirst(str_replace('_', ' ', $value));
+        $this->original_headers = $this->data->isNotEmpty() ? array_keys((array) $this->data->first()) : [];
+
+        if ($this->columnLabels) {
+            // Use column display labels from table definition
+            $labels = $this->columnLabels;
+            $this->headers = array_map(function ($key) use ($labels) {
+                return $labels[$key] ?? ucfirst(str_replace('_', ' ', $key));
+            }, $this->original_headers);
+        } else {
+            // Legacy: humanize the data keys
+            $this->headers = array_map(function ($key) {
+                return ucfirst(str_replace('_', ' ', $key));
+            }, $this->original_headers);
         }
 
         return $this->headers;

@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.9.9] - 2026-04-08
+
+### Fixed
+- **GenericExport**: Export headers now use column display labels (e.g., "Rol funcional") instead of raw data keys (e.g., "rol_funcional"). Works automatically for both Eloquent and array/collection tables — no changes needed in existing apps.
+- **GenericExport**: Internal metadata keys (`_original`, `_disabled`, `_hidden`, `_card_title`) no longer leak into exported data. Previously only `_original` was stripped.
+- **exportToClipboard**: Clipboard export now uses column labels as headers and filters out internal metadata keys, matching the GenericExport fix.
+
+### Added
+- **TableCollection**: New `Collection` subclass that carries column label metadata from `processCollection()` through to `GenericExport`, enabling automatic label resolution without requiring changes to existing export methods.
+
 ## [v2.9.8] - 2026-04-06
 
 ### Fixed
