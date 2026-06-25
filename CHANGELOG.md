@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.9.10] - 2026-06-25
+
+### Changed
+- **Dependencies**: Allow Livewire 4 (`livewire/livewire: ^3.7|^4.0`).
+- **Dev**: Test against Laravel 13 via Orchestra Testbench 11 (`orchestra/testbench: ^9.0|^10.0|^11.0`).
+
 ## [v2.9.9] - 2026-04-08
 
 ### Fixed
