@@ -2,6 +2,8 @@
 
 namespace Beartropy\Tables\Traits;
 
+use Beartropy\Tables\Collections\TableCollection;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache as CacheFacade;
 
@@ -51,7 +53,7 @@ trait Cache
     {
         $this->all_data_count = count($this->userData);
         if (! CacheFacade::has($this->getCacheKey())) {
-            CacheFacade::put($this->getCacheKey(), $this->userData, now()->addMinutes(60));
+            CacheFacade::put($this->getCacheKey(), $this->cacheableRows($this->userData), now()->addMinutes(60));
             $this->cacheTimeStamp = now()->getTimestampMs();
         }
     }
@@ -79,7 +81,14 @@ trait Cache
             $this->mount();
         }
 
-        return CacheFacade::get($this->getCacheKey());
+        $cached = CacheFacade::get($this->getCacheKey());
+
+        // Rows are cached as plain arrays (see cacheableRows). Re-wrap them in a
+        // TableCollection so callers keep the Collection API. A legacy cached
+        // Collection is tolerated for the TTL window right after upgrading.
+        $rows = $cached instanceof Collection ? $cached->all() : (array) ($cached ?? []);
+
+        return new TableCollection($rows);
     }
 
     /**
@@ -94,7 +103,23 @@ trait Cache
     {
         $this->all_data_count = count($data);
         $this->emptySelection();
-        CacheFacade::put($this->getCacheKey(), $data, now()->addMinutes(60));
+        CacheFacade::put($this->getCacheKey(), $this->cacheableRows($data), now()->addMinutes(60));
         $this->cacheTimeStamp = now()->getTimestampMs();
+    }
+
+    /**
+     * Normalize table data to a plain array of rows for caching.
+     *
+     * The table data is only ever cached as an array of row arrays, never as
+     * the TableCollection object itself. This keeps the cache compatible with
+     * Laravel 13's hardened unserialization (config cache.serializable_classes)
+     * without consumers having to allow-list TableCollection.
+     *
+     * @param  mixed  $data
+     * @return array<int, mixed>
+     */
+    protected function cacheableRows($data): array
+    {
+        return $data instanceof Collection ? $data->all() : (array) ($data ?? []);
     }
 }
