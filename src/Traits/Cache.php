@@ -83,12 +83,19 @@ trait Cache
 
         $cached = CacheFacade::get($this->getCacheKey());
 
-        // Rows are cached as plain arrays (see cacheableRows). Re-wrap them in a
-        // TableCollection so callers keep the Collection API. A legacy cached
-        // Collection is tolerated for the TTL window right after upgrading.
-        $rows = $cached instanceof Collection ? $cached->all() : (array) ($cached ?? []);
+        // Rows are cached as a plain array of plain-array rows (see cacheableRows),
+        // so a healthy hit is always an array. Anything else — a legacy cached
+        // TableCollection object, or a __PHP_Incomplete_Class produced by Laravel
+        // 13's hardened cache unserialization for a pre-upgrade entry — is unusable
+        // and would blow up rendering (htmlspecialchars on an incomplete class).
+        // Drop it and rebuild from source so the table self-heals.
+        if (! is_array($cached)) {
+            $this->clearData();
+            $this->mount();
+            $cached = CacheFacade::get($this->getCacheKey());
+        }
 
-        return new TableCollection($rows);
+        return new TableCollection(is_array($cached) ? $cached : []);
     }
 
     /**
@@ -108,18 +115,81 @@ trait Cache
     }
 
     /**
-     * Normalize table data to a plain array of rows for caching.
+     * Normalize table data to a plain array of plain-array rows for caching.
      *
-     * The table data is only ever cached as an array of row arrays, never as
-     * the TableCollection object itself. This keeps the cache compatible with
-     * Laravel 13's hardened unserialization (config cache.serializable_classes)
-     * without consumers having to allow-list TableCollection.
+     * The cache must contain ONLY scalars and arrays — never objects. Laravel
+     * 13 hardens cache unserialization (config cache.serializable_classes), so
+     * any object stored in the cache (the TableCollection itself, or an object
+     * cell value such as a Carbon date, enum, or value object) comes back as a
+     * __PHP_Incomplete_Class and breaks rendering. Deep-normalizing here keeps
+     * the cache compatible without consumers having to allow-list any class.
      *
      * @param  mixed  $data
      * @return array<int, mixed>
      */
     protected function cacheableRows($data): array
     {
-        return $data instanceof Collection ? $data->all() : (array) ($data ?? []);
+        $rows = $data instanceof Collection ? $data->all() : (array) ($data ?? []);
+
+        return array_map(fn ($row) => $this->normalizeRowForCache($row), $rows);
+    }
+
+    /**
+     * Reduce a single row to a plain array, then normalize each of its values.
+     *
+     * @param  mixed  $row
+     * @return array<string, mixed>
+     */
+    protected function normalizeRowForCache($row): array
+    {
+        if ($row instanceof Collection) {
+            $row = $row->all();
+        } elseif (is_object($row)) {
+            $row = method_exists($row, 'toArray') ? $row->toArray() : (array) $row;
+        }
+
+        return array_map(fn ($value) => $this->normalizeValueForCache($value), (array) $row);
+    }
+
+    /**
+     * Recursively convert a cell value to a cache-safe (object-free) form.
+     *
+     * Stringable objects (e.g. Carbon) become their string representation —
+     * exactly what the Blade view would render — so output is preserved.
+     *
+     * @param  mixed  $value
+     * @return mixed
+     */
+    protected function normalizeValueForCache($value)
+    {
+        if (is_array($value)) {
+            return array_map(fn ($v) => $this->normalizeValueForCache($v), $value);
+        }
+
+        if ($value instanceof \BackedEnum) {
+            return $value->value;
+        }
+
+        if ($value instanceof \UnitEnum) {
+            return $value->name;
+        }
+
+        if (is_object($value)) {
+            if (method_exists($value, '__toString')) {
+                return (string) $value;
+            }
+
+            if ($value instanceof \JsonSerializable) {
+                return $this->normalizeValueForCache($value->jsonSerialize());
+            }
+
+            if (method_exists($value, 'toArray')) {
+                return $this->normalizeValueForCache($value->toArray());
+            }
+
+            return $this->normalizeValueForCache((array) $value);
+        }
+
+        return $value;
     }
 }

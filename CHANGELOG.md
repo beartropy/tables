@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.9.13] - 2026-06-27
+
+### Fixed
+- **Cache**: Object cell values (e.g. Carbon dates, backed enums, value objects) are now deep-normalized to scalars/arrays before caching, so the cache never stores objects. Previously v2.9.12 only flattened the top-level container, leaving object cell values to come back as `__PHP_Incomplete_Class` under Laravel 13's hardened cache unserialization — which broke rendering with `htmlspecialchars(): Argument #1 ($string) must be of type string, __PHP_Incomplete_Class given`. Stringable values (Carbon, etc.) are cached as their string form, preserving rendered output.
+- **Cache**: `getCachedData()` now self-heals — a non-array cache hit (a legacy cached `TableCollection` or an incomplete-class artifact from a pre-upgrade entry) is discarded and rebuilt from source instead of rendering garbage.
+
 ## [v2.9.12] - 2026-06-27
 
 ### Fixed
