@@ -58,7 +58,9 @@ class UsersTable extends BeartropyTable
 | `data()` | `array` | Provide array data (when `$model` is null). Supports arrays of associative arrays or stdClass objects. |
 | `options()` | `array` | Define bulk action options. |
 | `settings()` | `void` | Configure the table via settings methods. Called during `mount()`. |
-| `authorizeFieldUpdate(Model, string, mixed)` | `bool` | Authorization check for inline edits. Returns `true` by default. |
+| `authorizeFieldUpdate(Model, string, mixed)` | `bool` | Authorization check for inline edits on the Eloquent path. Returns `true` by default. |
+| `authorizeFieldUpdateRaw(mixed, string, mixed)` | `bool` | Authorization check for inline edits with no resolved model — callback columns and array/stdClass tables. Receives the raw row id. Returns `true` by default. |
+| `authorizeToggle(mixed, string)` | `bool` | Authorization check for boolean toggle columns. Returns `true` by default. |
 
 ## Settings Methods
 

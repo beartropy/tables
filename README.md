@@ -29,6 +29,37 @@ The full documentation for this package involves installation, configuration, an
 *   **Column Toggling**: Allow users to show or hide columns dynamically.
 *   **TALL Stack Optimized**: Built seamlessly for Tailwind CSS, Alpine.js, Laravel, and Livewire.
 
+## 🔐 Inline Editing & Toggle Authorization
+
+Inline editing and boolean toggles are write actions reachable from the browser, so the table decides what may be written.
+
+Only columns declared with `->editable()` can be written through `updateField()`. A column that merely exists is not a write target, and `toggleBoolean()` ignores any column key that is not part of `columns()`.
+
+On top of that, three hooks let you apply your own policy checks. **All three default to permitting the write**, so a table that exposes sensitive columns must override them — they are hooks, not automatic protection.
+
+```php
+use Illuminate\Database\Eloquent\Model;
+
+// Eloquent-backed tables: receives the resolved record.
+public function authorizeFieldUpdate(Model $record, string $field, mixed $value): bool
+{
+    return auth()->user()->can('update', $record);
+}
+
+// Callback columns and array/stdClass tables: no model exists, so this
+// receives the raw row id instead of a record.
+public function authorizeFieldUpdateRaw($id, string $field, mixed $value): bool
+{
+    return auth()->user()->can('editTables');
+}
+
+// Boolean toggle columns.
+public function authorizeToggle($id, string $column): bool
+{
+    return auth()->user()->can('editTables');
+}
+```
+
 ## 🚀 Quick Installation
 
 You can install the package via composer:

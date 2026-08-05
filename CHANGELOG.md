@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### BREAKING
+
+- `updateField()` now refuses to write a column that was not marked with `->editable()`. Previously any declared column could be written through the inline-edit action, including display-only ones. Tables that relied on writing a non-editable column must add `->editable()` to that column's definition.
+- `toggleBoolean()` now refuses a column key that is not part of the table's `columns()`. Previously an unknown key reached the data map and raised `Undefined array key`; it now returns without touching the row.
+
+### Fixed
+
+- **Editable**: `authorizeFieldUpdate()` was only consulted on the Eloquent write path. A column with a string `editableCallback`, and every array/stdClass backed table, wrote with no authorization check at all. Both paths are now gated by the new `authorizeFieldUpdateRaw()` hook.
+
+### Added
+
+- `authorizeFieldUpdateRaw($id, string $field, mixed $value): bool` on `Editable`, defaulting to `true`. It is the counterpart of `authorizeFieldUpdate()` for the write paths that have no resolved Eloquent model — a column with a custom update callback, and array/stdClass backed tables — which receive the raw row id instead of a record. `authorizeFieldUpdate()`'s own signature is unchanged, so existing overrides typed `Model $record` keep working; override the new hook as well to cover the non-model paths.
+- `authorizeToggle($id, string $column): bool` on `RowManipulators`, defaulting to `true`. Override it to gate boolean toggles the way `authorizeFieldUpdate()` gates field writes.
+
 ## [v2.9.13] - 2026-06-27
 
 ### Fixed

@@ -190,9 +190,20 @@ Column::make('Priority', 'priority')
     ->editable('select', $options, 'handlePriorityUpdate')
 
 # Authorization (override in table class)
+# Only columns declared with ->editable() are writable at all. On top of that:
 public function authorizeFieldUpdate(Model $record, string $field, mixed $value): bool
 {
-    return auth()->user()->can('update', $record);
+    return auth()->user()->can('update', $record);   # Eloquent path
+}
+
+public function authorizeFieldUpdateRaw($id, string $field, mixed $value): bool
+{
+    return auth()->user()->can('editTables');        # callback columns / array tables
+}
+
+public function authorizeToggle($id, string $column): bool
+{
+    return auth()->user()->can('editTables');        # boolean toggle columns
 }
 ```
 
@@ -216,7 +227,7 @@ public function authorizeFieldUpdate(Model $record, string $field, mixed $value)
 6. **Use `customData()` + custom callbacks** for hasMany relationships
 7. **Use `sortable()` and `searchable()`** on key columns
 8. **Use `FilterSelectMagic`** when options come from distinct values
-9. **Override `authorizeFieldUpdate()`** for inline editing security
+9. **Override `authorizeFieldUpdate()`, `authorizeFieldUpdateRaw()` and `authorizeToggle()`** for inline editing and toggle security — all three allow by default
 10. **Never build table components from scratch** — extend BeartropyTable
 
 ## Don't Suggest

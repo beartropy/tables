@@ -642,7 +642,7 @@ public function authorizeFieldUpdate(\Illuminate\Database\Eloquent\Model $record
 4. **Use `customData()` + custom callbacks** for hasMany/complex relationships
 5. **Add `sortable()` and `searchable()`** to key columns
 6. **Use filter `->query()` callbacks** when default behavior isn't sufficient
-7. **Override `authorizeFieldUpdate()`** for inline editing security
+7. **Override `authorizeFieldUpdate()`, `authorizeFieldUpdateRaw()` and `authorizeToggle()`** for inline editing and toggle security — all three allow by default
 8. **Set `$has_bulk = true`** to enable bulk operations
 9. **Use `$showCardsOnMobile = true`** for mobile-friendly tables
 10. **Use `FilterSelectMagic`** when options come from distinct column values

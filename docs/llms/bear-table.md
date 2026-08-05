@@ -170,8 +170,10 @@ Call these from your table's `settings()` method (or `mount()`) to configure beh
 
 | Method | Signature | Description |
 |--------|-----------|-------------|
-| `authorizeFieldUpdate` | `authorizeFieldUpdate(Model $record, string $field, mixed $value): bool` | Override to add authorization checks for inline edits. Returns `true` by default. |
-| `updateField` | `updateField(mixed $id, string $field, mixed $value): bool` | Handle an inline edit update. Supports callback, Eloquent, and array modes. |
+| `authorizeFieldUpdate` | `authorizeFieldUpdate(Model $record, string $field, mixed $value): bool` | Override to add authorization checks for inline edits on the Eloquent path. Returns `true` by default. |
+| `authorizeFieldUpdateRaw` | `authorizeFieldUpdateRaw(mixed $id, string $field, mixed $value): bool` | Override to add authorization checks for inline edits on the paths with no resolved model (callback columns, array/stdClass tables). Receives the raw row id. Returns `true` by default. |
+| `authorizeToggle` | `authorizeToggle(mixed $id, string $column): bool` | Override to add authorization checks for boolean toggle columns. Returns `true` by default. |
+| `updateField` | `updateField(mixed $id, string $field, mixed $value): bool` | Handle an inline edit update. Only writes columns declared with `->editable()`. Supports callback, Eloquent, and array modes. |
 
 ### Filters
 
@@ -528,6 +530,6 @@ class UsersTable extends BeartropyTable
 - **Complex Property Types**: `$columns` and `$filters` are intentionally left untyped because they contain Livewire-serialized Collections with complex nested structures.
 - **Query Callback Signature**: All filter `->query()` callbacks receive `($query, $value, $filter)`. The third `$filter` parameter is the filter object itself, giving access to `$filter->key`, `$filter->label`, etc. Most callbacks only need `$query` and `$value`.
 - **Dot Notation in Filters**: Filters with dot-notation keys (e.g., `'profile.bio'`) are automatically resolved using `whereHas()` for model-based tables. The system splits on `.`, uses the left part as the relationship name and the right part as the column.
-- **Authorize Field Update**: The `authorizeFieldUpdate()` method in the Editable trait provides a security hook for inline editing. Override it to add policy checks.
+- **Authorize Field Update**: `updateField()` only writes columns declared with `->editable()`; a column that merely exists is not a write target. On top of that, the Editable trait exposes two security hooks for inline editing: `authorizeFieldUpdate()` on the Eloquent path (receives the resolved record) and `authorizeFieldUpdateRaw()` on the paths with no model — callback columns and array/stdClass tables — which receives the raw row id. `RowManipulators` exposes `authorizeToggle()` for boolean toggle columns, and `toggleBoolean()` ignores column keys that are not part of `columns()`. All three hooks return `true` by default, so override them on tables that expose sensitive columns.
 - **Cache Strategy**: Array-based tables cache data per-user for 60 minutes. Use `clearData()` to invalidate manually.
 - **Header Layout**: The table header has 4 named slots (mostLeft, lessLeft, lessRight, mostRight) plus the search input and buttons area.
