@@ -132,6 +132,40 @@ class NonEditableColumnTable extends BeartropyTable
     public function settings() {}
 }
 
+class CallbackEditableTable extends BeartropyTable
+{
+    public $written = [];
+
+    public $denyEverything = false;
+
+    public function columns()
+    {
+        return [
+            Column::make('Name', 'name')->editable('input', [], 'recordWrite'),
+            Column::make('Role', 'role')->editable(),
+        ];
+    }
+
+    public function recordWrite($id, $field, $value, $table)
+    {
+        $this->written[] = [$id, $field, $value];
+    }
+
+    public function authorizeFieldUpdateRaw($id, string $field, mixed $value): bool
+    {
+        return ! $this->denyEverything;
+    }
+
+    public function data()
+    {
+        return [
+            ['id' => 1, 'name' => 'Ada', 'role' => 'user'],
+        ];
+    }
+
+    public function settings() {}
+}
+
 beforeEach(function () {
     UserForEditable::create(['name' => 'Alice', 'email' => 'alice@example.com']);
     UserForEditable::create(['name' => 'Bob', 'email' => 'bob@example.com']);
@@ -219,4 +253,32 @@ it('a column marked editable can still be written', function () {
     Livewire::test(NonEditableColumnTable::class)
         ->call('updateField', 1, 'name', 'Grace')
         ->assertDispatched('table-field-updated');
+});
+
+it('a denied update does not reach the string callback', function () {
+    Livewire::test(CallbackEditableTable::class)
+        ->set('denyEverything', true)
+        ->call('updateField', 1, 'name', 'Grace')
+        ->assertSet('written', []);
+});
+
+it('an allowed update still reaches the string callback', function () {
+    Livewire::test(CallbackEditableTable::class)
+        ->call('updateField', 1, 'name', 'Grace')
+        ->assertSet('written', [[1, 'name', 'Grace']]);
+});
+
+it('a denied update does not reach the array fallback', function () {
+    $component = Livewire::test(CallbackEditableTable::class)
+        ->set('denyEverything', true)
+        ->call('updateField', 1, 'role', 'admin');
+
+    expect($component->instance()->getRowByID(1)['role'])->toBe('user');
+});
+
+it('an allowed update still reaches the array fallback', function () {
+    $component = Livewire::test(CallbackEditableTable::class)
+        ->call('updateField', 1, 'role', 'admin');
+
+    expect($component->instance()->getRowByID(1)['role'])->toBe('admin');
 });

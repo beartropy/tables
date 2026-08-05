@@ -22,6 +22,26 @@ trait Editable
     }
 
     /**
+     * Authorize a field update that has no resolved Eloquent model.
+     *
+     * This is the counterpart of authorizeFieldUpdate() for the write paths where
+     * no model exists: a column with a custom update callback, and array/stdClass
+     * backed tables. Those paths receive the raw row id instead of a record, which
+     * is why they cannot share authorizeFieldUpdate()'s signature.
+     *
+     * Override this method in your table component to add policy checks. Defaults
+     * to allowing the update, matching authorizeFieldUpdate()'s default.
+     *
+     * @param  mixed  $id  The row ID being updated.
+     * @param  string  $field  The field/column key being updated.
+     * @param  mixed  $value  The new value.
+     */
+    public function authorizeFieldUpdateRaw($id, string $field, mixed $value): bool
+    {
+        return true;
+    }
+
+    /**
      * Update a specific field for a row.
      *
      * Handles inline editing updates. Supports callbacks, Eloquent models, and array data.
@@ -47,13 +67,24 @@ trait Editable
 
         // 1. Component Method by Name (String)
         if (is_string($column->editableCallback) && method_exists($this, $column->editableCallback)) {
+            if (! $this->authorizeFieldUpdateRaw($id, $field, $value)) {
+                return false;
+            }
+
             $this->{$column->editableCallback}($id, $field, $value, $this);
 
             return true;
         }
 
         // 2. User Callback (Closure)
+        // Note: setColumns() strips closures off the column objects so Livewire can
+        // serialize them, so this branch is currently unreachable. The check stays
+        // in place so the path is not left unauthorized if that ever changes.
         if ($column->editableCallback && is_callable($column->editableCallback)) {
+            if (! $this->authorizeFieldUpdateRaw($id, $field, $value)) {
+                return false;
+            }
+
             call_user_func($column->editableCallback, $id, $field, $value, $this);
 
             return true;
@@ -95,6 +126,10 @@ trait Editable
         }
 
         // 4. Array Data Update (Fallback)
+        if (! $this->authorizeFieldUpdateRaw($id, $field, $value)) {
+            return false;
+        }
+
         $this->updateRowOnTable($id, [$field => $value]);
 
         return true;
