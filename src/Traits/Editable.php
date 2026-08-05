@@ -45,7 +45,8 @@ trait Editable
      * Update a specific field for a row.
      *
      * Handles inline editing updates. Supports callbacks, Eloquent models, and array data.
-     * Dispatches 'table-field-updated' event.
+     * Dispatches 'table-field-updated' only once the write has actually been performed, so
+     * a denied or failed update never announces itself as a successful one.
      *
      * @param  mixed  $id  The row ID.
      * @param  string  $field  The field/column key to update.
@@ -54,7 +55,10 @@ trait Editable
      */
     public function updateField($id, $field, $value)
     {
-        $column = \collect($this->columns)->firstWhere('key', $field);
+        // Resolved from getFreshColumns() rather than $this->columns: setColumns() nulls
+        // out every Closure so Livewire can serialize the column objects, which would
+        // leave a closure editableCallback silently unreachable.
+        $column = $this->getFreshColumns()->firstWhere('key', $field);
 
         // A column that was never marked editable is not a write target, even
         // though it exists. Without this, any declared column is writable
@@ -63,8 +67,6 @@ trait Editable
             return;
         }
 
-        $this->dispatch('table-field-updated', id: $id, field: $field, value: $value);
-
         // 1. Component Method by Name (String)
         if (is_string($column->editableCallback) && method_exists($this, $column->editableCallback)) {
             if (! $this->authorizeFieldUpdateRaw($id, $field, $value)) {
@@ -72,20 +74,19 @@ trait Editable
             }
 
             $this->{$column->editableCallback}($id, $field, $value, $this);
+            $this->dispatch('table-field-updated', id: $id, field: $field, value: $value);
 
             return true;
         }
 
         // 2. User Callback (Closure)
-        // Note: setColumns() strips closures off the column objects so Livewire can
-        // serialize them, so this branch is currently unreachable. The check stays
-        // in place so the path is not left unauthorized if that ever changes.
         if ($column->editableCallback && is_callable($column->editableCallback)) {
             if (! $this->authorizeFieldUpdateRaw($id, $field, $value)) {
                 return false;
             }
 
             call_user_func($column->editableCallback, $id, $field, $value, $this);
+            $this->dispatch('table-field-updated', id: $id, field: $field, value: $value);
 
             return true;
         }
@@ -109,6 +110,10 @@ trait Editable
 
                         $this->clearData();
 
+                        if ($saved) {
+                            $this->dispatch('table-field-updated', id: $id, field: $field, value: $value);
+                        }
+
                         return $saved;
                     } else {
                         \Illuminate\Support\Facades\Log::warning("BeartropyTable Record not found: $id");
@@ -131,6 +136,7 @@ trait Editable
         }
 
         $this->updateRowOnTable($id, [$field => $value]);
+        $this->dispatch('table-field-updated', id: $id, field: $field, value: $value);
 
         return true;
     }

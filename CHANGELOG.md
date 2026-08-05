@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### BREAKING
+
+- A closure passed to `editable()` now owns persistence. Previously `setColumns()` nulled out every closure so Livewire could serialize the column objects, which left a closure `editableCallback` silently unreachable: the callback never ran, and `updateField()` fell through to the default write and saved the field anyway. The callback now runs, and — matching how a string callback has always behaved — it replaces the default write rather than running alongside it. A table using `editable('input', [], fn ($id, $field, $value, $table) => ...)` that relied on the field still being saved must now persist it from inside the closure.
+
+### Fixed
+
+- **Editable**: `updateField()` dispatched `table-field-updated` before doing any work, so a denied or failed update announced itself as a successful one. It is now dispatched only once the write has actually happened — after a callback runs, after a successful model save, or after the array row is updated. A write refused by `authorizeFieldUpdate()`/`authorizeFieldUpdateRaw()`, or aimed at a record that does not exist, no longer dispatches it.
+- **Editable**: `updateField()` resolves the column through `getFreshColumns()` instead of the serialized `$this->columns`, which is what makes closure callbacks reachable at all. This matches how `Sort`, `Search` and `Data` already resolve columns when they need callbacks intact.
+
 ## [v2.10.0] - 2026-08-05
 
 ### BREAKING

@@ -142,6 +142,9 @@ class CallbackEditableTable extends BeartropyTable
     {
         return [
             Column::make('Name', 'name')->editable('input', [], 'recordWrite'),
+            Column::make('Nick', 'nick')->editable('input', [], function ($id, $field, $value, $table) {
+                $table->written[] = [$id, $field, $value];
+            }),
             Column::make('Role', 'role')->editable(),
         ];
     }
@@ -159,7 +162,7 @@ class CallbackEditableTable extends BeartropyTable
     public function data()
     {
         return [
-            ['id' => 1, 'name' => 'Ada', 'role' => 'user'],
+            ['id' => 1, 'name' => 'Ada', 'nick' => 'ada', 'role' => 'user'],
         ];
     }
 
@@ -281,4 +284,58 @@ it('an allowed update still reaches the array fallback', function () {
         ->call('updateField', 1, 'role', 'admin');
 
     expect($component->instance()->getRowByID(1)['role'])->toBe('admin');
+});
+
+it('a denied update does not dispatch table-field-updated', function () {
+    Livewire::test(CallbackEditableTable::class)
+        ->set('denyEverything', true)
+        ->call('updateField', 1, 'name', 'Grace')
+        ->assertNotDispatched('table-field-updated');
+});
+
+it('an update to a missing record does not dispatch table-field-updated', function () {
+    Livewire::test(EditableUserTable::class)
+        ->call('updateField', 999, 'name', 'Ghost')
+        ->assertNotDispatched('table-field-updated');
+});
+
+it('a closure callback actually runs', function () {
+    Livewire::test(CallbackEditableTable::class)
+        ->call('updateField', 1, 'nick', 'grace')
+        ->assertSet('written', [[1, 'nick', 'grace']]);
+});
+
+it('a denied update does not reach the closure callback', function () {
+    Livewire::test(CallbackEditableTable::class)
+        ->set('denyEverything', true)
+        ->call('updateField', 1, 'nick', 'grace')
+        ->assertSet('written', []);
+});
+
+class ClosureCallbackModelTable extends BeartropyTable
+{
+    public $written = [];
+
+    public function settings()
+    {
+        $this->model = UserForEditable::class;
+    }
+
+    public function columns()
+    {
+        return [
+            Column::make('Name', 'name')->editable('input', [], function ($id, $field, $value, $table) {
+                $table->written[] = [$id, $field, $value];
+            }),
+        ];
+    }
+}
+
+it('a closure callback owns persistence and the model is not auto-updated', function () {
+    Livewire::test(ClosureCallbackModelTable::class)
+        ->call('updateField', 1, 'name', 'Grace')
+        ->assertSet('written', [[1, 'name', 'Grace']]);
+
+    // The closure decides what to persist; updateField must not also write the model.
+    expect(UserForEditable::find(1)->name)->toBe('Alice');
 });
