@@ -5,12 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [v2.10.0] - 2026-08-05
 
 ### BREAKING
 
-- `updateField()` now refuses to write a column that was not marked with `->editable()`. Previously any declared column could be written through the inline-edit action, including display-only ones. Tables that relied on writing a non-editable column must add `->editable()` to that column's definition.
-- `toggleBoolean()` now refuses a column key that is not part of the table's `columns()`. Previously an unknown key reached the data map and raised `Undefined array key`; it now returns without touching the row.
+Neither change is reachable through the package's own views: the inline editor only renders for columns marked `->editable()`, and toggles only render for toggle columns. Both guards reject input the UI never produces, so the affected surface is programmatic calls and hand-crafted Livewire requests.
+
+- `updateField()` now refuses to write a column that was not marked with `->editable()`. Previously any declared column could be written through the inline-edit action, including display-only ones. Tables that call `updateField()` programmatically on a non-editable column must add `->editable()` to that column's definition.
+- `toggleBoolean()` now refuses a column key that is not part of the table's `columns()`. A key absent from both `columns()` and the row data previously raised `Undefined array key` and now returns quietly. The genuine behaviour change is the other case: a key present in the row data but never declared as a column — for example a `data()` row carrying `is_admin` with no matching column — used to flip successfully and is now refused.
 
 ### Fixed
 
