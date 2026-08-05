@@ -112,6 +112,26 @@ class EditableArrayTable extends BeartropyTable
     public function settings() {}
 }
 
+class NonEditableColumnTable extends BeartropyTable
+{
+    public function columns()
+    {
+        return [
+            Column::make('Name', 'name')->editable(),
+            Column::make('Role', 'role'),
+        ];
+    }
+
+    public function data()
+    {
+        return [
+            ['id' => 1, 'name' => 'Ada', 'role' => 'user'],
+        ];
+    }
+
+    public function settings() {}
+}
+
 beforeEach(function () {
     UserForEditable::create(['name' => 'Alice', 'email' => 'alice@example.com']);
     UserForEditable::create(['name' => 'Bob', 'email' => 'bob@example.com']);
@@ -187,4 +207,16 @@ it('updateField on array table updates via updateRowOnTable', function () {
 
     // The data should be updated in cache
     $component->assertDispatched('table-field-updated');
+});
+
+it('a column that was never marked editable cannot be written', function () {
+    Livewire::test(NonEditableColumnTable::class)
+        ->call('updateField', 1, 'role', 'admin')
+        ->assertNotDispatched('table-field-updated');
+});
+
+it('a column marked editable can still be written', function () {
+    Livewire::test(NonEditableColumnTable::class)
+        ->call('updateField', 1, 'name', 'Grace')
+        ->assertDispatched('table-field-updated');
 });

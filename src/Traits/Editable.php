@@ -36,7 +36,10 @@ trait Editable
     {
         $column = \collect($this->columns)->firstWhere('key', $field);
 
-        if (! $column) {
+        // A column that was never marked editable is not a write target, even
+        // though it exists. Without this, any declared column is writable
+        // through the inline-edit action.
+        if (! $column || ! $column->isEditable) {
             return;
         }
 
