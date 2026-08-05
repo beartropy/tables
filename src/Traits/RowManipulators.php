@@ -126,6 +126,20 @@ trait RowManipulators
     }
 
     /**
+     * Authorize a boolean toggle before it is applied.
+     *
+     * Override this method in your table component to add policy checks. Defaults
+     * to allowing the toggle, matching authorizeFieldUpdate()'s default.
+     *
+     * @param  mixed  $id  The row id.
+     * @param  string  $column  The column key being toggled.
+     */
+    public function authorizeToggle($id, string $column): bool
+    {
+        return true;
+    }
+
+    /**
      * Toggle a boolean column value for a row.
      *
      * Dispatches trigger method if defined on the column.
@@ -136,8 +150,20 @@ trait RowManipulators
      */
     public function toggleBoolean($id, $column)
     {
-
         $col = $this->columns->where('key', $column)->first();
+
+        // The column key arrives from the client. A key that is not part of this
+        // table is not a toggle target, and neither is one the caller is not
+        // allowed to flip. Both checks run before the trigger dispatch below,
+        // because that dispatch calls a method named by the column definition.
+        if (! $col) {
+            return;
+        }
+
+        if (! $this->authorizeToggle($id, $column)) {
+            return;
+        }
+
         $trigger = is_object($col) && property_exists($col, 'trigger') ? $col->trigger : false;
         if ($trigger) {
             $this->$trigger($id, $column);
