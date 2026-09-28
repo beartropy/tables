@@ -43,7 +43,7 @@ trait Filters
             } else {
                 $filter->key = $this->getColumnKey($filter->label);
             }
-            if ($filter->type == 'magic-select') {
+            if (($filter->type ?? null) === 'magic-select') {
                 $pluckKey = $filter->key;
 
                 // Resolve the DB column and collection key for this filter
@@ -106,6 +106,15 @@ trait Filters
             }
 
             $data = (array) get_object_vars($item);
+
+            // Guarantee a 'type' key exists on every serialized filter. The base
+            // Filter class does not declare $type, so a custom filter subclass
+            // without it -- or a partially rehydrated Livewire snapshot -- would
+            // otherwise reach the view without the key and trigger an
+            // "Undefined array key 'type'" error while rendering the filters part.
+            if (! array_key_exists('type', $data) || is_null($data['type'])) {
+                $data['type'] = 'string';
+            }
 
             // Convert select options to [{value, label}] format so the UI
             // select component preserves numeric IDs as option values.

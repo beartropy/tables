@@ -26,8 +26,12 @@
 >
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         @foreach($filters as $key => $filter)
+            @php
+                $filterType = $filter['type'] ?? null;
+            @endphp
+            @continue(is_null($filterType))
             <div class="flex flex-col space-y-1">
-                @if($filter['type'] === 'string')
+                @if($filterType === 'string')
                     <x-beartropy-ui::input
                         wire:model.live.debounce.500ms="filters.{{ $key }}.input"
                         label="{{ucfirst($filter['label'])}}"
@@ -37,7 +41,7 @@
                         placeholder="{{ucfirst($filter['label'])}}..."
                     />
 
-                @elseif($filter['type'] === 'daterange')
+                @elseif($filterType === 'daterange')
                     <x-beartropy-ui::datetime
                         wire:model.live="filters.{{ $key }}.input"
                         label="{{ $filter['label'] }}"
@@ -46,7 +50,7 @@
                         range
                     />
 
-                @elseif($filter['type'] === 'select')
+                @elseif($filterType === 'select')
                     <x-beartropy-ui::select
                         label="{{ $filter['label'] }}"
                         color="{{ $inputThemeOverride ?? $theme }}"
@@ -59,7 +63,7 @@
                         clearable
                     />
 
-                @elseif($filter['type'] === 'bool')
+                @elseif($filterType === 'bool')
                     @php
                         $boolOptions = [
                             ['value' => "all", 'label' => ucfirst(__('yat::yat.all'))],

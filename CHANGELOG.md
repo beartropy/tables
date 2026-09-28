@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v3.0.1] - 2026-09-28
+
+### Fixed
+
+- **Filters**: A filter without a declared `$type` — a custom subclass of the base `Filter` class, which does not declare the property, or a partially rehydrated Livewire snapshot — crashed the filters view with `Undefined array key 'type'`. `setFilters()` now guarantees every serialized filter carries a `type`, defaulting to `'string'` (a text input), and the view reads it defensively, skipping any filter that still has none. The `magic-select` check in `setFilters()` no longer touches an undeclared property either.
+
 ## [v3.0.0] - 2026-08-05
 
 ### BREAKING
