@@ -311,3 +311,18 @@ it('bool filter with all shows everything', function () {
 
     expect($filtered)->toHaveCount(2);
 });
+
+it('ignores updates to filter keys that do not exist on the server', function () {
+    // A stale browser tab (or a re-run of setFilters(), which regenerates the
+    // random filter keys) can send `filters.<unknownKey>.input`. Livewire writes
+    // ['input' => ...] into the collection before the update hook runs, so the
+    // hook must not assume the entry is a real, fully-serialized filter.
+    $component = Livewire::test(ArrayStringFilterTable::class);
+
+    $component->set('filters.staleKey1234.input', 'Alice');
+
+    $filters = $component->get('filters');
+    expect($filters->has('staleKey1234'))->toBeFalse();
+    expect($filters)->toHaveCount(2);
+    expect($component->get('has_filters'))->toBeTrue();
+});
